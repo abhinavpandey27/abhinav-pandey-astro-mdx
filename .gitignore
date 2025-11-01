@@ -1,2 +1,4 @@
+apps/portfolio-astro
+.env
 docs/
 .DS_Store

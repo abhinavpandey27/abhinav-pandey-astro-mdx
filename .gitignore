@@ -3,4 +3,3 @@ docs/
 .env
 .env.local
 node_modules/
-apps/portfolio-astro/tina/__generated__/

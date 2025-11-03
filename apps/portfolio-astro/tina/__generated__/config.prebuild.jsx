@@ -1,5 +1,20 @@
 // tina/config.ts
 import { defineConfig } from "tinacms";
+var ensureContentMediaPath = (value) => {
+  if (!value) return value ?? "";
+  const trimmed = value.trim();
+  if (trimmed.startsWith("../")) return trimmed;
+  if (trimmed.startsWith("/")) return `..${trimmed}`;
+  return `../${trimmed}`;
+};
+var ensureMediaUiValue = (value) => {
+  if (!value) return value ?? "";
+  return value.replace(/^..\//, "/");
+};
+var mediaUiTransforms = {
+  parse: (value) => ensureContentMediaPath(value),
+  format: (value) => ensureMediaUiValue(value)
+};
 var branch = process.env.TINA_BRANCH || process.env.GITHUB_HEAD_REF || process.env.GITHUB_REF_NAME || process.env.VERCEL_GIT_COMMIT_REF || process.env.VERCEL_BRANCH || process.env.HEAD || "main";
 var config_default = defineConfig({
   branch,
@@ -87,7 +102,13 @@ var config_default = defineConfig({
                 type: "object",
                 required: true,
                 fields: [
-                  { name: "asset", label: "Asset", type: "image", required: true },
+                  {
+                    name: "asset",
+                    label: "Asset",
+                    type: "image",
+                    required: true,
+                    ui: mediaUiTransforms
+                  },
                   {
                     name: "alt",
                     label: "Alt Text",
@@ -119,7 +140,13 @@ var config_default = defineConfig({
               validate: (value) => Array.isArray(value) && value.length >= 1 ? void 0 : "Provide at least one gallery asset"
             },
             fields: [
-              { name: "asset", label: "Asset", type: "image", required: true },
+              {
+                name: "asset",
+                label: "Asset",
+                type: "image",
+                required: true,
+                ui: mediaUiTransforms
+              },
               {
                 name: "alt",
                 label: "Alt Text",
@@ -372,7 +399,13 @@ var config_default = defineConfig({
             type: "object",
             list: true,
             fields: [
-              { name: "asset", label: "Asset", type: "image", required: true },
+              {
+                name: "asset",
+                label: "Asset",
+                type: "image",
+                required: true,
+                ui: mediaUiTransforms
+              },
               {
                 name: "alt",
                 label: "Alt Text",
@@ -469,7 +502,13 @@ var config_default = defineConfig({
             type: "object",
             required: true,
             fields: [
-              { name: "asset", label: "Asset", type: "image", required: true },
+              {
+                name: "asset",
+                label: "Asset",
+                type: "image",
+                required: true,
+                ui: mediaUiTransforms
+              },
               {
                 name: "alt",
                 label: "Alt Text",
@@ -498,7 +537,13 @@ var config_default = defineConfig({
               validate: (value) => Array.isArray(value) && value.length > 0 ? void 0 : "Include at least one gallery asset"
             },
             fields: [
-              { name: "asset", label: "Asset", type: "image", required: true },
+              {
+                name: "asset",
+                label: "Asset",
+                type: "image",
+                required: true,
+                ui: mediaUiTransforms
+              },
               {
                 name: "alt",
                 label: "Alt Text",

@@ -1,15 +1,35 @@
 // tina/config.ts
 import { defineConfig } from "tinacms";
+var extractMediaPath = (value) => {
+  let normalized = value.trim();
+  if (!normalized) return "";
+  normalized = normalized.replace(/\\/g, "/");
+  normalized = normalized.replace(/[?#].*$/, "");
+  normalized = normalized.replace(/media\.\.\//g, "media/");
+  const match = normalized.match(/media\/.+$/);
+  if (match) {
+    normalized = match[0];
+  } else {
+    normalized = normalized.replace(/^(\.\.\/|\.\/)+/, "");
+    normalized = normalized.replace(/^\/+/, "");
+    if (!normalized.startsWith("media/")) {
+      normalized = normalized.startsWith("media") ? normalized.replace(/^media\.?/, "media") : `media/${normalized}`;
+    }
+  }
+  normalized = normalized.replace(/^media\/\//, "media/");
+  return normalized;
+};
 var ensureContentMediaPath = (value) => {
-  if (!value) return value ?? "";
-  const trimmed = value.trim();
-  if (trimmed.startsWith("../")) return trimmed;
-  if (trimmed.startsWith("/")) return `..${trimmed}`;
-  return `../${trimmed}`;
+  if (!value) return "";
+  const mediaPath = extractMediaPath(value);
+  if (!mediaPath) return "";
+  return mediaPath.startsWith("../media/") ? mediaPath : `../${mediaPath}`;
 };
 var ensureMediaUiValue = (value) => {
-  if (!value) return value ?? "";
-  return value.replace(/^..\//, "/");
+  if (!value) return "";
+  const mediaPath = extractMediaPath(value);
+  if (!mediaPath) return "";
+  return mediaPath.startsWith("/media/") ? mediaPath : `/${mediaPath.replace(/^\/+/, "")}`;
 };
 var mediaUiTransforms = {
   parse: (value) => ensureContentMediaPath(value),
@@ -30,7 +50,7 @@ var config_default = defineConfig({
   media: {
     tina: {
       mediaRoot: "media",
-      publicFolder: "public"
+      publicFolder: "src/content"
     }
   },
   schema: {

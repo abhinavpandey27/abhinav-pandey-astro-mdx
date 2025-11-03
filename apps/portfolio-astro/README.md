@@ -89,7 +89,7 @@ Remember to respect reduced-motion preferences when sequencing transitions.
 
 - Import `abhinavpandey27/abhinav-pandey-astro-mdx` into Vercel and set the **Root Directory** to `apps/portfolio-astro` so only the Astro app builds.
 - Use Node.js **18.17 or newer** (Project Settings → General → Node.js Version) to satisfy Astro/Tina requirements.
-- Build command: `npm run build`  
+- Build command: `npm run build` (runs `tinacms build` before `astro build` so the `/admin` bundle ships with each deploy)  
   Install command: default (`npm install`)  
   Output directory: `dist`
 - Enable automatic deployments: production promotes from `main`; pull requests receive preview URLs for review.

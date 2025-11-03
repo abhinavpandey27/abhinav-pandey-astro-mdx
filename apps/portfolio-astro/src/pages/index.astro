@@ -1,0 +1,95 @@
+---
+import '../styles/global.css';
+import NavHeader from '../components/NavHeader.astro';
+import HeroSection from '../components/HeroSection.astro';
+
+import placeholderOne from '../content/media/placeholder.png?url';
+import placeholderTwo from '../content/media/placeholder.png?url';
+
+const navLinks = [
+  { label: 'Work', href: '#work' },
+  { label: 'About', href: '#about' },
+  { label: 'Contact', href: '#contact' }
+];
+
+const socialLinks = [
+  {
+    label: 'LinkedIn',
+    url: 'https://www.linkedin.com/in/abhinavpandey'
+  },
+  {
+    label: 'Dribbble',
+    url: 'https://dribbble.com/abhinavpandey'
+  },
+  {
+    label: 'Email',
+    url: 'mailto:hello@abhinavpandey.design',
+    ariaLabel: 'Send an email to Abhinav'
+  }
+];
+
+const featuredProject = {
+  kicker: 'Project Atlas',
+  title: 'Narrative-led mission planning for distributed exploration teams',
+  summary:
+    'A cinematic planning surface that synchronizes motion, content, and ritual so explorers can stay aligned in the field.',
+  metadata: [
+    { label: 'Role', value: 'Lead Product Designer' },
+    { label: 'Timeline', value: 'May — Sep 2023' },
+    { label: 'Team', value: 'Motion, Research, Design' }
+  ],
+  cta: {
+    label: 'Read case study',
+    href: 'https://example.com/project-atlas',
+    isExternal: true
+  }
+};
+
+const heroCarousel = [
+  {
+    src: placeholderOne,
+    alt: 'Storyboard frame from Project Atlas workshop',
+    caption: 'Storyboard concepting session during the Atlas motion sprint.',
+    emphasis: 'primary'
+  },
+  {
+    src: placeholderTwo,
+    alt: 'Tablet experience showing Atlas planning board',
+    caption: 'Responsive planning surfaces tuned for reduced motion states.',
+    emphasis: 'secondary'
+  }
+];
+---
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="Portfolio for Abhinav Pandey — Product Designer specializing in motion-rich storytelling." />
+    <title>Abhinav Pandey — Design Portfolio</title>
+  </head>
+
+  <body>
+    <a class="sr-only" href="#main">Skip to content</a>
+
+    <NavHeader
+      name="Abhinav Pandey"
+      location="Mumbai, India"
+      navLinks={navLinks}
+      socialLinks={socialLinks}
+      menuLabel="Menu"
+    />
+
+    <main id="main">
+      <HeroSection
+        id="top"
+        heroTagline="Motion-rich stories for teams shipping immersive products."
+        intro="I craft end-to-end product experiences for teams who want motion to feel intentional, thoughtful, and accessible."
+        bioSnippet="Previously at Orbit Labs and Flux Studio."
+        prefersReducedMotionCopy="Animations respect your motion preferences — opt-out anytime."
+        featured={featuredProject}
+        carousel={heroCarousel}
+      />
+    </main>
+  </body>
+</html>

@@ -1,0 +1,358 @@
+---
+export type HeroCarouselItem = {
+  src: string;
+  alt: string;
+  caption?: string;
+  emphasis?: 'primary' | 'secondary';
+};
+
+export type HeroHighlight = {
+  kicker?: string;
+  title: string;
+  summary: string;
+  metadata: Array<{ label: string; value: string }>;
+  cta: { label: string; href: string; isExternal?: boolean };
+};
+
+interface Props {
+  id?: string;
+  heroTagline: string;
+  intro: string;
+  bioSnippet?: string;
+  featured: HeroHighlight;
+  carousel: HeroCarouselItem[];
+  prefersReducedMotionCopy?: string;
+}
+
+const {
+  id = 'hero',
+  heroTagline,
+  intro,
+  bioSnippet,
+  featured,
+  carousel = [],
+  prefersReducedMotionCopy
+} = Astro.props as Props;
+---
+
+<section class="hero" id={id} aria-labelledby={`${id}-title`} data-testid="hero-section">
+  <div class="hero__inner">
+    <div class="hero__copy">
+      <p class="hero__eyebrow">Featured designer</p>
+      <h1 class="hero__title" id={`${id}-title`}>{heroTagline}</h1>
+      <p class="hero__intro">{intro}</p>
+      {bioSnippet && <p class="hero__bio">{bioSnippet}</p>}
+      {prefersReducedMotionCopy && (
+        <p class="hero__motion">{prefersReducedMotionCopy}</p>
+      )}
+    </div>
+
+    <article class="hero__highlight">
+      {featured.kicker && <p class="hero__highlight-kicker">{featured.kicker}</p>}
+      <h2 class="hero__highlight-title">{featured.title}</h2>
+      <p class="hero__highlight-summary">{featured.summary}</p>
+
+      <dl class="hero__metadata">
+        {featured.metadata.map((item) => (
+          <div class="hero__metadata-item">
+            <dt>{item.label}</dt>
+            <dd>{item.value}</dd>
+          </div>
+        ))}
+      </dl>
+
+      <a
+        class="hero__cta"
+        href={featured.cta.href}
+        target={featured.cta.isExternal ? '_blank' : undefined}
+        rel={featured.cta.isExternal ? 'noopener noreferrer' : undefined}
+      >
+        <span>{featured.cta.label}</span>
+        <span aria-hidden="true">↗</span>
+      </a>
+    </article>
+
+    {carousel.length > 0 && (
+      <div class="hero__carousel" aria-label="Featured project imagery">
+        <ul class="hero__carousel-track" role="list">
+          {carousel.map((item) => (
+            <li class="hero__carousel-item" data-emphasis={item.emphasis ?? 'secondary'}>
+              <figure>
+                <img src={item.src} alt={item.alt} loading="lazy" />
+                {item.caption && <figcaption>{item.caption}</figcaption>}
+              </figure>
+            </li>
+          ))}
+        </ul>
+      </div>
+    )}
+  </div>
+</section>
+
+<style>
+  .hero {
+    padding: clamp(var(--space-xl), 10vh, 160px) clamp(var(--space-lg), 6vw, 120px)
+      clamp(var(--space-2xl), 12vh, 200px);
+    background: linear-gradient(
+      160deg,
+      rgba(255, 255, 255, 0.85) 0%,
+      rgba(233, 233, 241, 0.65) 40%,
+      rgba(244, 245, 255, 0.82) 100%
+    );
+  }
+
+  .hero__inner {
+    display: grid;
+    grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+    gap: clamp(var(--space-xl), 4vw, var(--space-2xl));
+    align-items: start;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .hero__copy {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+    max-width: 520px;
+  }
+
+  .hero__eyebrow {
+    font-family: var(--font-family-ui);
+    font-size: 12px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--color-label-secondary);
+    margin: 0;
+  }
+
+  .hero__title {
+    margin: 0;
+    font-family: var(--font-family-heading);
+    font-size: clamp(38px, 5vw, 64px);
+    line-height: 1.05;
+    letter-spacing: var(--letter-spacing-h4);
+  }
+
+  .hero__intro {
+    margin: 0;
+    font-size: clamp(18px, 2.4vw, 22px);
+    line-height: 1.4;
+    color: var(--color-label-secondary);
+  }
+
+  .hero__bio {
+    margin: 0;
+    color: var(--color-label-secondary);
+  }
+
+  .hero__motion {
+    margin: 0;
+    padding: 10px 14px;
+    border-radius: var(--radius-md);
+    background: rgba(255, 255, 255, 0.7);
+    border: 1px solid rgba(11, 12, 17, 0.12);
+    font-family: var(--font-family-ui);
+    font-size: 12px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+
+  .hero__highlight {
+    position: relative;
+    padding: clamp(var(--space-lg), 4vw, var(--space-2xl));
+    border-radius: var(--radius-lg);
+    background: rgba(18, 19, 30, 0.96);
+    color: var(--color-label-primary-dark);
+    overflow: hidden;
+    box-shadow: var(--shadow-elevated);
+  }
+
+  .hero__highlight::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(
+      circle at 20% 20%,
+      rgba(255, 255, 255, 0.2),
+      rgba(255, 255, 255, 0) 70%
+    );
+    pointer-events: none;
+  }
+
+  .hero__highlight > * {
+    position: relative;
+    z-index: 1;
+  }
+
+  .hero__highlight-kicker {
+    margin: 0 0 var(--space-sm);
+    font-family: var(--font-family-ui);
+    font-size: 12px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--color-label-secondary-dark);
+  }
+
+  .hero__highlight-title {
+    margin: 0 0 var(--space-sm);
+    font-size: clamp(26px, 3vw, 34px);
+    line-height: 1.2;
+  }
+
+  .hero__highlight-summary {
+    margin: 0 0 var(--space-md);
+    color: var(--color-label-secondary-dark);
+    font-size: 16px;
+    line-height: 1.5;
+  }
+
+  .hero__metadata {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: var(--space-md);
+    margin: 0 0 var(--space-lg);
+  }
+
+  .hero__metadata-item {
+    display: grid;
+    gap: 4px;
+  }
+
+  .hero__metadata-item dt {
+    font-family: var(--font-family-ui);
+    font-size: 12px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--color-label-tertiary-dark);
+    margin: 0;
+  }
+
+  .hero__metadata-item dd {
+    margin: 0;
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--color-label-primary-dark);
+  }
+
+  .hero__cta {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-xs);
+    padding: 12px 16px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.12);
+    color: var(--color-label-primary-dark);
+    font-family: var(--font-family-ui);
+    font-size: 13px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    border: 1px solid rgba(255, 255, 255, 0.24);
+    transition: transform 0.2s ease, background 0.2s ease;
+  }
+
+  .hero__cta:hover,
+  .hero__cta:focus-visible {
+    transform: translateY(-2px);
+    background: rgba(255, 255, 255, 0.24);
+  }
+
+  .hero__carousel {
+    grid-column: 1 / -1;
+    overflow: hidden;
+    border-radius: var(--radius-lg);
+    border: 1px solid rgba(11, 12, 17, 0.08);
+    background: rgba(255, 255, 255, 0.8);
+    padding: var(--space-md);
+  }
+
+  .hero__carousel-track {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: var(--space-md);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .hero__carousel-item {
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    background: rgba(11, 12, 17, 0.04);
+    display: grid;
+  }
+
+  .hero__carousel-item[data-emphasis='primary'] {
+    border: 2px solid rgba(11, 12, 17, 0.16);
+  }
+
+  .hero__carousel-item figure {
+    margin: 0;
+    display: grid;
+    grid-template-rows: auto auto;
+    height: 100%;
+  }
+
+  .hero__carousel-item img {
+    width: 100%;
+    height: 220px;
+    object-fit: cover;
+  }
+
+  .hero__carousel-item figcaption {
+    margin: 0;
+    padding: var(--space-sm);
+    font-size: 13px;
+    color: var(--color-label-secondary);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .hero,
+    .hero__cta {
+      transition: none;
+    }
+  }
+
+  @media (max-width: 960px) {
+    .hero__inner {
+      grid-template-columns: 1fr;
+    }
+
+    .hero__highlight {
+      order: 3;
+    }
+  }
+
+  @media (max-width: 720px) {
+    .hero {
+      padding: clamp(var(--space-lg), 8vh, var(--space-xl))
+        clamp(var(--space-md), 6vw, var(--space-lg));
+    }
+
+    .hero__carousel-track {
+      display: flex;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      gap: var(--space-md);
+      padding-bottom: var(--space-sm);
+    }
+
+    .hero__carousel-track::-webkit-scrollbar {
+      height: 6px;
+    }
+
+    .hero__carousel-track::-webkit-scrollbar-thumb {
+      background: rgba(11, 12, 17, 0.18);
+      border-radius: 999px;
+    }
+
+    .hero__carousel-item {
+      min-width: 240px;
+      scroll-snap-align: start;
+    }
+
+    .hero__carousel-item img {
+      height: 200px;
+    }
+  }
+</style>

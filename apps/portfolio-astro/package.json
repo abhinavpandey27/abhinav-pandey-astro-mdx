@@ -24,6 +24,9 @@
   "devDependencies": {
     "@astrojs/check": "^0.9.5",
     "@types/node": "^20.19.24",
+    "@testing-library/dom": "^9.3.3",
+    "axe-core": "^4.10.0",
+    "happy-dom": "^14.10.1",
     "typescript": "~5.4.0",
     "vitest": "^4.0.5"
   }

@@ -1,0 +1,266 @@
+---
+export type NavLink = {
+  label: string;
+  href: string;
+};
+
+export type SocialLink = {
+  label: string;
+  url: string;
+  ariaLabel?: string;
+};
+
+interface Props {
+  name: string;
+  location: string;
+  navLinks: NavLink[];
+  socialLinks: SocialLink[];
+  menuLabel?: string;
+}
+
+const {
+  name,
+  location,
+  navLinks = [],
+  socialLinks = [],
+  menuLabel = 'Menu'
+} = Astro.props as Props;
+---
+
+<header class="nav-header" data-testid="nav-header">
+  <div class="nav-header__inner">
+    <a class="nav-header__brand" href="#top">
+      <span class="nav-header__name">{name}</span>
+      <span class="nav-header__location">{location}</span>
+    </a>
+
+    <nav aria-label="Primary" class="nav-header__primary">
+      <ul class="nav-header__links" role="list">
+        {navLinks.map((link) => (
+          <li>
+            <a href={link.href} class="nav-header__link">
+              <span aria-hidden="true">☩</span>
+              <span>{link.label}</span>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </nav>
+
+    <nav aria-label="Social" class="nav-header__social">
+      <ul class="nav-header__social-links" role="list">
+        {socialLinks.map((link) => (
+          <li>
+            <a
+              class="nav-header__social-link"
+              href={link.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label={link.ariaLabel ?? link.label}
+            >
+              {link.label}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </nav>
+
+    <button type="button" class="nav-header__menu" aria-label={menuLabel}>
+      <span class="nav-header__menu-icon" aria-hidden="true"></span>
+      <span class="nav-header__menu-label">{menuLabel}</span>
+    </button>
+  </div>
+</header>
+
+<style>
+  .nav-header {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(14px);
+    border-bottom: 1px solid rgba(11, 12, 17, 0.08);
+  }
+
+  .nav-header__inner {
+    display: grid;
+    grid-template-columns: 1fr auto auto;
+    align-items: center;
+    gap: var(--space-lg);
+    padding: var(--space-sm) clamp(var(--space-lg), 5vw, var(--space-2xl));
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .nav-header__brand {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    font-family: var(--font-family-heading);
+    font-size: clamp(18px, 2.2vw, 22px);
+    line-height: 1.1;
+    letter-spacing: var(--letter-spacing-body-lg);
+    color: var(--color-label-primary);
+  }
+
+  .nav-header__name {
+    font-weight: 600;
+  }
+
+  .nav-header__location {
+    font-family: var(--font-family-ui);
+    font-size: 12px;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    color: var(--color-label-secondary);
+  }
+
+  .nav-header__primary,
+  .nav-header__social {
+    display: flex;
+  }
+
+  .nav-header__links,
+  .nav-header__social-links {
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .nav-header__link {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-xs);
+    font-family: var(--font-family-ui);
+    font-size: 13px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--color-label-secondary);
+    transition: color 0.2s ease;
+  }
+
+  .nav-header__link:hover,
+  .nav-header__link:focus-visible {
+    color: var(--color-label-primary);
+  }
+
+  .nav-header__social-link {
+    font-family: var(--font-family-ui);
+    font-size: 12px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    padding: 6px 10px;
+    border-radius: var(--radius-sm);
+    border: 1px solid rgba(11, 12, 17, 0.18);
+    background: rgba(255, 255, 255, 0.6);
+    transition: border-color 0.2s ease, background 0.2s ease;
+  }
+
+  .nav-header__social-link:hover,
+  .nav-header__social-link:focus-visible {
+    border-color: rgba(11, 12, 17, 0.4);
+    background: rgba(255, 255, 255, 0.95);
+  }
+
+  .nav-header__menu {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-xs);
+    border: 1px solid rgba(11, 12, 17, 0.16);
+    border-radius: 999px;
+    padding: 6px 14px;
+    background: rgba(255, 255, 255, 0.6);
+    font-family: var(--font-family-ui);
+    font-size: 12px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--color-label-primary);
+    cursor: pointer;
+    transition: transform 0.2s ease, border-color 0.2s ease;
+  }
+
+  .nav-header__menu:hover,
+  .nav-header__menu:focus-visible {
+    transform: translateY(-1px);
+    border-color: rgba(11, 12, 17, 0.32);
+  }
+
+  .nav-header__menu-icon {
+    position: relative;
+    width: 14px;
+    height: 14px;
+  }
+
+  .nav-header__menu-icon::before,
+  .nav-header__menu-icon::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: currentColor;
+  }
+
+  .nav-header__menu-icon::before {
+    top: 4px;
+  }
+
+  .nav-header__menu-icon::after {
+    bottom: 4px;
+  }
+
+  @media (max-width: 960px) {
+    .nav-header__inner {
+      grid-template-columns: 1fr auto;
+      grid-template-areas:
+        'brand menu'
+        'primary primary'
+        'social social';
+      row-gap: var(--space-sm);
+    }
+
+    .nav-header__brand {
+      grid-area: brand;
+    }
+
+    .nav-header__primary {
+      grid-area: primary;
+      justify-content: flex-start;
+    }
+
+    .nav-header__social {
+      grid-area: social;
+    }
+
+    .nav-header__social-links {
+      flex-wrap: wrap;
+      gap: var(--space-sm);
+    }
+  }
+
+  @media (max-width: 720px) {
+    .nav-header {
+      backdrop-filter: blur(18px);
+    }
+
+    .nav-header__inner {
+      gap: var(--space-sm);
+      padding-inline: clamp(var(--space-md), 5vw, var(--space-lg));
+    }
+
+    .nav-header__links {
+      gap: var(--space-sm);
+    }
+
+    .nav-header__link {
+      font-size: 11px;
+    }
+
+    .nav-header__social-links {
+      justify-content: flex-start;
+    }
+  }
+</style>

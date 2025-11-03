@@ -11,8 +11,8 @@
     "check": "astro check",
     "lint:content": "astro check",
     "test": "vitest run",
-    "tina:dev": "tinacms dev -c tina/config.ts",
-    "tina:build": "tinacms build -c tina/config.ts"
+    "tina:dev": "tinacms dev",
+    "tina:build": "tinacms build"
   },
   "dependencies": {
     "@astrojs/mdx": "^2.3.0",

@@ -1,0 +1,214 @@
+fragment ProjectParts on Project {
+  __typename
+  title
+  slug
+  summary
+  featured
+  role
+  team
+  timeline
+  categories
+  hero {
+    __typename
+    media {
+      __typename
+      asset
+      alt
+      caption
+      emphasis
+    }
+    kicker
+  }
+  gallery {
+    __typename
+    asset
+    alt
+    caption
+    emphasis
+    layout
+    motionDelay
+  }
+  outcomes {
+    __typename
+    label
+    value
+    description
+  }
+  highlights {
+    __typename
+    title
+    body
+  }
+  cta {
+    __typename
+    label
+    href
+    isExternal
+  }
+  motion {
+    __typename
+    heroVariant
+    heroDuration
+    heroDelay
+    sectionBackground
+    galleryVariant
+    galleryStagger
+    prefersReducedMotionCopy
+  }
+}
+
+fragment SiteParts on Site {
+  __typename
+  title
+  heroTagline
+  location
+  intro
+  bioSnippet
+  email
+  featuredProject {
+    ... on Project {
+      __typename
+      title
+      slug
+      summary
+      featured
+      role
+      team
+      timeline
+      categories
+      hero {
+        __typename
+        media {
+          __typename
+          asset
+          alt
+          caption
+          emphasis
+        }
+        kicker
+      }
+      gallery {
+        __typename
+        asset
+        alt
+        caption
+        emphasis
+        layout
+        motionDelay
+      }
+      outcomes {
+        __typename
+        label
+        value
+        description
+      }
+      highlights {
+        __typename
+        title
+        body
+      }
+      cta {
+        __typename
+        label
+        href
+        isExternal
+      }
+      motion {
+        __typename
+        heroVariant
+        heroDuration
+        heroDelay
+        sectionBackground
+        galleryVariant
+        galleryStagger
+        prefersReducedMotionCopy
+      }
+    }
+    ... on Document {
+      _sys {
+        filename
+        basename
+        hasReferences
+        breadcrumbs
+        path
+        relativePath
+        extension
+      }
+      id
+    }
+  }
+  navLinks {
+    __typename
+    label
+    href
+  }
+  socialLinks {
+    __typename
+    label
+    url
+    ariaLabel
+  }
+  resume {
+    __typename
+    label
+    file
+    size
+  }
+  heroCarousel {
+    __typename
+    asset
+    alt
+    caption
+    emphasis
+  }
+  contactCopy
+  motion {
+    __typename
+    heroVariant
+    heroDuration
+    heroDelay
+    sectionBackground
+    galleryVariant
+    galleryStagger
+    prefersReducedMotionCopy
+  }
+}
+
+fragment AboutParts on About {
+  __typename
+  title
+  subtitle
+  location
+  lead
+  narrativeTone
+  portrait {
+    __typename
+    asset
+    alt
+    caption
+    emphasis
+  }
+  gallery {
+    __typename
+    asset
+    alt
+    caption
+    emphasis
+  }
+  skills {
+    __typename
+    category
+    items
+  }
+  contactHighlights
+  motion {
+    __typename
+    heroVariant
+    heroDuration
+    heroDelay
+    sectionBackground
+    galleryVariant
+    galleryStagger
+    prefersReducedMotionCopy
+  }
+}

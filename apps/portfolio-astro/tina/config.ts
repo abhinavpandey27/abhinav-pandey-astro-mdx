@@ -1,11 +1,20 @@
 import { defineConfig } from 'tinacms';
 
 const branch =
-  process.env.TINA_BRANCH || process.env.VERCEL_GIT_COMMIT_REF || process.env.VERCEL_BRANCH || 'main';
+  process.env.TINA_BRANCH ||
+  process.env.GITHUB_HEAD_REF ||
+  process.env.GITHUB_REF_NAME ||
+  process.env.VERCEL_GIT_COMMIT_REF ||
+  process.env.VERCEL_BRANCH ||
+  process.env.HEAD ||
+  'main';
 
 export default defineConfig({
   branch,
-  clientId: process.env.TINA_CLIENT_ID || '',
+  clientId:
+    process.env.TINA_CLIENT_ID ||
+    process.env.NEXT_PUBLIC_TINA_CLIENT_ID ||
+    '',
   token: process.env.TINA_TOKEN || '',
   client: {
     referenceDepth: 2

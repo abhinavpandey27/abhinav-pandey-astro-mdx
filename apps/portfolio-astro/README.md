@@ -84,3 +84,14 @@ Remember to respect reduced-motion preferences when sequencing transitions.
 
 <OutcomeMetric label="Completion Rate" value="92%" description="Reviewers reached the final section." emphasis="accent" align="center" />
 ```
+
+## Deployment (Vercel)
+
+- Import `abhinavpandey27/abhinav-pandey-astro-mdx` into Vercel and set the **Root Directory** to `apps/portfolio-astro` so only the Astro app builds.
+- Use Node.js **18.17 or newer** (Project Settings → General → Node.js Version) to satisfy Astro/Tina requirements.
+- Build command: `npm run build`  
+  Install command: default (`npm install`)  
+  Output directory: `dist`
+- Enable automatic deployments: production promotes from `main`; pull requests receive preview URLs for review.
+- After the first deploy, verify the production URL and preview comments. If the build fails, inspect Vercel logs, adjust Node version or build settings, and redeploy.
+- Detailed setup and validation steps live in `docs/tasks/002-vercel-deployment/specs/002-spec-vercel-deployment.md`.

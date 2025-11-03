@@ -1,5 +1,23 @@
 import { defineConfig } from 'tinacms';
 
+const ensureContentMediaPath = (value?: string | null) => {
+  if (!value) return value ?? '';
+  const trimmed = value.trim();
+  if (trimmed.startsWith('../')) return trimmed;
+  if (trimmed.startsWith('/')) return `..${trimmed}`;
+  return `../${trimmed}`;
+};
+
+const ensureMediaUiValue = (value?: string | null) => {
+  if (!value) return value ?? '';
+  return value.replace(/^..\//, '/');
+};
+
+const mediaUiTransforms = {
+  parse: (value?: string | null) => ensureContentMediaPath(value),
+  format: (value?: string | null) => ensureMediaUiValue(value)
+};
+
 const branch =
   process.env.TINA_BRANCH ||
   process.env.GITHUB_HEAD_REF ||
@@ -102,7 +120,13 @@ export default defineConfig({
                 type: 'object',
                 required: true,
                 fields: [
-                  { name: 'asset', label: 'Asset', type: 'image', required: true },
+                  {
+                    name: 'asset',
+                    label: 'Asset',
+                    type: 'image',
+                    required: true,
+                    ui: mediaUiTransforms
+                  },
                   {
                     name: 'alt',
                     label: 'Alt Text',
@@ -138,7 +162,13 @@ export default defineConfig({
                   : 'Provide at least one gallery asset'
             },
             fields: [
-              { name: 'asset', label: 'Asset', type: 'image', required: true },
+              {
+                name: 'asset',
+                label: 'Asset',
+                type: 'image',
+                required: true,
+                ui: mediaUiTransforms
+              },
               {
                 name: 'alt',
                 label: 'Alt Text',
@@ -397,7 +427,13 @@ export default defineConfig({
             type: 'object',
             list: true,
             fields: [
-              { name: 'asset', label: 'Asset', type: 'image', required: true },
+              {
+                name: 'asset',
+                label: 'Asset',
+                type: 'image',
+                required: true,
+                ui: mediaUiTransforms
+              },
               {
                 name: 'alt',
                 label: 'Alt Text',
@@ -496,7 +532,13 @@ export default defineConfig({
             type: 'object',
             required: true,
             fields: [
-              { name: 'asset', label: 'Asset', type: 'image', required: true },
+              {
+                name: 'asset',
+                label: 'Asset',
+                type: 'image',
+                required: true,
+                ui: mediaUiTransforms
+              },
               {
                 name: 'alt',
                 label: 'Alt Text',
@@ -529,7 +571,13 @@ export default defineConfig({
                   : 'Include at least one gallery asset'
             },
             fields: [
-              { name: 'asset', label: 'Asset', type: 'image', required: true },
+              {
+                name: 'asset',
+                label: 'Asset',
+                type: 'image',
+                required: true,
+                ui: mediaUiTransforms
+              },
               {
                 name: 'alt',
                 label: 'Alt Text',

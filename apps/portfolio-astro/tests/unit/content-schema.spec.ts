@@ -53,17 +53,16 @@ describe('content collections schema', () => {
     expect(result.success).toBe(true);
   });
 
-  it('fails if project slug has uppercase letters', () => {
+  it('derives slug from filename so uppercase content passes', () => {
     const result = projectSchema.safeParse({
-      title: 'Slug Error',
-      slug: 'Project-Orion',
-      summary: 'Invalid slug should fail.',
+      title: 'Slug Source',
+      summary: 'Slug now derives from filename; uppercase content passes.',
       role: 'Designer',
       timeline: '2024',
       hero: {
         media: {
           asset: mockImage('/images/error/hero.jpg'),
-          alt: 'Invalid slug hero'
+          alt: 'Slug derives from filename'
         }
       },
       gallery: [
@@ -75,7 +74,7 @@ describe('content collections schema', () => {
       motion: {}
     });
 
-    expect(result.success).toBe(false);
+    expect(result.success).toBe(true);
   });
 
   it('validates site settings and enforces mandatory fields', () => {

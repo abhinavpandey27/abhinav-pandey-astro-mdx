@@ -2,11 +2,14 @@
 
 exports[`HeroSection > matches compiled snapshot 1`] = `
 "---
+import CarouselIsland from './CarouselIsland.astro';
+
 export type HeroCarouselItem = {
   src: string;
   alt: string;
   caption?: string;
   emphasis?: 'primary' | 'secondary';
+  motionDelay?: number;
 };
 
 export type HeroHighlight = {
@@ -76,18 +79,7 @@ const {
     </article>
 
     {carousel.length > 0 && (
-      <div class="hero__carousel" aria-label="Featured project imagery">
-        <ul class="hero__carousel-track" role="list">
-          {carousel.map((item) => (
-            <li class="hero__carousel-item" data-emphasis={item.emphasis ?? 'secondary'}>
-              <figure>
-                <img src={item.src} alt={item.alt} loading="lazy" />
-                {item.caption && <figcaption>{item.caption}</figcaption>}
-              </figure>
-            </li>
-          ))}
-        </ul>
-      </div>
+      <CarouselIsland id={\`\${id}-carousel\`} items={carousel} />
     )}
   </div>
 </section>
@@ -260,55 +252,6 @@ const {
     background: rgba(255, 255, 255, 0.24);
   }
 
-  .hero__carousel {
-    grid-column: 1 / -1;
-    overflow: hidden;
-    border-radius: var(--radius-lg);
-    border: 1px solid rgba(11, 12, 17, 0.08);
-    background: rgba(255, 255, 255, 0.8);
-    padding: var(--space-md);
-  }
-
-  .hero__carousel-track {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-    gap: var(--space-md);
-    margin: 0;
-    padding: 0;
-    list-style: none;
-  }
-
-  .hero__carousel-item {
-    border-radius: var(--radius-md);
-    overflow: hidden;
-    background: rgba(11, 12, 17, 0.04);
-    display: grid;
-  }
-
-  .hero__carousel-item[data-emphasis='primary'] {
-    border: 2px solid rgba(11, 12, 17, 0.16);
-  }
-
-  .hero__carousel-item figure {
-    margin: 0;
-    display: grid;
-    grid-template-rows: auto auto;
-    height: 100%;
-  }
-
-  .hero__carousel-item img {
-    width: 100%;
-    height: 220px;
-    object-fit: cover;
-  }
-
-  .hero__carousel-item figcaption {
-    margin: 0;
-    padding: var(--space-sm);
-    font-size: 13px;
-    color: var(--color-label-secondary);
-  }
-
   @media (prefers-reduced-motion: reduce) {
     .hero,
     .hero__cta {
@@ -330,32 +273,6 @@ const {
     .hero {
       padding: clamp(var(--space-lg), 8vh, var(--space-xl))
         clamp(var(--space-md), 6vw, var(--space-lg));
-    }
-
-    .hero__carousel-track {
-      display: flex;
-      overflow-x: auto;
-      scroll-snap-type: x mandatory;
-      gap: var(--space-md);
-      padding-bottom: var(--space-sm);
-    }
-
-    .hero__carousel-track::-webkit-scrollbar {
-      height: 6px;
-    }
-
-    .hero__carousel-track::-webkit-scrollbar-thumb {
-      background: rgba(11, 12, 17, 0.18);
-      border-radius: 999px;
-    }
-
-    .hero__carousel-item {
-      min-width: 240px;
-      scroll-snap-align: start;
-    }
-
-    .hero__carousel-item img {
-      height: 200px;
     }
   }
 </style>

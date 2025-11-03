@@ -61,6 +61,20 @@ export default defineConfig({
                 value && value.length <= 220 ? undefined : 'Keep summary under 220 characters'
             }
           },
+          {
+            name: 'storyLayout',
+            label: 'Layout Variant',
+            type: 'string',
+            options: [
+              { label: 'Case Study', value: 'case-study' },
+              { label: 'Metrics Spotlight', value: 'metrics' }
+            ],
+            required: false,
+            ui: {
+              component: 'select',
+              description: 'Controls the layout variant rendered on the work section.'
+            }
+          },
           { name: 'featured', label: 'Featured', type: 'boolean', required: false },
           { name: 'role', label: 'Role', type: 'string', required: true },
           {
@@ -182,7 +196,60 @@ export default defineConfig({
             list: true,
             fields: [
               { name: 'title', label: 'Title', type: 'string', required: true },
-              { name: 'body', label: 'Body', type: 'string', ui: { component: 'textarea' }, required: true }
+              {
+                name: 'body',
+                label: 'Body',
+                type: 'rich-text',
+                isBody: true,
+                templates: [
+                  {
+                    name: 'Callout',
+                    label: 'Callout',
+                    fields: [
+                      { name: 'title', label: 'Title', type: 'string' },
+                      {
+                        name: 'tone',
+                        label: 'Tone',
+                        type: 'string',
+                        options: [
+                          { label: 'Neutral', value: 'neutral' },
+                          { label: 'Highlight', value: 'highlight' },
+                          { label: 'Warning', value: 'warning' }
+                        ]
+                      },
+                      { name: 'icon', label: 'Icon Emoji', type: 'string' }
+                    ]
+                  },
+                  {
+                    name: 'OutcomeMetric',
+                    label: 'Outcome Metric',
+                    fields: [
+                      { name: 'label', label: 'Label', type: 'string', required: true },
+                      { name: 'value', label: 'Value', type: 'string', required: true },
+                      { name: 'description', label: 'Description', type: 'string' },
+                      {
+                        name: 'emphasis',
+                        label: 'Emphasis',
+                        type: 'string',
+                        options: [
+                          { label: 'Primary', value: 'primary' },
+                          { label: 'Accent', value: 'accent' }
+                        ]
+                      },
+                      {
+                        name: 'align',
+                        label: 'Alignment',
+                        type: 'string',
+                        options: [
+                          { label: 'Left', value: 'left' },
+                          { label: 'Center', value: 'center' },
+                          { label: 'Right', value: 'right' }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
             ]
           },
           {
@@ -242,7 +309,7 @@ export default defineConfig({
       {
         name: 'site',
         label: 'Site Settings',
-        path: 'src/content/settings',
+        path: 'src/content/site',
         format: 'mdx',
         ui: {
           global: true

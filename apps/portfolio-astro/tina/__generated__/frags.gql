@@ -3,6 +3,7 @@ fragment ProjectParts on Project {
   title
   slug
   summary
+  storyLayout
   featured
   role
   team
@@ -71,6 +72,7 @@ fragment SiteParts on Site {
       title
       slug
       summary
+      storyLayout
       featured
       role
       team

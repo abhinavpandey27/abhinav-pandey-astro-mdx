@@ -20,7 +20,7 @@ All collections extend the shared motion-aware schemas defined in `src/content/s
 ## Frontmatter Conventions
 
 1. **Motion directives come last** in each document (`motion` object) so they're easy to diff.
-2. **Images live inside `src/content/media/`** while you iterate. Replace `../media/placeholder.png` with exported JPG/PNG files. Keep filenames kebab-cased.
+2. **Images live inside `src/content/media/`** while you iterate. Replace the placeholder asset (`../media/placeholder.jpeg`) with exported JPG/PNG files. Keep filenames kebab-cased.
 3. **Alt text is required everywhere.** Write narrative alt text that makes sense without visuals.
 4. **Slugs** must stay lowercase + kebab-case. Tina will block invalid values but double-check before committing.
 5. **Project galleries** need at least one asset; aim for two or more to showcase motion states.
@@ -72,3 +72,15 @@ Before you mark task **1.3 Authoring handbook and starter content** complete:
 - [ ] Document any manual testing (designer review notes) in the PR description.
 
 Happy storytelling—motion-first and accessible by default!
+
+### MDX Shortcodes
+
+The project MDX supports `<Callout>` and `<OutcomeMetric>` components without manual imports. Use Tina’s MDX editor to insert them with the provided templates. Example:
+
+```mdx
+<Callout title="Motion principle" tone="highlight">
+Remember to respect reduced-motion preferences when sequencing transitions.
+</Callout>
+
+<OutcomeMetric label="Completion Rate" value="92%" description="Reviewers reached the final section." emphasis="accent" align="center" />
+```

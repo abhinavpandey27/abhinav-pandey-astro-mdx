@@ -1,0 +1,279 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import CarouselIsland from './CarouselIsland.astro';
+import type { HeroCarouselItem } from './HeroSection.astro';
+import { Callout, OutcomeMetric } from './mdx';
+
+interface Props {
+  about: CollectionEntry<'about'>;
+  id?: string;
+}
+
+const { about, id } = Astro.props as Props;
+const data = about.data;
+const { Content } = await about.render();
+
+const gallery: HeroCarouselItem[] = data.gallery.map((item) => ({
+  src: item.asset.src,
+  alt: item.alt,
+  caption: item.caption,
+  emphasis: item.emphasis ?? 'primary',
+  motionDelay: data.motion?.galleryStagger
+}));
+
+const sectionBackground = data.motion?.sectionBackground ?? 'light';
+const sectionClass = ['about-section', `about-section--${sectionBackground}`].join(' ');
+const mdxComponents = { Callout, OutcomeMetric };
+---
+
+<section class={sectionClass} id={id ?? 'about'}>
+  <div class="about-section__inner">
+    <header class="about-section__header">
+      <div class="about-section__copy">
+        {data.subtitle && <span class="about-section__subtitle">{data.subtitle}</span>}
+        <h2 class="about-section__title">{data.title}</h2>
+        <div class="about-section__meta">
+          <span>{data.location}</span>
+        </div>
+        <p class="about-section__lead">{data.lead}</p>
+      </div>
+
+      <figure class="about-section__portrait">
+        <img src={data.portrait.asset.src} alt={data.portrait.alt} loading="lazy" />
+        {data.portrait.caption && <figcaption>{data.portrait.caption}</figcaption>}
+      </figure>
+    </header>
+
+    <div class="about-section__body">
+      <Content components={mdxComponents} />
+    </div>
+
+    {data.skills.length > 0 && (
+      <div class="about-section__skills">
+        {data.skills.map((group) => (
+          <article class="about-section__skill-group">
+            <h3>{group.category}</h3>
+            <ul>
+              {group.items.map((item) => (
+                <li>{item}</li>
+              ))}
+            </ul>
+          </article>
+        ))}
+      </div>
+    )}
+
+    {gallery.length > 0 && (
+      <div class="about-section__gallery">
+        <CarouselIsland id="about-gallery" items={gallery} autoplayInterval={7000} />
+      </div>
+    )}
+
+    {data.contactHighlights.length > 0 && (
+      <aside class="about-section__highlights" aria-label="Contact highlights">
+        <h3>How I partner</h3>
+        <ul>
+          {data.contactHighlights.map((highlight) => (
+            <li>{highlight}</li>
+          ))}
+        </ul>
+      </aside>
+    )}
+  </div>
+</section>
+
+<style>
+  .about-section {
+    padding: clamp(var(--space-xl), 12vh, 220px) clamp(var(--space-lg), 6vw, 120px);
+  }
+
+  .about-section--light {
+    background: #f8f8fb;
+    color: var(--color-label-primary);
+  }
+
+  .about-section--dark {
+    background: #0b0c11;
+    color: var(--color-label-primary-dark);
+  }
+
+  .about-section--accent {
+    background: radial-gradient(120% 120% at 20% 10%, rgba(36, 38, 62, 0.94), #0b0c11);
+    color: var(--color-label-primary-dark);
+  }
+
+  .about-section__inner {
+    display: grid;
+    gap: clamp(var(--space-xl), 4vw, var(--space-2xl));
+    max-width: 1140px;
+    margin: 0 auto;
+  }
+
+  .about-section__header {
+    display: grid;
+    gap: var(--space-xl);
+    grid-template-columns: minmax(0, 1fr) minmax(280px, 360px);
+    align-items: start;
+  }
+
+  .about-section__subtitle {
+    font-family: var(--font-family-ui);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-size: 12px;
+    color: var(--color-label-secondary);
+  }
+
+  .about-section--dark .about-section__subtitle,
+  .about-section--accent .about-section__subtitle {
+    color: rgba(255, 255, 255, 0.6);
+  }
+
+  .about-section__title {
+    margin: 0;
+    font-family: var(--font-family-heading);
+    font-size: clamp(36px, 5vw, 56px);
+    line-height: 1.05;
+  }
+
+  .about-section__meta {
+    font-family: var(--font-family-ui);
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    font-size: 12px;
+    color: var(--color-label-secondary);
+  }
+
+  .about-section--dark .about-section__meta,
+  .about-section--accent .about-section__meta {
+    color: rgba(255, 255, 255, 0.6);
+  }
+
+  .about-section__lead {
+    margin: var(--space-sm) 0 0;
+    font-size: clamp(18px, 2.4vw, 22px);
+    line-height: 1.5;
+    color: inherit;
+  }
+
+  .about-section__portrait {
+    margin: 0;
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    box-shadow: var(--shadow-elevated);
+    background: rgba(255, 255, 255, 0.05);
+    display: grid;
+  }
+
+  .about-section__portrait img {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  .about-section__portrait figcaption {
+    padding: var(--space-sm) var(--space-md);
+    font-size: 13px;
+    color: var(--color-label-secondary);
+  }
+
+  .about-section--dark .about-section__portrait figcaption,
+  .about-section--accent .about-section__portrait figcaption {
+    color: rgba(255, 255, 255, 0.7);
+  }
+
+  .about-section__body {
+    font-size: var(--font-size-body-md);
+    line-height: var(--line-height-body-md);
+    display: grid;
+    gap: var(--space-lg);
+  }
+
+  .about-section__body :global(p) {
+    margin: 0;
+  }
+
+  .about-section__skills {
+    display: grid;
+    gap: var(--space-lg);
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  }
+
+  .about-section__skill-group {
+    padding: var(--space-lg);
+    border-radius: var(--radius-lg);
+    border: 1px solid rgba(11, 12, 17, 0.12);
+    background: rgba(255, 255, 255, 0.9);
+    color: var(--color-label-primary);
+    box-shadow: var(--shadow-soft);
+  }
+
+  .about-section--dark .about-section__skill-group,
+  .about-section--accent .about-section__skill-group {
+    border-color: rgba(255, 255, 255, 0.15);
+    background: rgba(18, 19, 30, 0.9);
+    color: rgba(255, 255, 255, 0.95);
+  }
+
+  .about-section__skill-group h3 {
+    margin: 0 0 var(--space-sm);
+    font-size: clamp(20px, 3vw, 24px);
+  }
+
+  .about-section__skill-group ul {
+    margin: 0;
+    padding-left: 1.2em;
+    display: grid;
+    gap: var(--space-xs);
+  }
+
+  .about-section__gallery {
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+  }
+
+  .about-section__highlights {
+    border-radius: var(--radius-lg);
+    border: 1px solid rgba(11, 12, 17, 0.12);
+    padding: var(--space-lg);
+    background: rgba(255, 255, 255, 0.92);
+    color: var(--color-label-primary);
+  }
+
+  .about-section__highlights h3 {
+    margin: 0 0 var(--space-sm);
+    font-size: clamp(20px, 3vw, 24px);
+  }
+
+  .about-section__highlights ul {
+    margin: 0;
+    padding-left: 1.2em;
+    display: grid;
+    gap: var(--space-xs);
+  }
+
+  .about-section--dark .about-section__highlights,
+  .about-section--accent .about-section__highlights {
+    border-color: rgba(255, 255, 255, 0.15);
+    background: rgba(18, 19, 30, 0.92);
+    color: rgba(255, 255, 255, 0.95);
+  }
+
+  @media (max-width: 900px) {
+    .about-section__header {
+      grid-template-columns: 1fr;
+      gap: var(--space-lg);
+    }
+  }
+
+  @media (max-width: 720px) {
+    .about-section {
+      padding: clamp(var(--space-lg), 10vh, 160px)
+        clamp(var(--space-md), 6vw, var(--space-xl));
+    }
+
+    .about-section__skills {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

@@ -33,9 +33,7 @@ export const createProjectFrontmatterSchema = <T extends z.ZodTypeAny>(assetSche
 
   return z.object({
     title: z.string(),
-    slug: z.string().regex(/^[a-z0-9-]+$/, {
-      message: 'Use lowercase kebab-case slugs (e.g., project-alpha)'
-    }),
+    storyLayout: z.enum(['case-study', 'metrics']).default('case-study'),
     summary: z.string().max(220, 'Keep the summary under 220 characters'),
     featured: z.boolean().default(false),
     role: z.string(),

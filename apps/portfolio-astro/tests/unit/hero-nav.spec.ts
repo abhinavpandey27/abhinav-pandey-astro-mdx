@@ -28,7 +28,7 @@ describe('HeroSection', () => {
     const heroPath = resolve(componentsDir, 'HeroSection.astro');
     const source = await readFile(heroPath, 'utf-8');
     expect(source).toMatchSnapshot();
-    expect(source).toContain('aria-label="Featured project imagery"');
+    expect(source).toContain('<CarouselIsland');
   });
 
   it('passes axe accessibility checks for default markup', async () => {

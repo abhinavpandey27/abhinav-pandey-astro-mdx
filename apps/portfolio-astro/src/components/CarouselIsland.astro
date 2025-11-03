@@ -1,0 +1,306 @@
+---
+import type { HeroCarouselItem } from './HeroSection.astro';
+
+interface Props {
+  id?: string;
+  items: HeroCarouselItem[];
+  autoplayInterval?: number;
+}
+
+const {
+  id = 'carousel',
+  items = [],
+  autoplayInterval = 5000
+} = Astro.props as Props;
+
+const carouselId = `${id}-${Math.random().toString(36).slice(2, 7)}`;
+const hasMultipleSlides = items.length > 1;
+---
+
+<section
+  class="carousel"
+  aria-roledescription="carousel"
+  aria-label="Featured project imagery"
+  data-carousel
+  data-interval={autoplayInterval}
+  id={carouselId}
+>
+  <div class="carousel__viewport" data-carousel-track role="list">
+    {items.map((item, index) => {
+      const delay = typeof item.motionDelay === 'number' ? item.motionDelay : index * 0.12;
+      return (
+      <article
+        class="carousel__slide"
+        data-active={index === 0}
+        role="listitem"
+        tabindex="0"
+        style={`--carousel-delay:${delay}s`}
+        data-index={index}
+      >
+        <figure>
+          <img src={item.src} alt={item.alt} loading="lazy" />
+          {item.caption && <figcaption>{item.caption}</figcaption>}
+        </figure>
+      </article>
+    );
+    })}
+  </div>
+
+  {hasMultipleSlides && (
+    <div class="carousel__progress" aria-hidden="true">
+      {items.map((_item, index) => (
+        <button
+          type="button"
+          class="carousel__progress-dot"
+          data-index={index}
+          aria-label={`Go to slide ${index + 1}`}
+        ></button>
+      ))}
+    </div>
+  )}
+</section>
+
+{hasMultipleSlides && (
+  <script is:inline>
+    const root = document.currentScript?.previousElementSibling;
+    if (!root) {
+      throw new Error('Carousel root not found');
+    }
+
+    root.tabIndex = 0;
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const track = root.querySelector('[data-carousel-track]');
+    if (!track) {
+      return;
+    }
+
+    const slides = Array.from(track.children);
+    const dots = Array.from(root.querySelectorAll('.carousel__progress-dot'));
+    const interval = Number(root.dataset.interval) || 5000;
+    let index = 0;
+    let timer;
+
+    const activate = (nextIndex, focus = false) => {
+      index = nextIndex;
+      slides.forEach((slide, slideIndex) => {
+        slide.dataset.active = String(slideIndex === index);
+      });
+      dots.forEach((dot, dotIndex) => {
+        dot.classList.toggle('is-active', dotIndex === index);
+      });
+
+      const target = slides[index];
+      if (target) {
+        (target).scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+        if (focus) {
+          target.focus({ preventScroll: true });
+        }
+      }
+    };
+
+    const start = () => {
+      if (prefersReducedMotion.matches || slides.length < 2) {
+        return;
+      }
+      stop();
+      timer = window.setInterval(() => {
+        const next = (index + 1) % slides.length;
+        activate(next);
+      }, interval);
+    };
+
+    const stop = () => {
+      if (timer) {
+        window.clearInterval(timer);
+        timer = undefined;
+      }
+    };
+
+    root.addEventListener('mouseenter', stop);
+    root.addEventListener('mouseleave', start);
+    root.addEventListener('focusin', stop);
+    root.addEventListener('focusout', start);
+    root.addEventListener('keydown', (event) => {
+      if (event.key === 'ArrowRight') {
+        event.preventDefault();
+        const next = (index + 1) % slides.length;
+        activate(next, true);
+      } else if (event.key === 'ArrowLeft') {
+        event.preventDefault();
+        const next = (index - 1 + slides.length) % slides.length;
+        activate(next, true);
+      }
+    });
+    root.addEventListener('click', (event) => {
+      const target = event.target;
+      if (!(target instanceof HTMLElement)) return;
+      if (target.closest('.carousel__progress-dot')) {
+        const dot = target.closest('.carousel__progress-dot');
+        if (!dot) return;
+        const indexAttr = dot.getAttribute('data-index');
+        if (indexAttr) {
+          activate(Number(indexAttr), true);
+        }
+      }
+    });
+
+    prefersReducedMotion.addEventListener('change', (event) => {
+      if (event.matches) {
+        root.classList.add('is-reduced');
+        stop();
+      } else {
+        root.classList.remove('is-reduced');
+        start();
+      }
+    });
+
+    if (prefersReducedMotion.matches) {
+      root.classList.add('is-reduced');
+    } else {
+      root.classList.remove('is-reduced');
+      start();
+    }
+
+    activate(0);
+  </script>
+)}
+
+<style>
+  .carousel {
+    position: relative;
+    border-radius: var(--radius-lg);
+    border: 1px solid rgba(11, 12, 17, 0.08);
+    background: rgba(255, 255, 255, 0.8);
+    padding: var(--space-md);
+    overflow: hidden;
+  }
+
+  .carousel__viewport {
+    display: flex;
+    gap: var(--space-md);
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+  }
+
+  .carousel__viewport::-webkit-scrollbar {
+    display: none;
+  }
+
+  .carousel__slide {
+    flex: 0 0 min(280px, 80vw);
+    scroll-snap-align: center;
+    position: relative;
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    background: rgba(11, 12, 17, 0.04);
+    box-shadow: var(--shadow-soft);
+    transition: transform 0.4s ease, box-shadow 0.4s ease;
+    opacity: 0;
+    transform: translateY(12px);
+    animation: carouselEnter 0.6s ease forwards;
+    animation-delay: var(--carousel-delay, 0.12s);
+  }
+
+  .carousel__slide[data-active='true'] {
+    transform: translateY(-4px);
+    box-shadow: 0 18px 40px rgba(11, 12, 17, 0.14);
+  }
+
+  .carousel__slide figure {
+    margin: 0;
+    display: grid;
+    grid-template-rows: auto auto;
+  }
+
+  .carousel__slide img {
+    width: 100%;
+    height: 220px;
+    object-fit: cover;
+  }
+
+  .carousel__slide figcaption {
+    padding: var(--space-sm);
+    font-size: 13px;
+    color: var(--color-label-secondary);
+  }
+
+  .carousel__progress {
+    position: absolute;
+    bottom: var(--space-sm);
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: var(--space-xs);
+  }
+
+  .carousel__progress-dot {
+    width: 8px;
+    height: 8px;
+    padding: 0;
+    border-radius: 50%;
+    background: rgba(11, 12, 17, 0.2);
+    border: none;
+    transition: background 0.2s ease, transform 0.2s ease;
+    cursor: pointer;
+  }
+
+  .carousel__progress-dot.is-active {
+    background: rgba(11, 12, 17, 0.6);
+    transform: scale(1.2);
+  }
+
+  .carousel.is-reduced {
+    padding: 0;
+    border: none;
+    background: transparent;
+  }
+
+  .carousel.is-reduced .carousel__viewport {
+    display: grid;
+    gap: var(--space-md);
+    overflow: visible;
+    scroll-snap-type: none;
+  }
+
+  .carousel.is-reduced .carousel__slide {
+    transform: none;
+    box-shadow: none;
+    flex: 1 1 auto;
+    opacity: 1;
+    animation: none;
+  }
+
+  .carousel.is-reduced .carousel__progress {
+    display: none;
+  }
+
+  @media (max-width: 720px) {
+    .carousel {
+      padding: var(--space-sm);
+    }
+
+    .carousel__slide img {
+      height: 200px;
+    }
+  }
+
+  @keyframes carouselEnter {
+    from {
+      opacity: 0;
+      transform: translateY(18px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .carousel__slide {
+      animation: none;
+      opacity: 1;
+      transform: none;
+    }
+  }
+</style>

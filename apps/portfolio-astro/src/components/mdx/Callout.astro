@@ -1,0 +1,83 @@
+---
+type Tone = 'neutral' | 'highlight' | 'warning';
+
+interface Props {
+  title?: string;
+  tone?: Tone;
+  icon?: string;
+}
+
+const { title, tone = 'neutral', icon } = Astro.props as Props;
+const toneClass = `callout--${tone}`;
+---
+
+<aside class={`callout ${toneClass}`} role="note">
+  {(title || icon) && (
+    <header class="callout__header">
+      {icon && <span class="callout__icon" aria-hidden="true">{icon}</span>}
+      {title && <span class="callout__title">{title}</span>}
+    </header>
+  )}
+  <div class="callout__body">
+    <slot />
+  </div>
+</aside>
+
+<style>
+  .callout {
+    border-radius: var(--radius-lg);
+    padding: var(--space-lg);
+    border: 1px solid rgba(11, 12, 17, 0.12);
+    background: rgba(255, 255, 255, 0.92);
+    color: var(--color-label-primary);
+    display: grid;
+    gap: var(--space-sm);
+    box-shadow: var(--shadow-soft);
+  }
+
+  .callout--highlight {
+    border-color: rgba(87, 99, 255, 0.28);
+    background: linear-gradient(135deg, rgba(87, 99, 255, 0.12), rgba(255, 255, 255, 0.95));
+  }
+
+  .callout--warning {
+    border-color: rgba(255, 181, 66, 0.3);
+    background: linear-gradient(135deg, rgba(255, 226, 190, 0.4), rgba(255, 255, 255, 0.95));
+  }
+
+  .callout__header {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-xs);
+    font-family: var(--font-family-ui);
+    font-size: 12px;
+    letter-spacing: 1.8px;
+    text-transform: uppercase;
+    color: var(--color-label-secondary);
+  }
+
+  .callout__icon {
+    font-size: 16px;
+  }
+
+  .callout--highlight .callout__header {
+    color: rgba(61, 69, 214, 0.9);
+  }
+
+  .callout--warning .callout__header {
+    color: rgba(181, 108, 27, 0.9);
+  }
+
+  .callout__body :global(p) {
+    margin: 0;
+    font-size: var(--font-size-body-md);
+    line-height: var(--line-height-body-md);
+    color: inherit;
+  }
+
+  @media (max-width: 720px) {
+    .callout {
+      padding: var(--space-md);
+    }
+  }
+</style>

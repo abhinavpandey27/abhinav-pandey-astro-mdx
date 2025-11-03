@@ -122,7 +122,7 @@ type ProjectOutcomes {
 
 type ProjectHighlights {
   title: String!
-  body: String!
+  body: JSON
 }
 
 type ProjectCta {
@@ -145,6 +145,7 @@ type Project implements Node & Document {
   title: String!
   slug: String!
   summary: String!
+  storyLayout: String
   featured: Boolean
   role: String!
   team: [String]
@@ -217,9 +218,28 @@ input ProjectOutcomesFilter {
   description: StringFilter
 }
 
+input ProjectHighlightsBodyCalloutFilter {
+  title: StringFilter
+  tone: StringFilter
+  icon: StringFilter
+}
+
+input ProjectHighlightsBodyOutcomeMetricFilter {
+  label: StringFilter
+  value: StringFilter
+  description: StringFilter
+  emphasis: StringFilter
+  align: StringFilter
+}
+
+input ProjectHighlightsBodyFilter {
+  Callout: ProjectHighlightsBodyCalloutFilter
+  OutcomeMetric: ProjectHighlightsBodyOutcomeMetricFilter
+}
+
 input ProjectHighlightsFilter {
   title: StringFilter
-  body: StringFilter
+  body: ProjectHighlightsBodyFilter
 }
 
 input ProjectCtaFilter {
@@ -242,6 +262,7 @@ input ProjectFilter {
   title: StringFilter
   slug: StringFilter
   summary: StringFilter
+  storyLayout: StringFilter
   featured: BooleanFilter
   role: StringFilter
   team: StringFilter
@@ -540,7 +561,7 @@ input ProjectOutcomesMutation {
 
 input ProjectHighlightsMutation {
   title: String
-  body: String
+  body: JSON
 }
 
 input ProjectCtaMutation {
@@ -563,6 +584,7 @@ input ProjectMutation {
   title: String
   slug: String
   summary: String
+  storyLayout: String
   featured: Boolean
   role: String
   team: [String]

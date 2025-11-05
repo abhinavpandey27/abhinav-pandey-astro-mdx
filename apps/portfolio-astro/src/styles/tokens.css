@@ -73,6 +73,12 @@
 
   --shadow-elevated: 0 20px 40px rgba(11, 12, 17, 0.12);
   --shadow-soft: 0 8px 20px rgba(11, 12, 17, 0.08);
+
+  /* Grid System */
+  --grid-columns: 12;
+  --grid-gap: 16px;
+  --grid-padding: 24px;
+  --grid-max-width: 1872px;
 }
 
 @media (max-width: 720px) {

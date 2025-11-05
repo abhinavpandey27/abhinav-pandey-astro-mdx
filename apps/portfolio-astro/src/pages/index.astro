@@ -159,24 +159,29 @@ if (siteEntry && site.featuredProject) {
   <body>
     <a class="sr-only" href="#main">Skip to content</a>
 
-    <NavHeader
-      name={ownerName}
-      location={location}
-      navLinks={navLinks}
-      socialLinks={socialLinks}
-      menuLabel="Menu"
-    />
-
     <main id="main">
-      <HeroSection
-        id="top"
-        heroTagline={heroTagline}
-        intro={introCopy}
-        bioSnippet={bioSnippet}
-        prefersReducedMotionCopy={prefersReducedMotionCopy}
-        featured={featuredProject}
-        carousel={heroCarousel}
-      />
+      <div class="hero-wrapper">
+        <div class="hero-grid">
+          <div class="hero-grid__nav">
+            <NavHeader
+              name={ownerName}
+              location={location}
+              navLinks={navLinks}
+              socialLinks={socialLinks}
+              menuLabel="Menu"
+            />
+          </div>
+          <HeroSection
+            id="top"
+            heroTagline={heroTagline}
+            intro={introCopy}
+            bioSnippet={bioSnippet}
+            prefersReducedMotionCopy={prefersReducedMotionCopy}
+            featured={featuredProject}
+            carousel={heroCarousel}
+          />
+        </div>
+      </div>
 
       {projects.length > 0 && (
         <section id="work" class="work-section">
@@ -199,6 +204,28 @@ if (siteEntry && site.featuredProject) {
 </html>
 
 <style>
+  .hero-wrapper {
+    padding: var(--space-sm) 0;
+  }
+
+  .hero-grid {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    grid-template-rows: repeat(16, minmax(0, 1fr));
+    gap: var(--grid-gap);
+    height: 1097px;
+    border: 1px solid var(--color-label-quaternary);
+    border-top: none;
+    border-bottom: none;
+    padding: var(--grid-padding);
+  }
+
+  .hero-grid__nav {
+    grid-column: 1 / span 12;
+    grid-row: 1 / span 2;
+    align-self: start;
+  }
+
   .work-section {
     display: grid;
     gap: 0;

@@ -29,46 +29,67 @@ const {
 
 <header class="nav-header" data-testid="nav-header">
   <div class="nav-header__inner">
-    <a class="nav-header__brand" href="#top">
-      <span class="nav-header__name">{name}</span>
-      <span class="nav-header__location">{location}</span>
-    </a>
+    <div class="nav-header__left">
+      <a class="nav-header__brand" href="#top">
+        <span class="nav-header__name">{name}</span>
+        <span class="nav-header__location">{location}</span>
+      </a>
 
-    <nav aria-label="Primary" class="nav-header__primary">
-      <ul class="nav-header__links" role="list">
-        {navLinks.map((link) => (
-          <li>
-            <a href={link.href} class="nav-header__link">
-              <span aria-hidden="true">☩</span>
-              <span>{link.label}</span>
-            </a>
-          </li>
-        ))}
-      </ul>
-    </nav>
+      <nav aria-label="Primary" class="nav-header__primary">
+        <ul class="nav-header__links" role="list">
+          {navLinks.map((link) => (
+            <li>
+              <a href={link.href} class="nav-header__link">
+                <span aria-hidden="true">☩</span>
+                <span>{link.label}</span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </nav>
+    </div>
 
-    <nav aria-label="Social" class="nav-header__social">
-      <ul class="nav-header__social-links" role="list">
-        {socialLinks.map((link) => (
-          <li>
-            <a
-              class="nav-header__social-link"
-              href={link.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label={link.ariaLabel ?? link.label}
-            >
-              {link.label}
-            </a>
-          </li>
-        ))}
-      </ul>
-    </nav>
+    <div class="nav-header__right">
+      <nav aria-label="Social" class="nav-header__social">
+        <ul class="nav-header__social-links" role="list">
+          {socialLinks.slice(0, 2).map((link) => (
+            <li>
+              <a
+                class="nav-header__social-link"
+                href={link.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={link.ariaLabel ?? link.label}
+              >
+                {link.label} ↗
+              </a>
+            </li>
+          ))}
+        </ul>
+        {socialLinks.length > 2 && (
+          <ul class="nav-header__social-links" role="list">
+            {socialLinks.slice(2, 4).map((link) => (
+              <li>
+                <a
+                  class="nav-header__social-link"
+                  href={link.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={link.ariaLabel ?? link.label}
+                >
+                  {link.label} {link.label.toLowerCase().includes('resume') ? '↓' : '↗'}
+                </a>
+              </li>
+            ))}
+          </ul>
+        )}
+      </nav>
 
-    <button type="button" class="nav-header__menu" aria-label={menuLabel}>
-      <span class="nav-header__menu-icon" aria-hidden="true"></span>
-      <span class="nav-header__menu-label">{menuLabel}</span>
-    </button>
+      <button type="button" class="nav-header__menu" aria-label={menuLabel}>
+        <span class="nav-header__menu-label">{menuLabel}</span>
+        <span class="nav-header__menu-icon" aria-hidden="true"></span>
+      </button>
+    </div>
   </div>
 </header>
 
@@ -83,61 +104,80 @@ const {
   }
 
   .nav-header__inner {
-    display: grid;
-    grid-template-columns: 1fr auto auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-2xl);
+    padding: 0;
+  }
+
+  .nav-header__left {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2xl);
+  }
+
+  .nav-header__right {
+    display: flex;
     align-items: center;
     gap: var(--space-lg);
-    padding: var(--space-sm) clamp(var(--space-lg), 5vw, var(--space-2xl));
-    max-width: 1200px;
-    margin: 0 auto;
   }
 
   .nav-header__brand {
     display: flex;
     flex-direction: column;
     gap: 2px;
-    font-family: var(--font-family-heading);
-    font-size: clamp(18px, 2.2vw, 22px);
-    line-height: 1.1;
-    letter-spacing: var(--letter-spacing-body-lg);
+    font-family: var(--font-family-body);
+    font-size: var(--font-size-body-md);
+    line-height: var(--line-height-body-md);
+    letter-spacing: var(--letter-spacing-body-md);
     color: var(--color-label-primary);
   }
 
   .nav-header__name {
-    font-weight: 600;
+    font-weight: var(--font-weight-body-md);
   }
 
   .nav-header__location {
-    font-family: var(--font-family-ui);
-    font-size: 12px;
-    letter-spacing: 0.8px;
-    text-transform: uppercase;
+    font-family: var(--font-family-body);
+    font-size: var(--font-size-body-md);
+    line-height: var(--line-height-body-md);
+    letter-spacing: var(--letter-spacing-body-md);
     color: var(--color-label-secondary);
   }
 
-  .nav-header__primary,
+  .nav-header__primary {
+    display: flex;
+  }
+
   .nav-header__social {
     display: flex;
+    gap: var(--space-lg);
   }
 
   .nav-header__links,
   .nav-header__social-links {
     display: flex;
-    align-items: center;
-    gap: var(--space-md);
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0;
     margin: 0;
     padding: 0;
     list-style: none;
+  }
+
+  .nav-header__social-links {
+    align-items: flex-end;
   }
 
   .nav-header__link {
     display: inline-flex;
     align-items: center;
     gap: var(--space-xs);
-    font-family: var(--font-family-ui);
-    font-size: 13px;
-    letter-spacing: 2px;
-    text-transform: uppercase;
+    font-family: var(--font-family-body);
+    font-size: var(--font-size-body-md);
+    line-height: var(--line-height-body-md);
+    letter-spacing: var(--letter-spacing-body-md);
     color: var(--color-label-secondary);
     transition: color 0.2s ease;
   }
@@ -148,50 +188,47 @@ const {
   }
 
   .nav-header__social-link {
-    font-family: var(--font-family-ui);
-    font-size: 12px;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    padding: 6px 10px;
-    border-radius: var(--radius-sm);
-    border: 1px solid rgba(11, 12, 17, 0.18);
-    background: rgba(255, 255, 255, 0.6);
-    transition: border-color 0.2s ease, background 0.2s ease;
+    font-family: var(--font-family-body);
+    font-size: var(--font-size-body-md);
+    line-height: var(--line-height-body-md);
+    letter-spacing: var(--letter-spacing-body-md);
+    color: var(--color-label-secondary);
+    text-align: right;
+    transition: color 0.2s ease;
   }
 
   .nav-header__social-link:hover,
   .nav-header__social-link:focus-visible {
-    border-color: rgba(11, 12, 17, 0.4);
-    background: rgba(255, 255, 255, 0.95);
+    color: var(--color-label-primary);
   }
 
   .nav-header__menu {
     display: inline-flex;
     align-items: center;
     gap: var(--space-xs);
-    border: 1px solid rgba(11, 12, 17, 0.16);
-    border-radius: 999px;
-    padding: 6px 14px;
-    background: rgba(255, 255, 255, 0.6);
+    border: none;
+    border-radius: var(--radius-lg);
+    padding: var(--space-xs) var(--space-sm);
+    background: var(--color-label-primary);
     font-family: var(--font-family-ui);
-    font-size: 12px;
-    letter-spacing: 1px;
+    font-size: var(--font-size-label-lg);
+    line-height: var(--line-height-label-lg);
+    letter-spacing: var(--letter-spacing-label-lg);
     text-transform: uppercase;
-    color: var(--color-label-primary);
+    color: var(--color-surface-white);
     cursor: pointer;
-    transition: transform 0.2s ease, border-color 0.2s ease;
+    transition: transform 0.2s ease, opacity 0.2s ease;
   }
 
   .nav-header__menu:hover,
   .nav-header__menu:focus-visible {
-    transform: translateY(-1px);
-    border-color: rgba(11, 12, 17, 0.32);
+    opacity: 0.9;
   }
 
   .nav-header__menu-icon {
     position: relative;
-    width: 14px;
-    height: 14px;
+    width: 16px;
+    height: 16px;
   }
 
   .nav-header__menu-icon::before,
@@ -205,11 +242,11 @@ const {
   }
 
   .nav-header__menu-icon::before {
-    top: 4px;
+    top: 25%;
   }
 
   .nav-header__menu-icon::after {
-    bottom: 4px;
+    bottom: 25%;
   }
 
   @media (max-width: 960px) {

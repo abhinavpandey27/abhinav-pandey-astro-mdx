@@ -407,13 +407,12 @@ export default defineConfig({
             type: 'object',
             list: true,
             fields: [
-              {
-                name: 'asset',
-                label: 'Asset',
-                type: 'image',
-                required: true,
-                ui: mediaUiTransforms
-              },
+                  {
+                    name: 'asset',
+                    label: 'Asset',
+                    type: 'image',
+                    required: true
+                  },
               {
                 name: 'alt',
                 label: 'Alt Text',
@@ -516,8 +515,7 @@ export default defineConfig({
                 name: 'asset',
                 label: 'Asset',
                 type: 'image',
-                required: true,
-                ui: mediaUiTransforms
+                required: true
               },
               {
                 name: 'alt',
@@ -555,8 +553,7 @@ export default defineConfig({
                 name: 'asset',
                 label: 'Asset',
                 type: 'image',
-                required: true,
-                ui: mediaUiTransforms
+                required: true
               },
               {
                 name: 'alt',

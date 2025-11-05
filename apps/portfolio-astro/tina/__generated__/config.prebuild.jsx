@@ -1,40 +1,5 @@
 // tina/config.ts
 import { defineConfig } from "tinacms";
-var extractMediaPath = (value) => {
-  let normalized = value.trim();
-  if (!normalized) return "";
-  normalized = normalized.replace(/\\/g, "/");
-  normalized = normalized.replace(/[?#].*$/, "");
-  normalized = normalized.replace(/media\.\.\//g, "media/");
-  const match = normalized.match(/media\/.+$/);
-  if (match) {
-    normalized = match[0];
-  } else {
-    normalized = normalized.replace(/^(\.\.\/|\.\/)+/, "");
-    normalized = normalized.replace(/^\/+/, "");
-    if (!normalized.startsWith("media/")) {
-      normalized = normalized.startsWith("media") ? normalized.replace(/^media\.?/, "media") : `media/${normalized}`;
-    }
-  }
-  normalized = normalized.replace(/^media\/\//, "media/");
-  return normalized;
-};
-var ensureContentMediaPath = (value) => {
-  if (!value) return "";
-  const mediaPath = extractMediaPath(value);
-  if (!mediaPath) return "";
-  return mediaPath.startsWith("../media/") ? mediaPath : `../${mediaPath}`;
-};
-var ensureMediaUiValue = (value) => {
-  if (!value) return "";
-  const mediaPath = extractMediaPath(value);
-  if (!mediaPath) return "";
-  return mediaPath.startsWith("/media/") ? mediaPath : `/${mediaPath.replace(/^\/+/, "")}`;
-};
-var mediaUiTransforms = {
-  parse: (value) => ensureContentMediaPath(value),
-  format: (value) => ensureMediaUiValue(value)
-};
 var branch = process.env.TINA_BRANCH || process.env.GITHUB_HEAD_REF || process.env.GITHUB_REF_NAME || process.env.VERCEL_GIT_COMMIT_REF || process.env.VERCEL_BRANCH || process.env.HEAD || "main";
 var config_default = defineConfig({
   branch,
@@ -126,8 +91,7 @@ var config_default = defineConfig({
                     name: "asset",
                     label: "Asset",
                     type: "image",
-                    required: true,
-                    ui: mediaUiTransforms
+                    required: true
                   },
                   {
                     name: "alt",
@@ -164,8 +128,7 @@ var config_default = defineConfig({
                 name: "asset",
                 label: "Asset",
                 type: "image",
-                required: true,
-                ui: mediaUiTransforms
+                required: true
               },
               {
                 name: "alt",
@@ -423,8 +386,7 @@ var config_default = defineConfig({
                 name: "asset",
                 label: "Asset",
                 type: "image",
-                required: true,
-                ui: mediaUiTransforms
+                required: true
               },
               {
                 name: "alt",
@@ -526,8 +488,7 @@ var config_default = defineConfig({
                 name: "asset",
                 label: "Asset",
                 type: "image",
-                required: true,
-                ui: mediaUiTransforms
+                required: true
               },
               {
                 name: "alt",
@@ -561,8 +522,7 @@ var config_default = defineConfig({
                 name: "asset",
                 label: "Asset",
                 type: "image",
-                required: true,
-                ui: mediaUiTransforms
+                required: true
               },
               {
                 name: "alt",

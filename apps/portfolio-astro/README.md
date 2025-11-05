@@ -85,31 +85,6 @@ Remember to respect reduced-motion preferences when sequencing transitions.
 <OutcomeMetric label="Completion Rate" value="92%" description="Reviewers reached the final section." emphasis="accent" align="center" />
 ```
 
-## Media Workflow & Optimisation
-
-1. Upload or manage media directly in Tina CMS. Files are saved under `public/media/` and referenced in content using `/media/...` paths.
-2. Before committing new assets, run the optimiser:
-
-```bash
-npm run optimize-media
-```
-
-   - Converts PNG/JPEG files to WebP, targeting ≤2 MB output and ~80 % quality.  
-   - Automatically rewrites content references if filenames change (e.g., `.png` → `.webp`).  
-   - Skips previously optimised files unless you pass `--force`.
-
-3. Optionally scope optimisation to specific files:
-
-```bash
-npm run optimize-media -- public/media/hero.png another/folder/*.jpg
-```
-
-4. Commit both the optimised media files and any content files whose references were updated.
-
-Troubleshooting:
-- If Tina still shows `../media/...`, save again; the schema normalises to `/media/...`.
-- For large originals that remain >2 MB, consider exporting a smaller source before optimisation.
-
 ## Deployment (Vercel)
 
 - Import `abhinavpandey27/abhinav-pandey-astro-mdx` into Vercel and set the **Root Directory** to `apps/portfolio-astro` so only the Astro app builds.

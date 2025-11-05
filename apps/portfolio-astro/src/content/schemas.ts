@@ -1,21 +1,6 @@
 import { z } from 'zod';
 
-const mediaPathSchema = z
-  .string()
-  .max(256, 'Keep media paths manageable')
-  .superRefine((value, ctx) => {
-    if (/^\/media\//.test(value)) {
-      return;
-    }
-    if (/^\.\.\/media\//.test(value)) {
-      return;
-    }
-    ctx.addIssue({
-      code: z.ZodIssueCode.custom,
-      message: 'Media paths must start with /media/'
-    });
-  })
-  .transform((value) => value.replace(/^(\.\.\/)+media\//, '/media/'));
+const mediaPathSchema = z.string().min(1, 'Provide a media path');
 
 export const motionDirectivesSchema = z
   .object({

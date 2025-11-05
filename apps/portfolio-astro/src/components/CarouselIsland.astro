@@ -168,16 +168,13 @@ const hasMultipleSlides = items.length > 1;
 <style>
   .carousel {
     position: relative;
-    border-radius: var(--radius-lg);
-    border: 1px solid rgba(11, 12, 17, 0.08);
-    background: rgba(255, 255, 255, 0.8);
-    padding: var(--space-md);
+    border-radius: var(--radius-sm);
     overflow: hidden;
   }
 
   .carousel__viewport {
     display: flex;
-    gap: var(--space-md);
+    gap: var(--space-sm);
     overflow-x: auto;
     scroll-snap-type: x mandatory;
     scrollbar-width: none;
@@ -188,35 +185,24 @@ const hasMultipleSlides = items.length > 1;
   }
 
   .carousel__slide {
-    flex: 0 0 min(280px, 80vw);
+    flex: 0 0 auto;
     scroll-snap-align: center;
     position: relative;
-    border-radius: var(--radius-md);
+    border-radius: var(--radius-sm);
     overflow: hidden;
-    background: rgba(11, 12, 17, 0.04);
-    box-shadow: var(--shadow-soft);
-    transition: transform 0.4s ease, box-shadow 0.4s ease;
-    opacity: 0;
-    transform: translateY(12px);
-    animation: carouselEnter 0.6s ease forwards;
-    animation-delay: var(--carousel-delay, 0.12s);
-  }
-
-  .carousel__slide[data-active='true'] {
-    transform: translateY(-4px);
-    box-shadow: 0 18px 40px rgba(11, 12, 17, 0.14);
+    transition: transform 0.4s ease;
   }
 
   .carousel__slide figure {
     margin: 0;
-    display: grid;
-    grid-template-rows: auto auto;
+    display: block;
   }
 
   .carousel__slide img {
     width: 100%;
-    height: 220px;
+    height: 100%;
     object-fit: cover;
+    display: block;
   }
 
   .carousel__slide figcaption {

@@ -52,93 +52,101 @@ const metadata = [
 ---
 
 <section class={sectionClasses} id={id ?? project.slug} data-variant={layoutVariant}>
-  <div class="project-story__inner">
-    <header class="project-story__header">
-      <div class="project-story__eyebrow">
-        {data.hero?.kicker && <span class="project-story__kicker">{data.hero.kicker}</span>}
-        {categories.length > 0 && (
-          <ul class="project-story__categories" aria-label="Project categories" role="list">
-            {categories.map((category) => (
-              <li>{category}</li>
-            ))}
-          </ul>
-        )}
-      </div>
-
-      <div class="project-story__hero-copy">
-        <h2 class="project-story__title">{data.title}</h2>
-        <p class="project-story__summary">{data.summary}</p>
-      </div>
-
-      <dl class="project-story__metadata">
-        {metadata.map((item) => (
-          <div class="project-story__metadata-item">
-            <dt>{item.label}</dt>
-            <dd>{item.value}</dd>
+  <div class="project-story__wrapper">
+    <div class="project-story__inner">
+      <header class="project-story__header">
+        <div class="project-story__left">
+          <div class="project-story__header-top">
+            {data.hero?.media && (
+              <img 
+                src={data.hero.media.asset} 
+                alt={data.hero.media.alt} 
+                class="project-story__icon"
+                width="64"
+                height="64"
+              />
+            )}
+            <div class="project-story__title-group">
+              <h2 class="project-story__title">{data.title}</h2>
+              {data.hero?.kicker && (
+                <p class="project-story__subtitle">{data.hero.kicker}</p>
+              )}
+            </div>
           </div>
-        ))}
-      </dl>
+          <p class="project-story__summary">{data.summary}</p>
+          {data.cta && (
+            <a
+              class="project-story__cta"
+              href={data.cta.href}
+              target={data.cta.isExternal ? '_blank' : undefined}
+              rel={data.cta.isExternal ? 'noopener noreferrer' : undefined}
+            >
+              <span>{data.cta.label}</span>
+              <span aria-hidden="true">→</span>
+            </a>
+          )}
+        </div>
 
-      {data.cta && (
-        <a
-          class="project-story__cta"
-          href={data.cta.href}
-          target={data.cta.isExternal ? '_blank' : undefined}
-          rel={data.cta.isExternal ? 'noopener noreferrer' : undefined}
-        >
-          <span>{data.cta.label}</span>
-          <span aria-hidden="true">↗</span>
-        </a>
+        <div class="project-story__middle">
+          {team && (
+            <div class="project-story__metadata-row">
+              <span class="project-story__metadata-label">Team</span>
+              <span class="project-story__metadata-value">{team}</span>
+            </div>
+          )}
+          {categories.length > 0 && (
+            <div class="project-story__metadata-row">
+              <span class="project-story__metadata-label">Category</span>
+              <div class="project-story__categories">
+                {categories.map((category) => (
+                  <span class="project-story__category-chip">{category}</span>
+                ))}
+              </div>
+            </div>
+          )}
+          <div class="project-story__metadata-row">
+            <span class="project-story__metadata-label">Role</span>
+            <span class="project-story__metadata-value">{data.role}</span>
+          </div>
+          <div class="project-story__metadata-row">
+            <span class="project-story__metadata-label">Timeline</span>
+            <span class="project-story__metadata-value">{data.timeline}</span>
+          </div>
+        </div>
+
+        {outcomes.length > 0 && (
+          <div class="project-story__right">
+            <div class="project-story__outcomes-header">
+              <span class="project-story__metadata-label">Outcome</span>
+            </div>
+            <div class="project-story__outcomes">
+              {outcomes.map((outcome) => (
+                <div class="project-story__outcome">
+                  <span class="project-story__outcome-value">{outcome.value}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+      </header>
+
+      {gallery.length > 0 && (
+        <div class="project-story__gallery">
+          <CarouselIsland id={`${project.slug}-gallery`} items={gallery} autoplayInterval={6000} />
+        </div>
       )}
-    </header>
-
-    {layoutVariant === 'case-study' && highlights.length > 0 && (
-      <div class="project-story__highlights">
-        {highlights.map((highlight) => (
-          <article class="project-story__highlight">
-            <h3>{highlight.title}</h3>
-            <p>{highlight.body}</p>
-          </article>
-        ))}
-      </div>
-    )}
-
-    {outcomes.length > 0 && (
-      <div class="project-story__outcomes" data-display={layoutVariant}>
-        {outcomes.map((outcome) => (
-          <article class="project-story__outcome">
-            <span class="project-story__outcome-label">{outcome.label}</span>
-            <span class="project-story__outcome-value">{outcome.value}</span>
-            {outcome.description && <p>{outcome.description}</p>}
-          </article>
-        ))}
-      </div>
-    )}
-
-    {Content && (
-      <div class="project-story__body">
-        <Content components={mdxComponents} />
-      </div>
-    )}
-
-    {prefersReducedMotionCopy && (
-      <p class="project-story__motion">{prefersReducedMotionCopy}</p>
-    )}
-
-    {gallery.length > 0 && (
-      <CarouselIsland id={`${project.slug}-gallery`} items={gallery} autoplayInterval={6000} />
-    )}
+    </div>
   </div>
 </section>
 
 <style>
   .project-story {
-    padding: clamp(var(--space-xl), 12vh, 220px) clamp(var(--space-lg), 6vw, 128px);
+    padding: var(--space-sm) 0;
     transition: background 0.6s ease, color 0.6s ease;
   }
 
   .project-story--dark {
-    background: #0b0c11;
+    background: #090e03;
     color: var(--color-label-primary-dark);
   }
 
@@ -152,276 +160,238 @@ const metadata = [
     color: var(--color-label-primary-dark);
   }
 
+  .project-story__wrapper {
+    padding: var(--grid-padding);
+  }
+
   .project-story__inner {
     display: grid;
-    gap: clamp(var(--space-lg), 4vw, var(--space-2xl));
-    max-width: 1160px;
+    grid-template-columns: repeat(12, 1fr);
+    gap: var(--grid-gap);
+    max-width: var(--grid-max-width);
     margin: 0 auto;
   }
 
   .project-story__header {
+    grid-column: 1 / span 12;
     display: grid;
-    gap: var(--space-md);
+    grid-template-columns: repeat(12, 1fr);
+    gap: var(--grid-gap);
+    padding: var(--space-xl) 0;
+    border-top: 1px solid var(--color-material-thin);
   }
 
-  .project-story__eyebrow {
+  .project-story__left {
+    grid-column: 1 / span 5;
     display: flex;
-    flex-wrap: wrap;
+    flex-direction: column;
     gap: var(--space-sm);
-    align-items: center;
   }
 
-  .project-story__kicker {
+  .project-story__header-top {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+  }
+
+  .project-story__icon {
+    width: 64px;
+    height: 64px;
+    border-radius: var(--radius-sm);
+    object-fit: cover;
+    flex-shrink: 0;
+  }
+
+  .project-story__title-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .project-story__title {
+    margin: 0;
+    font-family: var(--font-family-heading);
+    font-size: var(--font-size-h4);
+    line-height: var(--line-height-h4);
+    letter-spacing: var(--letter-spacing-h4);
+    font-weight: var(--font-weight-h4);
+    color: var(--color-label-primary-dark);
+  }
+
+  .project-story__subtitle {
+    margin: 0;
+    font-family: var(--font-family-heading);
+    font-size: var(--font-size-h4);
+    line-height: var(--line-height-h4);
+    letter-spacing: var(--letter-spacing-h4);
+    color: var(--color-label-secondary-dark);
+  }
+
+  .project-story__summary {
+    margin: 0;
+    font-family: var(--font-family-body);
+    font-size: var(--font-size-body-md);
+    line-height: var(--line-height-body-md);
+    letter-spacing: var(--letter-spacing-body-md);
+    color: var(--color-label-primary-dark);
+  }
+
+  .project-story__middle {
+    grid-column: 6 / span 4;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xs);
+    padding-top: var(--space-sm);
+    border-top: 1px solid var(--color-label-quaternary-dark);
+  }
+
+  .project-story__metadata-row {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-sm);
+    padding-top: var(--space-sm);
+    border-top: 1px solid var(--color-label-quaternary-dark);
+  }
+
+  .project-story__metadata-row:first-child {
+    border-top: none;
+    padding-top: 0;
+  }
+
+  .project-story__metadata-label {
     font-family: var(--font-family-ui);
+    font-size: var(--font-size-label-lg);
+    line-height: var(--line-height-label-lg);
+    letter-spacing: var(--letter-spacing-label-lg);
     text-transform: uppercase;
-    letter-spacing: 1.6px;
-    font-size: 12px;
+    color: var(--color-label-secondary-dark);
+    width: 92px;
+    flex-shrink: 0;
+  }
+
+  .project-story__metadata-value {
+    font-family: var(--font-family-body);
+    font-size: var(--font-size-body-md);
+    line-height: var(--line-height-body-md);
+    letter-spacing: var(--letter-spacing-body-md);
+    color: var(--color-label-primary-dark);
+    flex: 1;
   }
 
   .project-story__categories {
     display: flex;
     flex-wrap: wrap;
     gap: var(--space-xs);
-    margin: 0;
-    padding: 0;
-    list-style: none;
+    flex: 1;
   }
 
-  .project-story__categories li {
-    padding: 6px 12px;
-    border-radius: 999px;
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    font-family: var(--font-family-ui);
-    font-size: 12px;
-    letter-spacing: 1px;
-    text-transform: uppercase;
+  .project-story__category-chip {
+    padding: 2px var(--space-xs);
+    border-radius: var(--space-xs);
+    background: var(--color-label-quaternary-dark);
+    font-family: var(--font-family-body);
+    font-size: var(--font-size-body-md);
+    line-height: var(--line-height-body-md);
+    letter-spacing: var(--letter-spacing-body-md);
+    color: var(--color-label-primary-dark);
   }
 
-  .project-story--light .project-story__categories li {
-    border-color: rgba(11, 12, 17, 0.18);
-    background: rgba(255, 255, 255, 0.7);
-    color: var(--color-label-primary);
-  }
-
-  .project-story__hero-copy {
-    display: grid;
+  .project-story__right {
+    grid-column: 10 / span 3;
+    display: flex;
+    flex-direction: column;
     gap: var(--space-sm);
-    max-width: 720px;
+    padding-top: var(--space-sm);
+    border-top: 1px solid var(--color-label-quaternary-dark);
+    align-self: start;
   }
 
-  .project-story__title {
-    margin: 0;
+  .project-story__outcomes-header {
+    margin-bottom: var(--space-sm);
+  }
+
+  .project-story__outcomes {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+  }
+
+  .project-story__outcome {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .project-story__outcome-value {
     font-family: var(--font-family-heading);
-    font-size: clamp(34px, 5vw, 52px);
-    line-height: 1.1;
+    font-size: var(--font-size-h4);
+    line-height: var(--line-height-h4);
     letter-spacing: var(--letter-spacing-h4);
+    font-weight: var(--font-weight-h4);
+    color: var(--color-label-primary-dark);
+    list-style-position: inside;
   }
 
-  .project-story__summary {
-    margin: 0;
-    font-size: clamp(18px, 2.4vw, 22px);
-    line-height: 1.45;
-    color: inherit;
+  .project-story__gallery {
+    grid-column: 1 / span 12;
+    height: 629px;
   }
 
-  .project-story__metadata {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-    gap: var(--space-md);
-    margin: 0;
+  .project-story__gallery :global(.carousel) {
+    height: 100%;
   }
 
-  .project-story__metadata-item {
-    display: grid;
-    gap: 4px;
+  .project-story__gallery :global(.carousel__viewport) {
+    height: 100%;
   }
 
-  .project-story__metadata-item dt {
-    font-family: var(--font-family-ui);
-    text-transform: uppercase;
-    letter-spacing: 1.8px;
-    font-size: 12px;
-    color: rgba(255, 255, 255, 0.6);
+  .project-story__gallery :global(.carousel__slide) {
+    height: 100%;
   }
 
-  .project-story--light .project-story__metadata-item dt {
-    color: var(--color-label-secondary);
-  }
-
-  .project-story__metadata-item dd {
-    margin: 0;
-    font-size: 16px;
-    font-weight: 500;
+  .project-story__gallery :global(.carousel__slide img) {
+    height: 100%;
+    object-fit: cover;
   }
 
   .project-story__cta {
-    justify-self: start;
+    align-self: flex-start;
     display: inline-flex;
     align-items: center;
     gap: var(--space-xs);
-    padding: 12px 20px;
-    border-radius: 999px;
-    border: 1px solid rgba(255, 255, 255, 0.24);
+    padding: var(--space-xs) var(--space-sm);
+    border-radius: var(--radius-lg);
+    background: var(--color-label-primary-dark);
+    color: var(--color-surface-white);
     font-family: var(--font-family-ui);
-    font-size: 13px;
+    font-size: var(--font-size-label-lg);
+    line-height: var(--line-height-label-lg);
+    letter-spacing: var(--letter-spacing-label-lg);
     text-transform: uppercase;
-    letter-spacing: 2px;
-    color: inherit;
-    transition: transform 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+    transition: transform 0.2s ease, opacity 0.2s ease;
+    margin-top: var(--space-xs);
   }
 
   .project-story__cta:hover,
   .project-story__cta:focus-visible {
-    transform: translateY(-2px);
-    border-color: rgba(255, 255, 255, 0.5);
-    background: rgba(255, 255, 255, 0.12);
-  }
-
-  .project-story--light .project-story__cta {
-    border-color: rgba(11, 12, 17, 0.18);
-  }
-
-  .project-story--light .project-story__cta:hover,
-  .project-story--light .project-story__cta:focus-visible {
-    border-color: rgba(11, 12, 17, 0.4);
-    background: rgba(255, 255, 255, 0.9);
-    color: var(--color-label-primary);
-  }
-
-  .project-story__highlights {
-    display: grid;
-    gap: var(--space-md);
-    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-  }
-
-  .project-story__highlight {
-    padding: var(--space-lg);
-    border-radius: var(--radius-lg);
-    background: rgba(255, 255, 255, 0.06);
-    backdrop-filter: blur(12px);
-    box-shadow: var(--shadow-soft);
-  }
-
-  .project-story__highlight h3 {
-    margin: 0 0 var(--space-sm);
-    font-size: clamp(20px, 3vw, 24px);
-  }
-
-  .project-story__highlight p {
-    margin: 0;
-    color: rgba(255, 255, 255, 0.78);
-  }
-
-  .project-story--light .project-story__highlight {
-    background: rgba(255, 255, 255, 0.9);
-    color: var(--color-label-primary);
-  }
-
-  .project-story--light .project-story__highlight p {
-    color: var(--color-label-secondary);
-  }
-
-  .project-story__outcomes {
-    display: grid;
-    gap: var(--space-md);
-    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-  }
-
-  .project-story__outcome {
-    padding: var(--space-lg);
-    border-radius: var(--radius-lg);
-    border: 1px solid rgba(255, 255, 255, 0.14);
-    display: grid;
-    gap: var(--space-xs);
-  }
-
-  .project-story__outcome-label {
-    font-family: var(--font-family-ui);
-    text-transform: uppercase;
-    letter-spacing: 2px;
-    font-size: 12px;
-    color: rgba(255, 255, 255, 0.65);
-  }
-
-  .project-story__outcome-value {
-    font-size: clamp(22px, 4vw, 32px);
-    font-weight: 600;
-  }
-
-  .project-story__outcome p {
-    margin: 0;
-    color: rgba(255, 255, 255, 0.78);
-  }
-
-  .project-story__body {
-    display: grid;
-    gap: var(--space-lg);
-    font-size: var(--font-size-body-md);
-    line-height: var(--line-height-body-md);
-  }
-
-  .project-story__body :global(p) {
-    margin: 0;
-    color: currentColor;
-  }
-
-  .project-story__body :global(h3) {
-    font-family: var(--font-family-heading);
-    font-size: clamp(24px, 3vw, 30px);
-    margin: 0;
-  }
-
-  .project-story__body :global(ul),
-  .project-story__body :global(ol) {
-    padding-left: 1.2em;
-    margin: 0;
-    display: grid;
-    gap: var(--space-xs);
-  }
-
-  .project-story--light .project-story__outcome {
-    border-color: rgba(11, 12, 17, 0.12);
-    background: rgba(255, 255, 255, 0.9);
-    color: var(--color-label-primary);
-  }
-
-  .project-story--light .project-story__outcome-label {
-    color: var(--color-label-secondary);
-  }
-
-  .project-story--light .project-story__outcome p {
-    color: var(--color-label-secondary);
-  }
-
-  .project-story__motion {
-    margin: 0;
-    padding: 12px 16px;
-    border-radius: var(--radius-md);
-    border: 1px solid rgba(255, 255, 255, 0.18);
-    font-family: var(--font-family-ui);
-    font-size: 12px;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-  }
-
-  .project-story--light .project-story__motion {
-    border-color: rgba(11, 12, 17, 0.18);
-    background: rgba(255, 255, 255, 0.8);
-    color: var(--color-label-primary);
+    opacity: 0.9;
+    transform: translateY(-1px);
   }
 
   @media (max-width: 960px) {
-    .project-story {
-      padding: clamp(var(--space-lg), 10vh, 160px)
-        clamp(var(--space-md), 6vw, var(--space-xl));
+    .project-story__header {
+      grid-template-columns: 1fr;
+      gap: var(--space-lg);
     }
 
-    .project-story__highlight {
-      padding: var(--space-md);
+    .project-story__left,
+    .project-story__middle,
+    .project-story__right {
+      grid-column: 1 / span 12;
     }
 
-    .project-story__outcome {
-      padding: var(--space-md);
+    .project-story__gallery {
+      height: auto;
+      min-height: 400px;
     }
   }
 </style>

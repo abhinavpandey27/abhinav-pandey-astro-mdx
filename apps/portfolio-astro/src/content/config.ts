@@ -7,18 +7,17 @@ import {
 
 const projectsCollection = defineCollection({
   type: 'content',
-  schema: ({ image }) => createProjectFrontmatterSchema(image())
+  schema: () => createProjectFrontmatterSchema()
 });
 
 const siteSettingsCollection = defineCollection({
   type: 'content',
-  schema: ({ image }) =>
-    createSiteSettingsFrontmatterSchema(image(), reference('projects'))
+  schema: () => createSiteSettingsFrontmatterSchema(reference('projects'))
 });
 
 const aboutCollection = defineCollection({
   type: 'content',
-  schema: ({ image }) => createAboutFrontmatterSchema(image())
+  schema: () => createAboutFrontmatterSchema()
 });
 
 export const collections = {

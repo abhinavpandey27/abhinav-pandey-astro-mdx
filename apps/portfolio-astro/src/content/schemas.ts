@@ -1,11 +1,9 @@
 import { z } from 'zod';
 
-export const assetMetadataSchema = z.object({
-  src: z.string(),
-  width: z.number().positive(),
-  height: z.number().positive(),
-  format: z.enum(['png', 'jpg', 'jpeg', 'gif', 'webp', 'avif'])
-});
+const mediaPathSchema = z
+  .string()
+  .regex(/^\/media\//, 'Media paths must start with /media/')
+  .max(256, 'Keep media paths manageable');
 
 export const motionDirectivesSchema = z
   .object({
@@ -20,16 +18,18 @@ export const motionDirectivesSchema = z
   .partial()
   .default({});
 
-export const createMediaItemSchema = <T extends z.ZodTypeAny>(assetSchema: T) =>
+export const createMediaItemSchema = () =>
   z.object({
-    asset: assetSchema,
+    asset: mediaPathSchema,
     alt: z.string().min(1, 'Provide meaningful alt text'),
     caption: z.string().optional(),
-    emphasis: z.enum(['primary', 'secondary', 'supporting']).default('primary')
+    emphasis: z.enum(['primary', 'secondary', 'supporting']).default('primary'),
+    width: z.number().positive().optional(),
+    height: z.number().positive().optional()
   });
 
-export const createProjectFrontmatterSchema = <T extends z.ZodTypeAny>(assetSchema: T) => {
-  const mediaItem = createMediaItemSchema(assetSchema);
+export const createProjectFrontmatterSchema = () => {
+  const mediaItem = createMediaItemSchema();
 
   return z.object({
     title: z.string(),
@@ -80,8 +80,8 @@ export const createProjectFrontmatterSchema = <T extends z.ZodTypeAny>(assetSche
   });
 };
 
-export const createSiteSettingsFrontmatterSchema = <T extends z.ZodTypeAny>(assetSchema: T, projectRef: z.ZodTypeAny) => {
-  const mediaItem = createMediaItemSchema(assetSchema).omit({ emphasis: true }).extend({
+export const createSiteSettingsFrontmatterSchema = (projectRef: z.ZodTypeAny) => {
+  const mediaItem = createMediaItemSchema().omit({ emphasis: true }).extend({
     emphasis: z.enum(['primary', 'secondary', 'supporting']).default('primary')
   });
 
@@ -121,8 +121,8 @@ export const createSiteSettingsFrontmatterSchema = <T extends z.ZodTypeAny>(asse
   });
 };
 
-export const createAboutFrontmatterSchema = <T extends z.ZodTypeAny>(assetSchema: T) => {
-  const mediaItem = createMediaItemSchema(assetSchema).omit({ emphasis: true }).extend({
+export const createAboutFrontmatterSchema = () => {
+  const mediaItem = createMediaItemSchema().omit({ emphasis: true }).extend({
     emphasis: z.enum(['primary', 'secondary']).default('primary')
   });
 

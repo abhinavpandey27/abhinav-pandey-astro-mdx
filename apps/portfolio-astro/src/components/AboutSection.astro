@@ -14,11 +14,13 @@ const data = about.data;
 const { Content } = await about.render();
 
 const gallery: HeroCarouselItem[] = data.gallery.map((item) => ({
-  src: item.asset.src,
+  src: item.asset,
   alt: item.alt,
   caption: item.caption,
   emphasis: item.emphasis ?? 'primary',
-  motionDelay: data.motion?.galleryStagger
+  motionDelay: data.motion?.galleryStagger,
+  width: 'width' in item ? item.width : undefined,
+  height: 'height' in item ? item.height : undefined
 }));
 
 const sectionBackground = data.motion?.sectionBackground ?? 'light';
@@ -39,7 +41,7 @@ const mdxComponents = { Callout, OutcomeMetric };
       </div>
 
       <figure class="about-section__portrait">
-        <img src={data.portrait.asset.src} alt={data.portrait.alt} loading="lazy" />
+        <img src={data.portrait.asset} alt={data.portrait.alt} loading="lazy" />
         {data.portrait.caption && <figcaption>{data.portrait.caption}</figcaption>}
       </figure>
     </header>

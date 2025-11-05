@@ -37,10 +37,12 @@ const fallbackSite = {
   ],
   heroCarousel: [
     {
-      asset: { src: fallbackImage },
+      asset: fallbackImage,
       alt: 'Placeholder hero artwork',
       caption: 'Add hero carousel items from Tina.',
-      emphasis: 'primary' as const
+      emphasis: 'primary' as const,
+      width: undefined,
+      height: undefined
     }
   ],
   motion: {
@@ -89,10 +91,12 @@ const primaryEmail = site.email ?? fallbackSite.email;
 
 const heroCarousel: HeroCarouselItem[] = (site.heroCarousel?.length ? site.heroCarousel : fallbackSite.heroCarousel).map(
   (item) => ({
-    src: item.asset.src,
+    src: item.asset,
     alt: item.alt,
     caption: item.caption,
-    emphasis: item.emphasis
+    emphasis: item.emphasis,
+    width: 'width' in item ? item.width : undefined,
+    height: 'height' in item ? item.height : undefined
   })
 );
 
@@ -118,7 +122,7 @@ let featuredProject = fallbackProject;
 
 if (siteEntry && site.featuredProject) {
   const featuredProjectEntry = await getEntry(site.featuredProject);
-  if (featuredProjectEntry) {
+  if (featuredProjectEntry && featuredProjectEntry.collection === 'projects') {
     const project = featuredProjectEntry.data;
     const projectTeam = project.team.length ? project.team.join(', ') : undefined;
     const projectCta =
@@ -130,7 +134,7 @@ if (siteEntry && site.featuredProject) {
       } as const);
 
     featuredProject = {
-      kicker: project.hero.kicker,
+      kicker: project.hero?.kicker ?? fallbackProject.kicker,
       title: project.title,
       summary: project.summary,
       metadata: [

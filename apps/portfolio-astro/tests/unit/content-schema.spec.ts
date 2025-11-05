@@ -1,28 +1,18 @@
 import { describe, expect, it } from 'vitest';
 import { z } from 'zod';
 import {
-  assetMetadataSchema,
   createAboutFrontmatterSchema,
   createProjectFrontmatterSchema,
   createSiteSettingsFrontmatterSchema
 } from '../../src/content/schemas';
 
-type ImageMetadata = {
-  src: string;
-  width: number;
-  height: number;
-  format: 'png' | 'jpg' | 'jpeg' | 'gif' | 'webp' | 'avif';
-};
+const projectSchema = createProjectFrontmatterSchema();
+const siteSchema = createSiteSettingsFrontmatterSchema(z.string());
+const aboutSchema = createAboutFrontmatterSchema();
 
-const projectSchema = createProjectFrontmatterSchema(assetMetadataSchema);
-const siteSchema = createSiteSettingsFrontmatterSchema(assetMetadataSchema, z.string());
-const aboutSchema = createAboutFrontmatterSchema(assetMetadataSchema);
-
-const mockImage = (src: string): ImageMetadata => ({
-  src,
-  width: 1600,
-  height: 900,
-  format: 'jpg'
+const mockAsset = (path: string) => ({
+  asset: path,
+  alt: 'Placeholder alt text'
 });
 
 describe('content collections schema', () => {
@@ -35,15 +25,13 @@ describe('content collections schema', () => {
       timeline: 'Jan 2024 — Apr 2024',
       hero: {
         media: {
-          asset: mockImage('/images/orion/hero.jpg'),
-          alt: 'Heroic mission control dashboard',
+          ...mockAsset('/media/orion/hero.jpg'),
           emphasis: 'primary'
         }
       },
       gallery: [
         {
-          asset: mockImage('/images/orion/screen-1.jpg'),
-          alt: 'Tablet UI',
+          ...mockAsset('/media/orion/screen-1.jpg'),
           layout: 'full'
         }
       ],
@@ -61,14 +49,12 @@ describe('content collections schema', () => {
       timeline: '2024',
       hero: {
         media: {
-          asset: mockImage('/images/error/hero.jpg'),
-          alt: 'Slug derives from filename'
+          ...mockAsset('/media/error/hero.jpg')
         }
       },
       gallery: [
         {
-          asset: mockImage('/images/error/gallery.jpg'),
-          alt: 'Gallery'
+          ...mockAsset('/media/error/gallery.jpg')
         }
       ],
       motion: {}
@@ -103,8 +89,7 @@ describe('content collections schema', () => {
       location: 'Mumbai, India',
       lead: 'Designing immersive, human-centered stories.',
       portrait: {
-        asset: mockImage('/images/about/portrait.jpg'),
-        alt: 'Portrait of Abhinav'
+        ...mockAsset('/media/about/portrait.jpg')
       },
       gallery: [],
       motion: {}

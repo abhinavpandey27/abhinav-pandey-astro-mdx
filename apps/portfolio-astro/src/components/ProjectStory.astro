@@ -26,11 +26,13 @@ const outcomes = data.outcomes ?? [];
 const highlights = data.highlights ?? [];
 
 const gallery: HeroCarouselItem[] = data.gallery.map((item) => ({
-  src: item.asset.src,
+  src: item.asset,
   alt: item.alt,
   caption: item.caption,
   emphasis: item.emphasis ?? 'primary',
-  motionDelay: item.motionDelay
+  motionDelay: item.motionDelay,
+  width: 'width' in item ? item.width : undefined,
+  height: 'height' in item ? item.height : undefined
 }));
 
 const background = data.motion?.sectionBackground ?? 'dark';

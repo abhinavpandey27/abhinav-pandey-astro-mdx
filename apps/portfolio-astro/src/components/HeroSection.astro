@@ -5,8 +5,10 @@ export type HeroCarouselItem = {
   src: string;
   alt: string;
   caption?: string;
-  emphasis?: 'primary' | 'secondary';
+  emphasis?: 'primary' | 'secondary' | 'supporting';
   motionDelay?: number;
+  width?: number;
+  height?: number;
 };
 
 export type HeroHighlight = {

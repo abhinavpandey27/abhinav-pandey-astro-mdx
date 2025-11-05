@@ -11,14 +11,16 @@
     "check": "astro check",
     "lint:content": "astro check",
     "test": "vitest run",
+    "optimize-media": "node scripts/optimize-media.mjs",
     "tina:dev": "tinacms dev",
     "tina:build": "tinacms build"
   },
   "dependencies": {
     "@astrojs/mdx": "^2.3.0",
-    "@tinacms/cli": "^1.11.0",
     "astro": "^4.10.0",
-    "tinacms": "^2.9.0",
+    "globby": "^13.2.2",
+    "picocolors": "^1.0.0",
+    "sharp": "^0.32.6",
     "zod": "^3.23.8"
   },
   "devDependencies": {
@@ -26,7 +28,9 @@
     "@types/node": "^20.19.24",
     "@testing-library/dom": "^9.3.3",
     "axe-core": "^4.10.0",
+    "@tinacms/cli": "^1.11.0",
     "happy-dom": "^14.10.1",
+    "tinacms": "^2.9.0",
     "typescript": "~5.4.0",
     "vitest": "^4.0.5"
   }

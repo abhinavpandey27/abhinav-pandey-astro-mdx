@@ -1,4 +1,5 @@
 docs/
+.media-optim-cache.json
 .DS_Store
 .env
 .env.local

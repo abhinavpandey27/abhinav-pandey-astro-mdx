@@ -2,8 +2,20 @@ import { z } from 'zod';
 
 const mediaPathSchema = z
   .string()
-  .regex(/^\/media\//, 'Media paths must start with /media/')
-  .max(256, 'Keep media paths manageable');
+  .max(256, 'Keep media paths manageable')
+  .superRefine((value, ctx) => {
+    if (/^\/media\//.test(value)) {
+      return;
+    }
+    if (/^\.\.\/media\//.test(value)) {
+      return;
+    }
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      message: 'Media paths must start with /media/'
+    });
+  })
+  .transform((value) => value.replace(/^(\.\.\/)+media\//, '/media/'));
 
 export const motionDirectivesSchema = z
   .object({

@@ -160,9 +160,44 @@ declare module 'astro:content' {
 } & { render(): Render[".mdx"] };
 };
 "projects": {
+"mpl-fantasy-pro.mdx": {
+	id: "mpl-fantasy-pro.mdx";
+  slug: "mpl-fantasy-pro";
+  body: string;
+  collection: "projects";
+  data: InferEntrySchema<"projects">
+} & { render(): Render[".mdx"] };
 "project-atlas.mdx": {
 	id: "project-atlas.mdx";
   slug: "project-atlas";
+  body: string;
+  collection: "projects";
+  data: InferEntrySchema<"projects">
+} & { render(): Render[".mdx"] };
+"reve-dating.mdx": {
+	id: "reve-dating.mdx";
+  slug: "reve-dating";
+  body: string;
+  collection: "projects";
+  data: InferEntrySchema<"projects">
+} & { render(): Render[".mdx"] };
+"spilll-closed-beta.mdx": {
+	id: "spilll-closed-beta.mdx";
+  slug: "spilll-closed-beta";
+  body: string;
+  collection: "projects";
+  data: InferEntrySchema<"projects">
+} & { render(): Render[".mdx"] };
+"spilll-open-beta.mdx": {
+	id: "spilll-open-beta.mdx";
+  slug: "spilll-open-beta";
+  body: string;
+  collection: "projects";
+  data: InferEntrySchema<"projects">
+} & { render(): Render[".mdx"] };
+"striker.mdx": {
+	id: "striker.mdx";
+  slug: "striker";
   body: string;
   collection: "projects";
   data: InferEntrySchema<"projects">

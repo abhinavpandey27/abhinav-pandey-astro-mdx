@@ -3,6 +3,7 @@ import type { CollectionEntry } from 'astro:content';
 import CarouselIsland from './CarouselIsland.astro';
 import type { HeroCarouselItem } from './HeroSection.astro';
 import { Callout, OutcomeMetric } from './mdx';
+import { getCollection } from 'astro:content';
 
 interface Props {
   about: CollectionEntry<'about'>;
@@ -26,44 +27,62 @@ const gallery: HeroCarouselItem[] = data.gallery.map((item) => ({
 const sectionBackground = data.motion?.sectionBackground ?? 'light';
 const sectionClass = ['about-section', `about-section--${sectionBackground}`].join(' ');
 const mdxComponents = { Callout, OutcomeMetric };
+
+// Get social links from site settings
+const [siteEntry] = await getCollection('site');
+const socialLinks = siteEntry?.data?.socialLinks ?? [];
+const resume = siteEntry?.data?.resume;
+
+const socialLabelMap: Record<string, string> = {
+  twitter: 'Twitter',
+  linkedin: 'LinkedIn',
+  email: 'E-Mail',
+  behance: 'Behance',
+  dribbble: 'Dribbble',
+  github: 'GitHub'
+};
+
+// Ensure we have Twitter, Email, LinkedIn, and Resume in the correct order
+const orderedSocialLinks = [];
+const twitterLink = socialLinks.find(link => link.label.toLowerCase() === 'twitter');
+const emailLink = socialLinks.find(link => link.label.toLowerCase() === 'email');
+const linkedinLink = socialLinks.find(link => link.label.toLowerCase() === 'linkedin');
+const resumeLink = resume ? {
+  label: 'resume',
+  url: resume.file,
+  ariaLabel: resume.label || 'Download resume'
+} : null;
+
+// Add in order: Twitter, Email, LinkedIn, Resume
+if (twitterLink) orderedSocialLinks.push(twitterLink);
+if (emailLink) orderedSocialLinks.push(emailLink);
+if (linkedinLink) orderedSocialLinks.push(linkedinLink);
+if (resumeLink) orderedSocialLinks.push(resumeLink);
+
+const formattedSocialLinks = orderedSocialLinks.map((link) => ({
+  label: socialLabelMap[link.label] ?? (link.label.toLowerCase() === 'resume' ? 'Resume' : link.label),
+  url: link.url,
+  ariaLabel: link.ariaLabel,
+  isResume: link.label.toLowerCase() === 'resume' || link.url?.endsWith('.pdf')
+}));
 ---
 
 <section class={sectionClass} id={id ?? 'about'}>
-  <div class="about-section__inner">
-    <header class="about-section__header">
-      <div class="about-section__copy">
-        {data.subtitle && <span class="about-section__subtitle">{data.subtitle}</span>}
-        <h2 class="about-section__title">{data.title}</h2>
-        <div class="about-section__meta">
-          <span>{data.location}</span>
-        </div>
-        <p class="about-section__lead">{data.lead}</p>
+  <div class="about-section__grid">
+    <div class="about-section__top">
+      <div class="about-section__intro">
+        <p class="about-section__intro-text">7+ years of experience in product and service design. I worked in both big corporations and small startups, always striving to turn complex things into intuitive and thoughtful ones.</p>
+        <p class="about-section__intro-secondary">
+          Did 0→1 for a new player-card-based fantasy system. Designed, tested, and shipped core UX and final UI under high ambiguity with rapid iteration. Balanced gamification, education, and monetization through a clean, mobile-first design approach that scaled across drops, fantasy, and crafting flows.
+        </p>
       </div>
-
-      <figure class="about-section__portrait">
-        <img src={data.portrait.asset} alt={data.portrait.alt} loading="lazy" />
-        {data.portrait.caption && <figcaption>{data.portrait.caption}</figcaption>}
-      </figure>
-    </header>
-
-    <div class="about-section__body">
-      <Content components={mdxComponents} />
+      <div class="about-section__top-right">
+        <button type="button" class="about-section__menu-button" aria-label="Menu">
+          <span>menu</span>
+          <span class="about-section__menu-icon" aria-hidden="true"></span>
+        </button>
+      </div>
     </div>
-
-    {data.skills.length > 0 && (
-      <div class="about-section__skills">
-        {data.skills.map((group) => (
-          <article class="about-section__skill-group">
-            <h3>{group.category}</h3>
-            <ul>
-              {group.items.map((item) => (
-                <li>{item}</li>
-              ))}
-            </ul>
-          </article>
-        ))}
-      </div>
-    )}
 
     {gallery.length > 0 && (
       <div class="about-section__gallery">
@@ -71,42 +90,87 @@ const mdxComponents = { Callout, OutcomeMetric };
       </div>
     )}
 
-    {data.contactHighlights.length > 0 && (
-      <aside class="about-section__highlights" aria-label="Contact highlights">
-        <h3>How I partner</h3>
-        <ul>
-          {data.contactHighlights.map((highlight) => (
-            <li>{highlight}</li>
-          ))}
-        </ul>
-      </aside>
-    )}
+    <div class="about-section__bottom">
+      <div class="about-section__bottom-left">
+        <div class="about-section__info-section">
+          <p class="about-section__info-label">Colophon</p>
+          <p class="about-section__info-text">
+            The font used on this site is our custom creation, DBCo. Metaphor. Our frontend code is{' '}
+            <a href="https://github.com/design-business-company/dbco-frontend" target="_blank" rel="noopener noreferrer">open-sourced</a>
+            {' '}and can be found here. We utilize Nuxt/Vue 3 and Sanity to bring this site to life.
+          </p>
+        </div>
+        <div class="about-section__info-section">
+          <p class="about-section__info-label">Thank You</p>
+          <p class="about-section__info-text">
+            The font used on this site is our custom creation, DBCo. Metaphor. Our frontend code is{' '}
+            <a href="https://github.com/design-business-company/dbco-frontend" target="_blank" rel="noopener noreferrer">open-sourced</a>
+            {' '}and can be found here. We utilize Nuxt/Vue 3 and Sanity to bring this site to life.
+          </p>
+        </div>
+      </div>
+      <div class="about-section__bottom-right">
+        <nav aria-label="Social links" class="about-section__social">
+          {formattedSocialLinks.slice(0, 2).length > 0 && (
+            <ul class="about-section__social-links">
+              {formattedSocialLinks.slice(0, 2).map((link) => (
+                <li>
+                  <a
+                    class="about-section__social-link"
+                    href={link.url}
+                    target={link.isResume ? undefined : '_blank'}
+                    rel={link.isResume ? undefined : 'noopener noreferrer'}
+                    aria-label={link.ariaLabel ?? link.label}
+                    download={link.isResume ? true : undefined}
+                  >
+                    {link.label} {link.isResume ? '↓' : '↗'}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          )}
+          {formattedSocialLinks.slice(2, 4).length > 0 && (
+            <ul class="about-section__social-links">
+              {formattedSocialLinks.slice(2, 4).map((link) => (
+                <li>
+                  <a
+                    class="about-section__social-link"
+                    href={link.url}
+                    target={link.isResume ? undefined : '_blank'}
+                    rel={link.isResume ? undefined : 'noopener noreferrer'}
+                    aria-label={link.ariaLabel ?? link.label}
+                    download={link.isResume ? true : undefined}
+                  >
+                    {link.label} {link.isResume ? '↓' : '↗'}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          )}
+        </nav>
+      </div>
+    </div>
   </div>
 </section>
 
 <style>
   .about-section {
-    padding: clamp(var(--space-xl), 12vh, 220px) clamp(var(--space-lg), 6vw, 120px);
+    padding: var(--space-sm) var(--grid-padding);
     min-height: 100vh;
-    background: var(--theme-bg, #f8f8fb);
+    background: var(--theme-bg, var(--color-surface-white));
     color: var(--theme-text, var(--color-label-primary));
-    transition: background-color 0.8s cubic-bezier(0.4, 0, 0.2, 1), 
-      color 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: background-color var(--theme-transition-duration, 0.6s) var(--theme-transition-easing, cubic-bezier(0.4, 0, 0.2, 1)), 
+      color var(--theme-transition-duration, 0.6s) var(--theme-transition-easing, cubic-bezier(0.4, 0, 0.2, 1));
   }
 
   .about-section--light {
-    background: var(--theme-bg, #f8f8fb);
-    color: var(--theme-text, var(--color-label-primary));
+    background: var(--color-surface-white);
+    color: var(--color-label-primary);
   }
 
   .about-section--dark {
-    background: var(--theme-bg, #0b0c11);
-    color: var(--theme-text, var(--color-label-primary-dark));
-  }
-
-  .about-section--accent {
-    background: var(--theme-bg, radial-gradient(120% 120% at 20% 10%, rgba(36, 38, 62, 0.94), #0b0c11));
-    color: var(--theme-text, var(--color-label-primary-dark));
+    background: var(--color-surface-black);
+    color: var(--color-label-primary-dark);
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -115,171 +179,223 @@ const mdxComponents = { Callout, OutcomeMetric };
     }
   }
 
-  .about-section__inner {
+  .about-section__grid {
     display: grid;
-    gap: clamp(var(--space-xl), 4vw, var(--space-2xl));
-    max-width: 1140px;
-    margin: 0 auto;
+    grid-template-columns: repeat(12, 1fr);
+    grid-template-rows: repeat(16, minmax(0, 1fr));
+    gap: var(--grid-gap);
+    min-height: 100vh;
+    border: 1px solid var(--color-label-quaternary);
+    border-top: none;
+    border-bottom: none;
+    padding: var(--grid-padding) 0;
   }
 
-  .about-section__header {
-    display: grid;
-    gap: var(--space-xl);
-    grid-template-columns: minmax(0, 1fr) minmax(280px, 360px);
-    align-items: start;
+  .about-section__top {
+    grid-column: 1 / span 12;
+    grid-row: 1 / span 3;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: var(--space-2xl);
+    padding: var(--space-sm) var(--grid-padding);
   }
 
-  .about-section__subtitle {
-    font-family: var(--font-family-ui);
-    text-transform: uppercase;
-    letter-spacing: 2px;
-    font-size: 12px;
-    color: var(--theme-text, var(--color-label-secondary));
-    opacity: 0.6;
+  .about-section__intro {
+    display: flex;
+    flex: 1 0 0;
+    gap: var(--space-2xl);
+    align-items: flex-start;
   }
 
-  .about-section__title {
+  .about-section__intro-text {
     margin: 0;
-    font-family: var(--theme-font-family, var(--font-family-heading));
-    font-size: clamp(36px, 5vw, 56px);
-    line-height: 1.05;
-    color: var(--theme-text, inherit);
-  }
-
-  .about-section__meta {
-    font-family: var(--font-family-ui);
-    letter-spacing: 1.2px;
-    text-transform: uppercase;
-    font-size: 12px;
-    color: var(--theme-text, var(--color-label-secondary));
-    opacity: 0.6;
-  }
-
-  .about-section__lead {
-    margin: var(--space-sm) 0 0;
-    font-family: var(--theme-font-family, inherit);
-    font-size: clamp(18px, 2.4vw, 22px);
-    line-height: 1.5;
-    color: var(--theme-text, inherit);
-  }
-
-  .about-section__portrait {
-    margin: 0;
-    border-radius: var(--radius-lg);
-    overflow: hidden;
-    box-shadow: var(--shadow-elevated);
-    background: rgba(255, 255, 255, 0.05);
-    display: grid;
-  }
-
-  .about-section__portrait img {
-    width: 100%;
-    height: auto;
-    display: block;
-  }
-
-  .about-section__portrait figcaption {
-    padding: var(--space-sm) var(--space-md);
-    font-size: 13px;
-    color: var(--theme-text, var(--color-label-secondary));
-    opacity: 0.7;
-  }
-
-  .about-section__body {
-    font-family: var(--theme-font-family, var(--font-family-body));
-    font-size: var(--theme-font-size, var(--font-size-body-md));
-    line-height: var(--theme-line-height, var(--line-height-body-md));
-    letter-spacing: var(--theme-letter-spacing, var(--letter-spacing-body-md));
-    color: var(--theme-text, inherit);
-    display: grid;
-    gap: var(--space-lg);
-  }
-
-  .about-section__body :global(p) {
-    margin: 0;
-  }
-
-  .about-section__skills {
-    display: grid;
-    gap: var(--space-lg);
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  }
-
-  .about-section__skill-group {
-    padding: var(--space-lg);
-    border-radius: var(--radius-lg);
-    border: 1px solid rgba(11, 12, 17, 0.12);
-    background: rgba(255, 255, 255, 0.9);
+    font-family: var(--font-family-heading);
+    font-size: var(--font-size-h4);
+    line-height: var(--line-height-h4);
+    letter-spacing: var(--letter-spacing-h4);
+    font-weight: var(--font-weight-h4);
     color: var(--color-label-primary);
-    box-shadow: var(--shadow-soft);
+    width: 595px;
   }
 
-  .about-section--dark .about-section__skill-group,
-  .about-section--accent .about-section__skill-group {
-    border-color: rgba(255, 255, 255, 0.15);
-    background: rgba(18, 19, 30, 0.9);
-    color: rgba(255, 255, 255, 0.95);
+  .about-section--dark .about-section__intro-text {
+    color: var(--color-label-primary-dark);
   }
 
-  .about-section__skill-group h3 {
-    margin: 0 0 var(--space-sm);
-    font-size: clamp(20px, 3vw, 24px);
-  }
-
-  .about-section__skill-group ul {
+  .about-section__intro-secondary {
     margin: 0;
-    padding-left: 1.2em;
-    display: grid;
+    font-family: var(--font-family-body);
+    font-size: var(--font-size-body-lg);
+    line-height: var(--line-height-body-lg);
+    letter-spacing: var(--letter-spacing-body-lg);
+    font-weight: var(--font-weight-body-lg);
+    color: var(--color-label-secondary);
+    width: 583px;
+  }
+
+  .about-section--dark .about-section__intro-secondary {
+    color: var(--color-label-secondary-dark);
+  }
+
+  .about-section__top-right {
+    display: flex;
+    align-items: center;
+    gap: 40px;
+  }
+
+  .about-section__menu-button {
+    display: inline-flex;
+    align-items: center;
     gap: var(--space-xs);
+    border: none;
+    border-radius: var(--radius-lg);
+    padding: var(--space-xs) var(--space-sm);
+    background: var(--color-label-primary);
+    font-family: var(--font-family-ui);
+    font-size: var(--font-size-label-lg);
+    line-height: var(--line-height-label-lg);
+    letter-spacing: var(--letter-spacing-label-lg);
+    text-transform: uppercase;
+    color: var(--color-surface-white);
+    cursor: pointer;
+    transition: opacity 0.2s ease;
+    white-space: nowrap;
+  }
+
+  .about-section__menu-button:hover,
+  .about-section__menu-button:focus-visible {
+    opacity: 0.9;
+  }
+
+  .about-section__menu-icon {
+    position: relative;
+    width: 16px;
+    height: 16px;
+  }
+
+  .about-section__menu-icon::before,
+  .about-section__menu-icon::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: currentColor;
+  }
+
+  .about-section__menu-icon::before {
+    top: 25%;
+  }
+
+  .about-section__menu-icon::after {
+    bottom: 25%;
   }
 
   .about-section__gallery {
-    border-radius: var(--radius-lg);
-    overflow: hidden;
+    grid-column: 1 / span 12;
+    grid-row: 4 / span 10;
   }
 
-  .about-section__highlights {
-    border-radius: var(--radius-lg);
-    border: 1px solid rgba(11, 12, 17, 0.12);
-    padding: var(--space-lg);
-    background: rgba(255, 255, 255, 0.92);
+  .about-section__bottom {
+    grid-column: 1 / span 12;
+    grid-row: 14 / span 2;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: var(--space-2xl);
+    padding: var(--space-sm) var(--grid-padding);
+  }
+
+  .about-section__bottom-left {
+    display: flex;
+    align-items: center;
+    gap: 89px;
+  }
+
+  .about-section__info-section {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    width: 477px;
+  }
+
+  .about-section__info-label {
+    margin: 0;
+    font-family: var(--font-family-body);
+    font-size: var(--font-size-body-md);
+    line-height: var(--line-height-body-md);
+    letter-spacing: var(--letter-spacing-body-md);
+    font-weight: var(--font-weight-body-md);
+    color: var(--color-label-secondary);
+  }
+
+  .about-section--dark .about-section__info-label {
+    color: var(--color-label-secondary-dark);
+  }
+
+  .about-section__info-text {
+    margin: 0;
+    font-family: var(--font-family-body);
+    font-size: var(--font-size-body-md);
+    line-height: var(--line-height-body-md);
+    letter-spacing: var(--letter-spacing-body-md);
+    font-weight: var(--font-weight-body-md);
     color: var(--color-label-primary);
   }
 
-  .about-section__highlights h3 {
-    margin: 0 0 var(--space-sm);
-    font-size: clamp(20px, 3vw, 24px);
+  .about-section--dark .about-section__info-text {
+    color: var(--color-label-primary-dark);
   }
 
-  .about-section__highlights ul {
+  .about-section__info-text a {
+    text-decoration: underline;
+    color: inherit;
+  }
+
+  .about-section__bottom-right {
+    display: flex;
+    align-items: center;
+    gap: 30px;
+  }
+
+  .about-section__social {
+    display: flex;
+    gap: 30px;
+  }
+
+  .about-section__social-links {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 0;
     margin: 0;
-    padding-left: 1.2em;
-    display: grid;
-    gap: var(--space-xs);
+    padding: 0;
+    list-style: none;
+    width: 117px;
   }
 
-  .about-section--dark .about-section__highlights,
-  .about-section--accent .about-section__highlights {
-    border-color: rgba(255, 255, 255, 0.15);
-    background: rgba(18, 19, 30, 0.92);
-    color: rgba(255, 255, 255, 0.95);
+  .about-section__social-link {
+    font-family: var(--font-family-body);
+    font-size: var(--font-size-body-md);
+    line-height: var(--line-height-body-md);
+    letter-spacing: var(--letter-spacing-body-md);
+    font-weight: var(--font-weight-body-md);
+    color: var(--color-label-secondary);
+    text-align: right;
+    transition: color 0.2s ease;
   }
 
-  @media (max-width: 900px) {
-    .about-section__header {
-      grid-template-columns: 1fr;
-      gap: var(--space-lg);
-    }
+  .about-section--dark .about-section__social-link {
+    color: var(--color-label-secondary-dark);
   }
 
-  @media (max-width: 720px) {
-    .about-section {
-      padding: clamp(var(--space-lg), 10vh, 160px)
-        clamp(var(--space-md), 6vw, var(--space-xl));
-    }
-
-    .about-section__skills {
-      grid-template-columns: 1fr;
-    }
+  .about-section__social-link:hover,
+  .about-section__social-link:focus-visible {
+    color: var(--color-label-primary);
   }
-</style>
+
+  .about-section--dark .about-section__social-link:hover,
+  .about-section--dark .about-section__social-link:focus-visible {
+    color: var(--color-label-primary-dark);
+  }

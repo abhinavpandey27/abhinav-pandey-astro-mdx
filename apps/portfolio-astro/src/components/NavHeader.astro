@@ -8,6 +8,7 @@ export type SocialLink = {
   label: string;
   url: string;
   ariaLabel?: string;
+  isResume?: boolean;
 };
 
 interface Props {
@@ -57,11 +58,12 @@ const {
               <a
                 class="nav-header__social-link"
                 href={link.url}
-                target="_blank"
-                rel="noopener noreferrer"
+                target={link.isResume ? undefined : '_blank'}
+                rel={link.isResume ? undefined : 'noopener noreferrer'}
                 aria-label={link.ariaLabel ?? link.label}
+                download={link.isResume ? true : undefined}
               >
-                {link.label} ↗
+                {link.label} {link.isResume ? '↓' : '↗'}
               </a>
             </li>
           ))}
@@ -73,11 +75,12 @@ const {
                 <a
                   class="nav-header__social-link"
                   href={link.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
+                  target={link.isResume ? undefined : '_blank'}
+                  rel={link.isResume ? undefined : 'noopener noreferrer'}
                   aria-label={link.ariaLabel ?? link.label}
+                  download={link.isResume ? true : undefined}
                 >
-                  {link.label} {link.label.toLowerCase().includes('resume') ? '↓' : '↗'}
+                  {link.label} {link.isResume ? '↓' : '↗'}
                 </a>
               </li>
             ))}
@@ -121,7 +124,7 @@ const {
     align-items: center;
     justify-content: space-between;
     gap: var(--space-2xl);
-    padding: 0;
+    padding: var(--space-sm) var(--space-md);
   }
 
   .nav-header__left {
@@ -133,31 +136,31 @@ const {
   .nav-header__right {
     display: flex;
     align-items: center;
-    gap: var(--space-lg);
+    gap: var(--space-2xl);
   }
 
   .nav-header__brand {
     display: flex;
     flex-direction: column;
     gap: 2px;
-    font-family: var(--theme-font-family, var(--font-family-body));
-    font-size: var(--theme-font-size, var(--font-size-body-md));
-    line-height: var(--theme-line-height, var(--line-height-body-md));
-    letter-spacing: var(--theme-letter-spacing, var(--letter-spacing-body-md));
+    font-family: var(--font-family-body);
+    font-size: var(--font-size-body-md);
+    line-height: var(--line-height-body-md);
+    letter-spacing: var(--letter-spacing-body-md);
     color: var(--theme-text, var(--color-label-primary));
+    width: 214px;
   }
 
   .nav-header__name {
-    font-weight: var(--theme-font-weight, var(--font-weight-body-md));
+    font-weight: var(--font-weight-body-md);
   }
 
   .nav-header__location {
-    font-family: var(--theme-font-family, var(--font-family-body));
-    font-size: var(--theme-font-size, var(--font-size-body-md));
-    line-height: var(--theme-line-height, var(--line-height-body-md));
-    letter-spacing: var(--theme-letter-spacing, var(--letter-spacing-body-md));
-    color: var(--theme-text, var(--color-label-secondary));
-    opacity: 0.6;
+    font-family: var(--font-family-body);
+    font-size: var(--font-size-body-md);
+    line-height: var(--line-height-body-md);
+    letter-spacing: var(--letter-spacing-body-md);
+    color: var(--color-label-secondary);
   }
 
   .nav-header__primary {
@@ -166,7 +169,7 @@ const {
 
   .nav-header__social {
     display: flex;
-    gap: var(--space-lg);
+    gap: var(--space-2xl);
   }
 
   .nav-header__links,
@@ -188,36 +191,33 @@ const {
     display: inline-flex;
     align-items: center;
     gap: var(--space-xs);
-    font-family: var(--theme-font-family, var(--font-family-body));
-    font-size: var(--theme-font-size, var(--font-size-body-md));
-    line-height: var(--theme-line-height, var(--line-height-body-md));
-    letter-spacing: var(--theme-letter-spacing, var(--letter-spacing-body-md));
-    color: var(--theme-text, var(--color-label-secondary));
-    opacity: 0.6;
-    transition: color 0.2s ease, opacity 0.2s ease;
+    font-family: var(--font-family-body);
+    font-size: var(--font-size-body-md);
+    line-height: var(--line-height-body-md);
+    letter-spacing: var(--letter-spacing-body-md);
+    color: var(--color-label-secondary);
+    transition: color 0.2s ease;
   }
 
   .nav-header__link:hover,
   .nav-header__link:focus-visible {
     color: var(--theme-text, var(--color-label-primary));
-    opacity: 1;
   }
 
   .nav-header__social-link {
-    font-family: var(--theme-font-family, var(--font-family-body));
-    font-size: var(--theme-font-size, var(--font-size-body-md));
-    line-height: var(--theme-line-height, var(--line-height-body-md));
-    letter-spacing: var(--theme-letter-spacing, var(--letter-spacing-body-md));
-    color: var(--theme-text, var(--color-label-secondary));
-    opacity: 0.6;
+    font-family: var(--font-family-body);
+    font-size: var(--font-size-body-md);
+    line-height: var(--line-height-body-md);
+    letter-spacing: var(--letter-spacing-body-md);
+    color: var(--color-label-secondary);
     text-align: right;
-    transition: color 0.2s ease, opacity 0.2s ease;
+    transition: color 0.2s ease;
+    width: 117px;
   }
 
   .nav-header__social-link:hover,
   .nav-header__social-link:focus-visible {
     color: var(--theme-text, var(--color-label-primary));
-    opacity: 1;
   }
 
   .nav-header__menu {
@@ -236,6 +236,7 @@ const {
     color: var(--color-surface-white);
     cursor: pointer;
     transition: transform 0.2s ease, opacity 0.2s ease;
+    white-space: nowrap;
   }
 
   .nav-header__menu:hover,
@@ -303,7 +304,7 @@ const {
 
     .nav-header__inner {
       gap: var(--space-sm);
-      padding-inline: clamp(var(--space-md), 5vw, var(--space-lg));
+      padding-inline: var(--space-sm);
     }
 
     .nav-header__links {

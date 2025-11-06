@@ -20,7 +20,7 @@ const fallbackSite = {
   intro:
     'I craft end-to-end product experiences for teams who want motion to feel intentional, thoughtful, and accessible.',
   bioSnippet: 'Previously at Orbit Labs and Flux Studio.',
-  email: 'hello@abhinavpandey.design',
+  email: 'abhinavpandey027@gmail.com',
   navLinks: [
     { label: 'Work', href: '#work' },
     { label: 'About', href: '#about' },
@@ -28,16 +28,26 @@ const fallbackSite = {
   ],
   socialLinks: [
     {
+      label: 'twitter' as const,
+      url: 'https://x.com/ab27hi',
+      ariaLabel: 'View Abhinav on X'
+    },
+    {
+      label: 'email' as const,
+      url: 'mailto:abhinavpandey027@gmail.com',
+      ariaLabel: 'Email Abhinav'
+    },
+    {
       label: 'linkedin' as const,
       url: 'https://www.linkedin.com/in/abhinavpandey',
       ariaLabel: 'View Abhinav on LinkedIn'
-    },
-    {
-      label: 'dribbble' as const,
-      url: 'https://dribbble.com/abhinavpandey',
-      ariaLabel: 'View Abhinav on Dribbble'
     }
   ],
+  resume: {
+    label: 'Download résumé',
+    file: '/media/resume.pdf',
+    size: 0.2
+  },
   heroCarousel: [
     {
       asset: FALLBACK_MEDIA,
@@ -67,18 +77,38 @@ const site = siteEntryActual.data ?? fallbackSite;
 const socialLabelMap: Record<string, string> = {
   twitter: 'Twitter',
   linkedin: 'LinkedIn',
-  email: 'Email',
+  email: 'E-Mail',
   behance: 'Behance',
   dribbble: 'Dribbble',
   github: 'GitHub'
 };
 
-const navLinks = site.navLinks?.length ? site.navLinks : fallbackSite.navLinks;
+const navLinks = site.navLinks?.length ? site.navLinks.filter(link => link.label.toLowerCase() !== 'contact') : fallbackSite.navLinks.filter(link => link.label.toLowerCase() !== 'contact');
 const socialLinksSource = site.socialLinks?.length ? site.socialLinks : fallbackSite.socialLinks;
-const socialLinks = socialLinksSource.map((link) => ({
-  label: socialLabelMap[link.label] ?? link.label,
+
+// Ensure we have Twitter, Email, LinkedIn, and Resume in the correct order
+// Filter and order social links to match Figma design: Twitter, Email, LinkedIn, Resume
+const orderedSocialLinks = [];
+const twitterLink = socialLinksSource.find(link => link.label.toLowerCase() === 'twitter');
+const emailLink = socialLinksSource.find(link => link.label.toLowerCase() === 'email');
+const linkedinLink = socialLinksSource.find(link => link.label.toLowerCase() === 'linkedin');
+const resumeLink = site.resume ? {
+  label: 'resume',
+  url: site.resume.file,
+  ariaLabel: site.resume.label || 'Download resume'
+} : null;
+
+// Add in order: Twitter, Email, LinkedIn, Resume
+if (twitterLink) orderedSocialLinks.push(twitterLink);
+if (emailLink) orderedSocialLinks.push(emailLink);
+if (linkedinLink) orderedSocialLinks.push(linkedinLink);
+if (resumeLink) orderedSocialLinks.push(resumeLink);
+
+const socialLinks = orderedSocialLinks.map((link, index) => ({
+  label: socialLabelMap[link.label] ?? (link.label.toLowerCase() === 'resume' ? 'Resume' : link.label),
   url: link.url,
-  ariaLabel: link.ariaLabel
+  ariaLabel: link.ariaLabel,
+  isResume: link.label.toLowerCase() === 'resume' || link.url?.endsWith('.pdf')
 }));
 
 const title = site.title ?? fallbackSite.title;
@@ -146,29 +176,23 @@ projects.forEach((project) => {
   }
 });
 
-// About section theme
+// About section theme - only white or black
 if (aboutEntry) {
   const aboutTheme = normalizeTheme(aboutEntry.data.theme);
-  if (Object.keys(aboutTheme).length > 0) {
+  if (Object.keys(aboutTheme).length > 0 && (aboutTheme.bg === '#ffffff' || aboutTheme.bg === '#000000' || aboutTheme.bg === 'var(--color-surface-white)' || aboutTheme.bg === 'var(--color-surface-black)')) {
     themeMap['about'] = aboutTheme;
   } else {
     const bgType = aboutEntry.data.motion?.sectionBackground ?? 'light';
     if (bgType === 'dark') {
       themeMap['about'] = {
-        bg: '#0b0c11',
+        bg: '#000000',
         text: '#ffffff',
-        accent: '#5763ff'
-      };
-    } else if (bgType === 'light') {
-      themeMap['about'] = {
-        bg: '#f8f8fb',
-        text: '#0b0c11',
         accent: '#5763ff'
       };
     } else {
       themeMap['about'] = {
-        bg: '#24263e',
-        text: '#ffffff',
+        bg: '#ffffff',
+        text: '#0b0c11',
         accent: '#5763ff'
       };
     }
@@ -292,10 +316,6 @@ if (siteEntry && site.featuredProject) {
           <AboutSection about={aboutEntry} />
         </ThemeController>
       )}
-
-      <ThemeController sectionId="contact" theme={themeMap['contact']}>
-        <ContactStrip site={siteEntryActual} />
-      </ThemeController>
     </main>
 
     <div data-default-theme={JSON.stringify(themeMap['top'] || {

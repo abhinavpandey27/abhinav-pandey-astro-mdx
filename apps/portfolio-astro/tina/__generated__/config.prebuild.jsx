@@ -290,6 +290,63 @@ var config_default = defineConfig({
                 ui: { component: "textarea" }
               }
             ]
+          },
+          {
+            name: "theme",
+            label: "Theme",
+            type: "object",
+            fields: [
+              {
+                name: "bg",
+                label: "Background Color",
+                type: "string",
+                ui: {
+                  component: "color",
+                  colorFormat: "hex",
+                  colors: ["#090e03", "#f6f6fb", "#ffffff", "#0b0c11", "#1d2032"]
+                }
+              },
+              {
+                name: "text",
+                label: "Text Color",
+                type: "string",
+                ui: {
+                  component: "color",
+                  colorFormat: "hex",
+                  colors: ["#ffffff", "#0b0c11", "#eaeaea", "#ffffff"]
+                }
+              },
+              {
+                name: "accent",
+                label: "Accent Color",
+                type: "string",
+                ui: {
+                  component: "color",
+                  colorFormat: "hex",
+                  colors: ["#5763ff", "#ffda3d", "#ffffff"]
+                }
+              },
+              {
+                name: "typography",
+                label: "Typography",
+                type: "object",
+                fields: [
+                  {
+                    name: "fontFamily",
+                    label: "Font Family",
+                    type: "string",
+                    options: [
+                      { label: "Instrument Sans", value: "Instrument Sans" },
+                      { label: "Geist Mono", value: "Geist Mono" }
+                    ]
+                  },
+                  { name: "fontSize", label: "Font Size", type: "string" },
+                  { name: "fontWeight", label: "Font Weight", type: "string" },
+                  { name: "lineHeight", label: "Line Height", type: "string" },
+                  { name: "letterSpacing", label: "Letter Spacing", type: "string" }
+                ]
+              }
+            ]
           }
         ]
       },
@@ -446,6 +503,63 @@ var config_default = defineConfig({
                 ui: { component: "textarea" }
               }
             ]
+          },
+          {
+            name: "theme",
+            label: "Theme",
+            type: "object",
+            fields: [
+              {
+                name: "bg",
+                label: "Background Color",
+                type: "string",
+                ui: {
+                  component: "color",
+                  colorFormat: "hex",
+                  colors: ["#090e03", "#f6f6fb", "#ffffff", "#0b0c11", "#1d2032"]
+                }
+              },
+              {
+                name: "text",
+                label: "Text Color",
+                type: "string",
+                ui: {
+                  component: "color",
+                  colorFormat: "hex",
+                  colors: ["#ffffff", "#0b0c11", "#eaeaea", "#ffffff"]
+                }
+              },
+              {
+                name: "accent",
+                label: "Accent Color",
+                type: "string",
+                ui: {
+                  component: "color",
+                  colorFormat: "hex",
+                  colors: ["#5763ff", "#ffda3d", "#ffffff"]
+                }
+              },
+              {
+                name: "typography",
+                label: "Typography",
+                type: "object",
+                fields: [
+                  {
+                    name: "fontFamily",
+                    label: "Font Family",
+                    type: "string",
+                    options: [
+                      { label: "Instrument Sans", value: "Instrument Sans" },
+                      { label: "Geist Mono", value: "Geist Mono" }
+                    ]
+                  },
+                  { name: "fontSize", label: "Font Size", type: "string" },
+                  { name: "fontWeight", label: "Font Weight", type: "string" },
+                  { name: "lineHeight", label: "Line Height", type: "string" },
+                  { name: "letterSpacing", label: "Letter Spacing", type: "string" }
+                ]
+              }
+            ]
           }
         ]
       },
@@ -599,6 +713,63 @@ var config_default = defineConfig({
                 label: "Reduced Motion Copy",
                 type: "string",
                 ui: { component: "textarea" }
+              }
+            ]
+          },
+          {
+            name: "theme",
+            label: "Theme",
+            type: "object",
+            fields: [
+              {
+                name: "bg",
+                label: "Background Color",
+                type: "string",
+                ui: {
+                  component: "color",
+                  colorFormat: "hex",
+                  colors: ["#090e03", "#f6f6fb", "#ffffff", "#0b0c11", "#1d2032"]
+                }
+              },
+              {
+                name: "text",
+                label: "Text Color",
+                type: "string",
+                ui: {
+                  component: "color",
+                  colorFormat: "hex",
+                  colors: ["#ffffff", "#0b0c11", "#eaeaea", "#ffffff"]
+                }
+              },
+              {
+                name: "accent",
+                label: "Accent Color",
+                type: "string",
+                ui: {
+                  component: "color",
+                  colorFormat: "hex",
+                  colors: ["#5763ff", "#ffda3d", "#ffffff"]
+                }
+              },
+              {
+                name: "typography",
+                label: "Typography",
+                type: "object",
+                fields: [
+                  {
+                    name: "fontFamily",
+                    label: "Font Family",
+                    type: "string",
+                    options: [
+                      { label: "Instrument Sans", value: "Instrument Sans" },
+                      { label: "Geist Mono", value: "Geist Mono" }
+                    ]
+                  },
+                  { name: "fontSize", label: "Font Size", type: "string" },
+                  { name: "fontWeight", label: "Font Weight", type: "string" },
+                  { name: "lineHeight", label: "Line Height", type: "string" },
+                  { name: "letterSpacing", label: "Letter Spacing", type: "string" }
+                ]
               }
             ]
           }

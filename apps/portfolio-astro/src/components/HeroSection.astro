@@ -91,12 +91,12 @@ const {
 
   .hero__title {
     margin: 0;
-    font-family: var(--font-family-heading);
-    font-size: var(--font-size-h4);
-    line-height: var(--line-height-h4);
-    letter-spacing: var(--letter-spacing-h4);
-    font-weight: var(--font-weight-h4);
-    color: var(--color-label-primary);
+    font-family: var(--theme-font-family, var(--font-family-heading));
+    font-size: var(--theme-font-size, var(--font-size-h4));
+    line-height: var(--theme-line-height, var(--line-height-h4));
+    letter-spacing: var(--theme-letter-spacing, var(--letter-spacing-h4));
+    font-weight: var(--theme-font-weight, var(--font-weight-h4));
+    color: var(--theme-text, var(--color-label-primary));
     white-space: pre-wrap;
   }
 
@@ -120,26 +120,27 @@ const {
     line-height: var(--line-height-label-lg);
     letter-spacing: var(--letter-spacing-label-lg);
     text-transform: uppercase;
-    color: var(--color-label-secondary);
+    color: var(--theme-text, var(--color-label-secondary));
+    opacity: 0.6;
   }
 
   .hero__highlight-title {
     margin: 0;
-    font-family: var(--font-family-body);
-    font-size: var(--font-size-body-md);
-    line-height: var(--line-height-body-md);
-    letter-spacing: var(--letter-spacing-body-md);
-    font-weight: var(--font-weight-body-md);
-    color: var(--color-label-primary);
+    font-family: var(--theme-font-family, var(--font-family-body));
+    font-size: var(--theme-font-size, var(--font-size-body-md));
+    line-height: var(--theme-line-height, var(--line-height-body-md));
+    letter-spacing: var(--theme-letter-spacing, var(--letter-spacing-body-md));
+    font-weight: var(--theme-font-weight, var(--font-weight-body-md));
+    color: var(--theme-text, var(--color-label-primary));
   }
 
   .hero__highlight-summary {
     margin: 0;
-    font-family: var(--font-family-body);
-    font-size: var(--font-size-body-md);
-    line-height: var(--line-height-body-md);
-    letter-spacing: var(--letter-spacing-body-md);
-    color: var(--color-label-primary);
+    font-family: var(--theme-font-family, var(--font-family-body));
+    font-size: var(--theme-font-size, var(--font-size-body-md));
+    line-height: var(--theme-line-height, var(--line-height-body-md));
+    letter-spacing: var(--theme-letter-spacing, var(--letter-spacing-body-md));
+    color: var(--theme-text, var(--color-label-primary));
   }
 
   .hero__cta {
@@ -149,16 +150,17 @@ const {
     gap: var(--space-xs);
     padding: var(--space-xs) var(--space-sm);
     border-radius: var(--radius-lg);
-    background: var(--color-surface-white);
-    border: 1px solid var(--color-label-tertiary);
+    background: var(--theme-accent, var(--color-surface-white));
+    border: 1px solid var(--theme-text, var(--color-label-tertiary));
+    opacity: 0.18;
     backdrop-filter: blur(8px);
     font-family: var(--font-family-ui);
     font-size: var(--font-size-label-sm);
     line-height: var(--line-height-label-sm);
     letter-spacing: var(--letter-spacing-label-sm);
     text-transform: uppercase;
-    color: var(--color-label-primary);
-    transition: transform 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+    color: var(--theme-text, var(--color-label-primary));
+    transition: transform 0.2s ease, border-color 0.2s ease, background-color 0.2s ease;
     margin-top: var(--space-xs);
   }
 

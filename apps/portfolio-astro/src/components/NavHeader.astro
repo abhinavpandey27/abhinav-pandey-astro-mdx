@@ -101,6 +101,19 @@ const {
     background: rgba(255, 255, 255, 0.8);
     backdrop-filter: blur(14px);
     border-bottom: 1px solid rgba(11, 12, 17, 0.08);
+    transition: background-color 0.6s ease, border-color 0.6s ease;
+  }
+
+  /* Ensure nav header maintains contrast with theme */
+  [data-active-theme] .nav-header {
+    background: color-mix(in srgb, var(--theme-bg, #ffffff) 85%, transparent);
+    border-bottom-color: color-mix(in srgb, var(--theme-text, #0b0c11) 12%, transparent);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .nav-header {
+      transition: background-color 0.15s ease, border-color 0.15s ease;
+    }
   }
 
   .nav-header__inner {
@@ -127,23 +140,24 @@ const {
     display: flex;
     flex-direction: column;
     gap: 2px;
-    font-family: var(--font-family-body);
-    font-size: var(--font-size-body-md);
-    line-height: var(--line-height-body-md);
-    letter-spacing: var(--letter-spacing-body-md);
-    color: var(--color-label-primary);
+    font-family: var(--theme-font-family, var(--font-family-body));
+    font-size: var(--theme-font-size, var(--font-size-body-md));
+    line-height: var(--theme-line-height, var(--line-height-body-md));
+    letter-spacing: var(--theme-letter-spacing, var(--letter-spacing-body-md));
+    color: var(--theme-text, var(--color-label-primary));
   }
 
   .nav-header__name {
-    font-weight: var(--font-weight-body-md);
+    font-weight: var(--theme-font-weight, var(--font-weight-body-md));
   }
 
   .nav-header__location {
-    font-family: var(--font-family-body);
-    font-size: var(--font-size-body-md);
-    line-height: var(--line-height-body-md);
-    letter-spacing: var(--letter-spacing-body-md);
-    color: var(--color-label-secondary);
+    font-family: var(--theme-font-family, var(--font-family-body));
+    font-size: var(--theme-font-size, var(--font-size-body-md));
+    line-height: var(--theme-line-height, var(--line-height-body-md));
+    letter-spacing: var(--theme-letter-spacing, var(--letter-spacing-body-md));
+    color: var(--theme-text, var(--color-label-secondary));
+    opacity: 0.6;
   }
 
   .nav-header__primary {
@@ -174,32 +188,36 @@ const {
     display: inline-flex;
     align-items: center;
     gap: var(--space-xs);
-    font-family: var(--font-family-body);
-    font-size: var(--font-size-body-md);
-    line-height: var(--line-height-body-md);
-    letter-spacing: var(--letter-spacing-body-md);
-    color: var(--color-label-secondary);
-    transition: color 0.2s ease;
+    font-family: var(--theme-font-family, var(--font-family-body));
+    font-size: var(--theme-font-size, var(--font-size-body-md));
+    line-height: var(--theme-line-height, var(--line-height-body-md));
+    letter-spacing: var(--theme-letter-spacing, var(--letter-spacing-body-md));
+    color: var(--theme-text, var(--color-label-secondary));
+    opacity: 0.6;
+    transition: color 0.2s ease, opacity 0.2s ease;
   }
 
   .nav-header__link:hover,
   .nav-header__link:focus-visible {
-    color: var(--color-label-primary);
+    color: var(--theme-text, var(--color-label-primary));
+    opacity: 1;
   }
 
   .nav-header__social-link {
-    font-family: var(--font-family-body);
-    font-size: var(--font-size-body-md);
-    line-height: var(--line-height-body-md);
-    letter-spacing: var(--letter-spacing-body-md);
-    color: var(--color-label-secondary);
+    font-family: var(--theme-font-family, var(--font-family-body));
+    font-size: var(--theme-font-size, var(--font-size-body-md));
+    line-height: var(--theme-line-height, var(--line-height-body-md));
+    letter-spacing: var(--theme-letter-spacing, var(--letter-spacing-body-md));
+    color: var(--theme-text, var(--color-label-secondary));
+    opacity: 0.6;
     text-align: right;
-    transition: color 0.2s ease;
+    transition: color 0.2s ease, opacity 0.2s ease;
   }
 
   .nav-header__social-link:hover,
   .nav-header__social-link:focus-visible {
-    color: var(--color-label-primary);
+    color: var(--theme-text, var(--color-label-primary));
+    opacity: 1;
   }
 
   .nav-header__menu {

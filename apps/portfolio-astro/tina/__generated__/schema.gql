@@ -141,6 +141,21 @@ type ProjectMotion {
   prefersReducedMotionCopy: String
 }
 
+type ProjectThemeTypography {
+  fontFamily: String
+  fontSize: String
+  fontWeight: String
+  lineHeight: String
+  letterSpacing: String
+}
+
+type ProjectTheme {
+  bg: String
+  text: String
+  accent: String
+  typography: ProjectThemeTypography
+}
+
 type Project implements Node & Document {
   title: String!
   slug: String!
@@ -157,6 +172,7 @@ type Project implements Node & Document {
   highlights: [ProjectHighlights]
   cta: ProjectCta
   motion: ProjectMotion
+  theme: ProjectTheme
   id: ID!
   _sys: SystemInfo!
   _values: JSON!
@@ -258,6 +274,21 @@ input ProjectMotionFilter {
   prefersReducedMotionCopy: StringFilter
 }
 
+input ProjectThemeTypographyFilter {
+  fontFamily: StringFilter
+  fontSize: StringFilter
+  fontWeight: StringFilter
+  lineHeight: StringFilter
+  letterSpacing: StringFilter
+}
+
+input ProjectThemeFilter {
+  bg: StringFilter
+  text: StringFilter
+  accent: StringFilter
+  typography: ProjectThemeTypographyFilter
+}
+
 input ProjectFilter {
   title: StringFilter
   slug: StringFilter
@@ -274,6 +305,7 @@ input ProjectFilter {
   highlights: ProjectHighlightsFilter
   cta: ProjectCtaFilter
   motion: ProjectMotionFilter
+  theme: ProjectThemeFilter
 }
 
 type ProjectConnectionEdges {
@@ -323,6 +355,21 @@ type SiteMotion {
   prefersReducedMotionCopy: String
 }
 
+type SiteThemeTypography {
+  fontFamily: String
+  fontSize: String
+  fontWeight: String
+  lineHeight: String
+  letterSpacing: String
+}
+
+type SiteTheme {
+  bg: String
+  text: String
+  accent: String
+  typography: SiteThemeTypography
+}
+
 type Site implements Node & Document {
   title: String!
   heroTagline: String!
@@ -337,6 +384,7 @@ type Site implements Node & Document {
   heroCarousel: [SiteHeroCarousel]
   contactCopy: String
   motion: SiteMotion
+  theme: SiteTheme
   id: ID!
   _sys: SystemInfo!
   _values: JSON!
@@ -380,6 +428,21 @@ input SiteMotionFilter {
   prefersReducedMotionCopy: StringFilter
 }
 
+input SiteThemeTypographyFilter {
+  fontFamily: StringFilter
+  fontSize: StringFilter
+  fontWeight: StringFilter
+  lineHeight: StringFilter
+  letterSpacing: StringFilter
+}
+
+input SiteThemeFilter {
+  bg: StringFilter
+  text: StringFilter
+  accent: StringFilter
+  typography: SiteThemeTypographyFilter
+}
+
 input SiteFilter {
   title: StringFilter
   heroTagline: StringFilter
@@ -394,6 +457,7 @@ input SiteFilter {
   heroCarousel: SiteHeroCarouselFilter
   contactCopy: StringFilter
   motion: SiteMotionFilter
+  theme: SiteThemeFilter
 }
 
 type SiteConnectionEdges {
@@ -436,6 +500,21 @@ type AboutMotion {
   prefersReducedMotionCopy: String
 }
 
+type AboutThemeTypography {
+  fontFamily: String
+  fontSize: String
+  fontWeight: String
+  lineHeight: String
+  letterSpacing: String
+}
+
+type AboutTheme {
+  bg: String
+  text: String
+  accent: String
+  typography: AboutThemeTypography
+}
+
 type About implements Node & Document {
   title: String!
   subtitle: String
@@ -447,6 +526,7 @@ type About implements Node & Document {
   skills: [AboutSkills]
   contactHighlights: [String]
   motion: AboutMotion
+  theme: AboutTheme
   id: ID!
   _sys: SystemInfo!
   _values: JSON!
@@ -481,6 +561,21 @@ input AboutMotionFilter {
   prefersReducedMotionCopy: StringFilter
 }
 
+input AboutThemeTypographyFilter {
+  fontFamily: StringFilter
+  fontSize: StringFilter
+  fontWeight: StringFilter
+  lineHeight: StringFilter
+  letterSpacing: StringFilter
+}
+
+input AboutThemeFilter {
+  bg: StringFilter
+  text: StringFilter
+  accent: StringFilter
+  typography: AboutThemeTypographyFilter
+}
+
 input AboutFilter {
   title: StringFilter
   subtitle: StringFilter
@@ -492,6 +587,7 @@ input AboutFilter {
   skills: AboutSkillsFilter
   contactHighlights: StringFilter
   motion: AboutMotionFilter
+  theme: AboutThemeFilter
 }
 
 type AboutConnectionEdges {
@@ -580,6 +676,21 @@ input ProjectMotionMutation {
   prefersReducedMotionCopy: String
 }
 
+input ProjectThemeTypographyMutation {
+  fontFamily: String
+  fontSize: String
+  fontWeight: String
+  lineHeight: String
+  letterSpacing: String
+}
+
+input ProjectThemeMutation {
+  bg: String
+  text: String
+  accent: String
+  typography: ProjectThemeTypographyMutation
+}
+
 input ProjectMutation {
   title: String
   slug: String
@@ -596,6 +707,7 @@ input ProjectMutation {
   highlights: [ProjectHighlightsMutation]
   cta: ProjectCtaMutation
   motion: ProjectMotionMutation
+  theme: ProjectThemeMutation
 }
 
 input SiteNavLinksMutation {
@@ -632,6 +744,21 @@ input SiteMotionMutation {
   prefersReducedMotionCopy: String
 }
 
+input SiteThemeTypographyMutation {
+  fontFamily: String
+  fontSize: String
+  fontWeight: String
+  lineHeight: String
+  letterSpacing: String
+}
+
+input SiteThemeMutation {
+  bg: String
+  text: String
+  accent: String
+  typography: SiteThemeTypographyMutation
+}
+
 input SiteMutation {
   title: String
   heroTagline: String
@@ -646,6 +773,7 @@ input SiteMutation {
   heroCarousel: [SiteHeroCarouselMutation]
   contactCopy: String
   motion: SiteMotionMutation
+  theme: SiteThemeMutation
 }
 
 input AboutPortraitMutation {
@@ -677,6 +805,21 @@ input AboutMotionMutation {
   prefersReducedMotionCopy: String
 }
 
+input AboutThemeTypographyMutation {
+  fontFamily: String
+  fontSize: String
+  fontWeight: String
+  lineHeight: String
+  letterSpacing: String
+}
+
+input AboutThemeMutation {
+  bg: String
+  text: String
+  accent: String
+  typography: AboutThemeTypographyMutation
+}
+
 input AboutMutation {
   title: String
   subtitle: String
@@ -688,6 +831,7 @@ input AboutMutation {
   skills: [AboutSkillsMutation]
   contactHighlights: [String]
   motion: AboutMotionMutation
+  theme: AboutThemeMutation
 }
 
 schema {

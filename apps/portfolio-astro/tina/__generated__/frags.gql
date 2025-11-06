@@ -56,6 +56,20 @@ fragment ProjectParts on Project {
     galleryStagger
     prefersReducedMotionCopy
   }
+  theme {
+    __typename
+    bg
+    text
+    accent
+    typography {
+      __typename
+      fontFamily
+      fontSize
+      fontWeight
+      lineHeight
+      letterSpacing
+    }
+  }
 }
 
 fragment SiteParts on Site {
@@ -125,6 +139,20 @@ fragment SiteParts on Site {
         galleryStagger
         prefersReducedMotionCopy
       }
+      theme {
+        __typename
+        bg
+        text
+        accent
+        typography {
+          __typename
+          fontFamily
+          fontSize
+          fontWeight
+          lineHeight
+          letterSpacing
+        }
+      }
     }
     ... on Document {
       _sys {
@@ -174,6 +202,20 @@ fragment SiteParts on Site {
     galleryStagger
     prefersReducedMotionCopy
   }
+  theme {
+    __typename
+    bg
+    text
+    accent
+    typography {
+      __typename
+      fontFamily
+      fontSize
+      fontWeight
+      lineHeight
+      letterSpacing
+    }
+  }
 }
 
 fragment AboutParts on About {
@@ -212,5 +254,19 @@ fragment AboutParts on About {
     galleryVariant
     galleryStagger
     prefersReducedMotionCopy
+  }
+  theme {
+    __typename
+    bg
+    text
+    accent
+    typography {
+      __typename
+      fontFamily
+      fontSize
+      fontWeight
+      lineHeight
+      letterSpacing
+    }
   }
 }

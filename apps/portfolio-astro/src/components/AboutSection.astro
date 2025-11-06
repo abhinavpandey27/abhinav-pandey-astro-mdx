@@ -87,21 +87,31 @@ const mdxComponents = { Callout, OutcomeMetric };
 <style>
   .about-section {
     padding: clamp(var(--space-xl), 12vh, 220px) clamp(var(--space-lg), 6vw, 120px);
+    min-height: 100vh;
+    background: var(--theme-bg, #f8f8fb);
+    color: var(--theme-text, var(--color-label-primary));
+    transition: background-color 0.6s ease, color 0.6s ease;
   }
 
   .about-section--light {
-    background: #f8f8fb;
-    color: var(--color-label-primary);
+    background: var(--theme-bg, #f8f8fb);
+    color: var(--theme-text, var(--color-label-primary));
   }
 
   .about-section--dark {
-    background: #0b0c11;
-    color: var(--color-label-primary-dark);
+    background: var(--theme-bg, #0b0c11);
+    color: var(--theme-text, var(--color-label-primary-dark));
   }
 
   .about-section--accent {
-    background: radial-gradient(120% 120% at 20% 10%, rgba(36, 38, 62, 0.94), #0b0c11);
-    color: var(--color-label-primary-dark);
+    background: var(--theme-bg, radial-gradient(120% 120% at 20% 10%, rgba(36, 38, 62, 0.94), #0b0c11));
+    color: var(--theme-text, var(--color-label-primary-dark));
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .about-section {
+      transition: background-color 0.15s ease, color 0.15s ease;
+    }
   }
 
   .about-section__inner {
@@ -123,19 +133,16 @@ const mdxComponents = { Callout, OutcomeMetric };
     text-transform: uppercase;
     letter-spacing: 2px;
     font-size: 12px;
-    color: var(--color-label-secondary);
-  }
-
-  .about-section--dark .about-section__subtitle,
-  .about-section--accent .about-section__subtitle {
-    color: rgba(255, 255, 255, 0.6);
+    color: var(--theme-text, var(--color-label-secondary));
+    opacity: 0.6;
   }
 
   .about-section__title {
     margin: 0;
-    font-family: var(--font-family-heading);
+    font-family: var(--theme-font-family, var(--font-family-heading));
     font-size: clamp(36px, 5vw, 56px);
     line-height: 1.05;
+    color: var(--theme-text, inherit);
   }
 
   .about-section__meta {
@@ -143,19 +150,16 @@ const mdxComponents = { Callout, OutcomeMetric };
     letter-spacing: 1.2px;
     text-transform: uppercase;
     font-size: 12px;
-    color: var(--color-label-secondary);
-  }
-
-  .about-section--dark .about-section__meta,
-  .about-section--accent .about-section__meta {
-    color: rgba(255, 255, 255, 0.6);
+    color: var(--theme-text, var(--color-label-secondary));
+    opacity: 0.6;
   }
 
   .about-section__lead {
     margin: var(--space-sm) 0 0;
+    font-family: var(--theme-font-family, inherit);
     font-size: clamp(18px, 2.4vw, 22px);
     line-height: 1.5;
-    color: inherit;
+    color: var(--theme-text, inherit);
   }
 
   .about-section__portrait {
@@ -176,17 +180,16 @@ const mdxComponents = { Callout, OutcomeMetric };
   .about-section__portrait figcaption {
     padding: var(--space-sm) var(--space-md);
     font-size: 13px;
-    color: var(--color-label-secondary);
-  }
-
-  .about-section--dark .about-section__portrait figcaption,
-  .about-section--accent .about-section__portrait figcaption {
-    color: rgba(255, 255, 255, 0.7);
+    color: var(--theme-text, var(--color-label-secondary));
+    opacity: 0.7;
   }
 
   .about-section__body {
-    font-size: var(--font-size-body-md);
-    line-height: var(--line-height-body-md);
+    font-family: var(--theme-font-family, var(--font-family-body));
+    font-size: var(--theme-font-size, var(--font-size-body-md));
+    line-height: var(--theme-line-height, var(--line-height-body-md));
+    letter-spacing: var(--theme-letter-spacing, var(--letter-spacing-body-md));
+    color: var(--theme-text, inherit);
     display: grid;
     gap: var(--space-lg);
   }

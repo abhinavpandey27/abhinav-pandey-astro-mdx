@@ -54,9 +54,17 @@ const socialLinks = data.socialLinks ?? [];
 
 <style>
   .contact-strip {
-    background: linear-gradient(120deg, rgba(17, 19, 32, 0.94), rgba(11, 12, 17, 1));
-    color: var(--color-label-primary-dark);
+    background: var(--theme-bg, linear-gradient(120deg, rgba(17, 19, 32, 0.94), rgba(11, 12, 17, 1)));
+    color: var(--theme-text, var(--color-label-primary-dark));
     padding: clamp(var(--space-xl), 12vh, 180px) clamp(var(--space-lg), 6vw, 120px);
+    min-height: 100vh;
+    transition: background-color 0.6s ease, color 0.6s ease;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .contact-strip {
+      transition: background-color 0.15s ease, color 0.15s ease;
+    }
   }
 
   .contact-strip__inner {
@@ -70,16 +78,19 @@ const socialLinks = data.socialLinks ?? [];
 
   .contact-strip__title {
     margin: 0 0 var(--space-sm);
-    font-family: var(--font-family-heading);
+    font-family: var(--theme-font-family, var(--font-family-heading));
     font-size: clamp(36px, 5vw, 52px);
     line-height: 1.05;
+    color: var(--theme-text, inherit);
   }
 
   .contact-strip__lead {
     margin: 0 0 var(--space-md);
+    font-family: var(--theme-font-family, inherit);
     font-size: clamp(18px, 2.2vw, 22px);
     line-height: 1.5;
-    color: rgba(255, 255, 255, 0.72);
+    color: var(--theme-text, rgba(255, 255, 255, 0.72));
+    opacity: 0.72;
   }
 
   .contact-strip__actions {

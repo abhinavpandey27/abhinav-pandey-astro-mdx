@@ -32,6 +32,21 @@ a {
   text-decoration: none;
 }
 
+a:focus-visible {
+  outline: 2px solid var(--theme-accent, #5763ff);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+  outline: 2px solid var(--theme-accent, #5763ff);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
 button {
   font: inherit;
 }

@@ -256,6 +256,23 @@ export type ProjectMotion = {
   prefersReducedMotionCopy?: Maybe<Scalars['String']['output']>;
 };
 
+export type ProjectThemeTypography = {
+  __typename?: 'ProjectThemeTypography';
+  fontFamily?: Maybe<Scalars['String']['output']>;
+  fontSize?: Maybe<Scalars['String']['output']>;
+  fontWeight?: Maybe<Scalars['String']['output']>;
+  lineHeight?: Maybe<Scalars['String']['output']>;
+  letterSpacing?: Maybe<Scalars['String']['output']>;
+};
+
+export type ProjectTheme = {
+  __typename?: 'ProjectTheme';
+  bg?: Maybe<Scalars['String']['output']>;
+  text?: Maybe<Scalars['String']['output']>;
+  accent?: Maybe<Scalars['String']['output']>;
+  typography?: Maybe<ProjectThemeTypography>;
+};
+
 export type Project = Node & Document & {
   __typename?: 'Project';
   title: Scalars['String']['output'];
@@ -273,6 +290,7 @@ export type Project = Node & Document & {
   highlights?: Maybe<Array<Maybe<ProjectHighlights>>>;
   cta?: Maybe<ProjectCta>;
   motion?: Maybe<ProjectMotion>;
+  theme?: Maybe<ProjectTheme>;
   id: Scalars['ID']['output'];
   _sys: SystemInfo;
   _values: Scalars['JSON']['output'];
@@ -374,6 +392,21 @@ export type ProjectMotionFilter = {
   prefersReducedMotionCopy?: InputMaybe<StringFilter>;
 };
 
+export type ProjectThemeTypographyFilter = {
+  fontFamily?: InputMaybe<StringFilter>;
+  fontSize?: InputMaybe<StringFilter>;
+  fontWeight?: InputMaybe<StringFilter>;
+  lineHeight?: InputMaybe<StringFilter>;
+  letterSpacing?: InputMaybe<StringFilter>;
+};
+
+export type ProjectThemeFilter = {
+  bg?: InputMaybe<StringFilter>;
+  text?: InputMaybe<StringFilter>;
+  accent?: InputMaybe<StringFilter>;
+  typography?: InputMaybe<ProjectThemeTypographyFilter>;
+};
+
 export type ProjectFilter = {
   title?: InputMaybe<StringFilter>;
   slug?: InputMaybe<StringFilter>;
@@ -390,6 +423,7 @@ export type ProjectFilter = {
   highlights?: InputMaybe<ProjectHighlightsFilter>;
   cta?: InputMaybe<ProjectCtaFilter>;
   motion?: InputMaybe<ProjectMotionFilter>;
+  theme?: InputMaybe<ProjectThemeFilter>;
 };
 
 export type ProjectConnectionEdges = {
@@ -446,6 +480,23 @@ export type SiteMotion = {
   prefersReducedMotionCopy?: Maybe<Scalars['String']['output']>;
 };
 
+export type SiteThemeTypography = {
+  __typename?: 'SiteThemeTypography';
+  fontFamily?: Maybe<Scalars['String']['output']>;
+  fontSize?: Maybe<Scalars['String']['output']>;
+  fontWeight?: Maybe<Scalars['String']['output']>;
+  lineHeight?: Maybe<Scalars['String']['output']>;
+  letterSpacing?: Maybe<Scalars['String']['output']>;
+};
+
+export type SiteTheme = {
+  __typename?: 'SiteTheme';
+  bg?: Maybe<Scalars['String']['output']>;
+  text?: Maybe<Scalars['String']['output']>;
+  accent?: Maybe<Scalars['String']['output']>;
+  typography?: Maybe<SiteThemeTypography>;
+};
+
 export type Site = Node & Document & {
   __typename?: 'Site';
   title: Scalars['String']['output'];
@@ -461,6 +512,7 @@ export type Site = Node & Document & {
   heroCarousel?: Maybe<Array<Maybe<SiteHeroCarousel>>>;
   contactCopy?: Maybe<Scalars['String']['output']>;
   motion?: Maybe<SiteMotion>;
+  theme?: Maybe<SiteTheme>;
   id: Scalars['ID']['output'];
   _sys: SystemInfo;
   _values: Scalars['JSON']['output'];
@@ -504,6 +556,21 @@ export type SiteMotionFilter = {
   prefersReducedMotionCopy?: InputMaybe<StringFilter>;
 };
 
+export type SiteThemeTypographyFilter = {
+  fontFamily?: InputMaybe<StringFilter>;
+  fontSize?: InputMaybe<StringFilter>;
+  fontWeight?: InputMaybe<StringFilter>;
+  lineHeight?: InputMaybe<StringFilter>;
+  letterSpacing?: InputMaybe<StringFilter>;
+};
+
+export type SiteThemeFilter = {
+  bg?: InputMaybe<StringFilter>;
+  text?: InputMaybe<StringFilter>;
+  accent?: InputMaybe<StringFilter>;
+  typography?: InputMaybe<SiteThemeTypographyFilter>;
+};
+
 export type SiteFilter = {
   title?: InputMaybe<StringFilter>;
   heroTagline?: InputMaybe<StringFilter>;
@@ -518,6 +585,7 @@ export type SiteFilter = {
   heroCarousel?: InputMaybe<SiteHeroCarouselFilter>;
   contactCopy?: InputMaybe<StringFilter>;
   motion?: InputMaybe<SiteMotionFilter>;
+  theme?: InputMaybe<SiteThemeFilter>;
 };
 
 export type SiteConnectionEdges = {
@@ -566,6 +634,23 @@ export type AboutMotion = {
   prefersReducedMotionCopy?: Maybe<Scalars['String']['output']>;
 };
 
+export type AboutThemeTypography = {
+  __typename?: 'AboutThemeTypography';
+  fontFamily?: Maybe<Scalars['String']['output']>;
+  fontSize?: Maybe<Scalars['String']['output']>;
+  fontWeight?: Maybe<Scalars['String']['output']>;
+  lineHeight?: Maybe<Scalars['String']['output']>;
+  letterSpacing?: Maybe<Scalars['String']['output']>;
+};
+
+export type AboutTheme = {
+  __typename?: 'AboutTheme';
+  bg?: Maybe<Scalars['String']['output']>;
+  text?: Maybe<Scalars['String']['output']>;
+  accent?: Maybe<Scalars['String']['output']>;
+  typography?: Maybe<AboutThemeTypography>;
+};
+
 export type About = Node & Document & {
   __typename?: 'About';
   title: Scalars['String']['output'];
@@ -578,6 +663,7 @@ export type About = Node & Document & {
   skills?: Maybe<Array<Maybe<AboutSkills>>>;
   contactHighlights?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
   motion?: Maybe<AboutMotion>;
+  theme?: Maybe<AboutTheme>;
   id: Scalars['ID']['output'];
   _sys: SystemInfo;
   _values: Scalars['JSON']['output'];
@@ -612,6 +698,21 @@ export type AboutMotionFilter = {
   prefersReducedMotionCopy?: InputMaybe<StringFilter>;
 };
 
+export type AboutThemeTypographyFilter = {
+  fontFamily?: InputMaybe<StringFilter>;
+  fontSize?: InputMaybe<StringFilter>;
+  fontWeight?: InputMaybe<StringFilter>;
+  lineHeight?: InputMaybe<StringFilter>;
+  letterSpacing?: InputMaybe<StringFilter>;
+};
+
+export type AboutThemeFilter = {
+  bg?: InputMaybe<StringFilter>;
+  text?: InputMaybe<StringFilter>;
+  accent?: InputMaybe<StringFilter>;
+  typography?: InputMaybe<AboutThemeTypographyFilter>;
+};
+
 export type AboutFilter = {
   title?: InputMaybe<StringFilter>;
   subtitle?: InputMaybe<StringFilter>;
@@ -623,6 +724,7 @@ export type AboutFilter = {
   skills?: InputMaybe<AboutSkillsFilter>;
   contactHighlights?: InputMaybe<StringFilter>;
   motion?: InputMaybe<AboutMotionFilter>;
+  theme?: InputMaybe<AboutThemeFilter>;
 };
 
 export type AboutConnectionEdges = {
@@ -783,6 +885,21 @@ export type ProjectMotionMutation = {
   prefersReducedMotionCopy?: InputMaybe<Scalars['String']['input']>;
 };
 
+export type ProjectThemeTypographyMutation = {
+  fontFamily?: InputMaybe<Scalars['String']['input']>;
+  fontSize?: InputMaybe<Scalars['String']['input']>;
+  fontWeight?: InputMaybe<Scalars['String']['input']>;
+  lineHeight?: InputMaybe<Scalars['String']['input']>;
+  letterSpacing?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type ProjectThemeMutation = {
+  bg?: InputMaybe<Scalars['String']['input']>;
+  text?: InputMaybe<Scalars['String']['input']>;
+  accent?: InputMaybe<Scalars['String']['input']>;
+  typography?: InputMaybe<ProjectThemeTypographyMutation>;
+};
+
 export type ProjectMutation = {
   title?: InputMaybe<Scalars['String']['input']>;
   slug?: InputMaybe<Scalars['String']['input']>;
@@ -799,6 +916,7 @@ export type ProjectMutation = {
   highlights?: InputMaybe<Array<InputMaybe<ProjectHighlightsMutation>>>;
   cta?: InputMaybe<ProjectCtaMutation>;
   motion?: InputMaybe<ProjectMotionMutation>;
+  theme?: InputMaybe<ProjectThemeMutation>;
 };
 
 export type SiteNavLinksMutation = {
@@ -835,6 +953,21 @@ export type SiteMotionMutation = {
   prefersReducedMotionCopy?: InputMaybe<Scalars['String']['input']>;
 };
 
+export type SiteThemeTypographyMutation = {
+  fontFamily?: InputMaybe<Scalars['String']['input']>;
+  fontSize?: InputMaybe<Scalars['String']['input']>;
+  fontWeight?: InputMaybe<Scalars['String']['input']>;
+  lineHeight?: InputMaybe<Scalars['String']['input']>;
+  letterSpacing?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type SiteThemeMutation = {
+  bg?: InputMaybe<Scalars['String']['input']>;
+  text?: InputMaybe<Scalars['String']['input']>;
+  accent?: InputMaybe<Scalars['String']['input']>;
+  typography?: InputMaybe<SiteThemeTypographyMutation>;
+};
+
 export type SiteMutation = {
   title?: InputMaybe<Scalars['String']['input']>;
   heroTagline?: InputMaybe<Scalars['String']['input']>;
@@ -849,6 +982,7 @@ export type SiteMutation = {
   heroCarousel?: InputMaybe<Array<InputMaybe<SiteHeroCarouselMutation>>>;
   contactCopy?: InputMaybe<Scalars['String']['input']>;
   motion?: InputMaybe<SiteMotionMutation>;
+  theme?: InputMaybe<SiteThemeMutation>;
 };
 
 export type AboutPortraitMutation = {
@@ -880,6 +1014,21 @@ export type AboutMotionMutation = {
   prefersReducedMotionCopy?: InputMaybe<Scalars['String']['input']>;
 };
 
+export type AboutThemeTypographyMutation = {
+  fontFamily?: InputMaybe<Scalars['String']['input']>;
+  fontSize?: InputMaybe<Scalars['String']['input']>;
+  fontWeight?: InputMaybe<Scalars['String']['input']>;
+  lineHeight?: InputMaybe<Scalars['String']['input']>;
+  letterSpacing?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type AboutThemeMutation = {
+  bg?: InputMaybe<Scalars['String']['input']>;
+  text?: InputMaybe<Scalars['String']['input']>;
+  accent?: InputMaybe<Scalars['String']['input']>;
+  typography?: InputMaybe<AboutThemeTypographyMutation>;
+};
+
 export type AboutMutation = {
   title?: InputMaybe<Scalars['String']['input']>;
   subtitle?: InputMaybe<Scalars['String']['input']>;
@@ -891,20 +1040,21 @@ export type AboutMutation = {
   skills?: InputMaybe<Array<InputMaybe<AboutSkillsMutation>>>;
   contactHighlights?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
   motion?: InputMaybe<AboutMotionMutation>;
+  theme?: InputMaybe<AboutThemeMutation>;
 };
 
-export type ProjectPartsFragment = { __typename: 'Project', title: string, slug: string, summary: string, storyLayout?: string | null, featured?: boolean | null, role: string, team?: Array<string | null> | null, timeline: string, categories?: Array<string | null> | null, hero: { __typename: 'ProjectHero', kicker?: string | null, media: { __typename: 'ProjectHeroMedia', asset: string, alt: string, caption?: string | null, emphasis?: string | null } }, gallery?: Array<{ __typename: 'ProjectGallery', asset: string, alt: string, caption?: string | null, emphasis?: string | null, layout: string, motionDelay?: number | null } | null> | null, outcomes?: Array<{ __typename: 'ProjectOutcomes', label: string, value: string, description?: string | null } | null> | null, highlights?: Array<{ __typename: 'ProjectHighlights', title: string, body?: any | null } | null> | null, cta?: { __typename: 'ProjectCta', label: string, href: string, isExternal?: boolean | null } | null, motion?: { __typename: 'ProjectMotion', heroVariant?: string | null, heroDuration?: number | null, heroDelay?: number | null, sectionBackground?: string | null, galleryVariant?: string | null, galleryStagger?: number | null, prefersReducedMotionCopy?: string | null } | null };
+export type ProjectPartsFragment = { __typename: 'Project', title: string, slug: string, summary: string, storyLayout?: string | null, featured?: boolean | null, role: string, team?: Array<string | null> | null, timeline: string, categories?: Array<string | null> | null, hero: { __typename: 'ProjectHero', kicker?: string | null, media: { __typename: 'ProjectHeroMedia', asset: string, alt: string, caption?: string | null, emphasis?: string | null } }, gallery?: Array<{ __typename: 'ProjectGallery', asset: string, alt: string, caption?: string | null, emphasis?: string | null, layout: string, motionDelay?: number | null } | null> | null, outcomes?: Array<{ __typename: 'ProjectOutcomes', label: string, value: string, description?: string | null } | null> | null, highlights?: Array<{ __typename: 'ProjectHighlights', title: string, body?: any | null } | null> | null, cta?: { __typename: 'ProjectCta', label: string, href: string, isExternal?: boolean | null } | null, motion?: { __typename: 'ProjectMotion', heroVariant?: string | null, heroDuration?: number | null, heroDelay?: number | null, sectionBackground?: string | null, galleryVariant?: string | null, galleryStagger?: number | null, prefersReducedMotionCopy?: string | null } | null, theme?: { __typename: 'ProjectTheme', bg?: string | null, text?: string | null, accent?: string | null, typography?: { __typename: 'ProjectThemeTypography', fontFamily?: string | null, fontSize?: string | null, fontWeight?: string | null, lineHeight?: string | null, letterSpacing?: string | null } | null } | null };
 
-export type SitePartsFragment = { __typename: 'Site', title: string, heroTagline: string, location: string, intro: string, bioSnippet?: string | null, email: string, contactCopy?: string | null, featuredProject: { __typename: 'Project', title: string, slug: string, summary: string, storyLayout?: string | null, featured?: boolean | null, role: string, team?: Array<string | null> | null, timeline: string, categories?: Array<string | null> | null, id: string, hero: { __typename: 'ProjectHero', kicker?: string | null, media: { __typename: 'ProjectHeroMedia', asset: string, alt: string, caption?: string | null, emphasis?: string | null } }, gallery?: Array<{ __typename: 'ProjectGallery', asset: string, alt: string, caption?: string | null, emphasis?: string | null, layout: string, motionDelay?: number | null } | null> | null, outcomes?: Array<{ __typename: 'ProjectOutcomes', label: string, value: string, description?: string | null } | null> | null, highlights?: Array<{ __typename: 'ProjectHighlights', title: string, body?: any | null } | null> | null, cta?: { __typename: 'ProjectCta', label: string, href: string, isExternal?: boolean | null } | null, motion?: { __typename: 'ProjectMotion', heroVariant?: string | null, heroDuration?: number | null, heroDelay?: number | null, sectionBackground?: string | null, galleryVariant?: string | null, galleryStagger?: number | null, prefersReducedMotionCopy?: string | null } | null, _sys: { __typename?: 'SystemInfo', filename: string, basename: string, hasReferences?: boolean | null, breadcrumbs: Array<string>, path: string, relativePath: string, extension: string } }, navLinks: Array<{ __typename: 'SiteNavLinks', label: string, href: string }>, socialLinks?: Array<{ __typename: 'SiteSocialLinks', label: string, url: string, ariaLabel?: string | null } | null> | null, resume: { __typename: 'SiteResume', label: string, file: string, size?: number | null }, heroCarousel?: Array<{ __typename: 'SiteHeroCarousel', asset: string, alt: string, caption?: string | null, emphasis?: string | null } | null> | null, motion?: { __typename: 'SiteMotion', heroVariant?: string | null, heroDuration?: number | null, heroDelay?: number | null, sectionBackground?: string | null, galleryVariant?: string | null, galleryStagger?: number | null, prefersReducedMotionCopy?: string | null } | null };
+export type SitePartsFragment = { __typename: 'Site', title: string, heroTagline: string, location: string, intro: string, bioSnippet?: string | null, email: string, contactCopy?: string | null, featuredProject: { __typename: 'Project', title: string, slug: string, summary: string, storyLayout?: string | null, featured?: boolean | null, role: string, team?: Array<string | null> | null, timeline: string, categories?: Array<string | null> | null, id: string, hero: { __typename: 'ProjectHero', kicker?: string | null, media: { __typename: 'ProjectHeroMedia', asset: string, alt: string, caption?: string | null, emphasis?: string | null } }, gallery?: Array<{ __typename: 'ProjectGallery', asset: string, alt: string, caption?: string | null, emphasis?: string | null, layout: string, motionDelay?: number | null } | null> | null, outcomes?: Array<{ __typename: 'ProjectOutcomes', label: string, value: string, description?: string | null } | null> | null, highlights?: Array<{ __typename: 'ProjectHighlights', title: string, body?: any | null } | null> | null, cta?: { __typename: 'ProjectCta', label: string, href: string, isExternal?: boolean | null } | null, motion?: { __typename: 'ProjectMotion', heroVariant?: string | null, heroDuration?: number | null, heroDelay?: number | null, sectionBackground?: string | null, galleryVariant?: string | null, galleryStagger?: number | null, prefersReducedMotionCopy?: string | null } | null, theme?: { __typename: 'ProjectTheme', bg?: string | null, text?: string | null, accent?: string | null, typography?: { __typename: 'ProjectThemeTypography', fontFamily?: string | null, fontSize?: string | null, fontWeight?: string | null, lineHeight?: string | null, letterSpacing?: string | null } | null } | null, _sys: { __typename?: 'SystemInfo', filename: string, basename: string, hasReferences?: boolean | null, breadcrumbs: Array<string>, path: string, relativePath: string, extension: string } }, navLinks: Array<{ __typename: 'SiteNavLinks', label: string, href: string }>, socialLinks?: Array<{ __typename: 'SiteSocialLinks', label: string, url: string, ariaLabel?: string | null } | null> | null, resume: { __typename: 'SiteResume', label: string, file: string, size?: number | null }, heroCarousel?: Array<{ __typename: 'SiteHeroCarousel', asset: string, alt: string, caption?: string | null, emphasis?: string | null } | null> | null, motion?: { __typename: 'SiteMotion', heroVariant?: string | null, heroDuration?: number | null, heroDelay?: number | null, sectionBackground?: string | null, galleryVariant?: string | null, galleryStagger?: number | null, prefersReducedMotionCopy?: string | null } | null, theme?: { __typename: 'SiteTheme', bg?: string | null, text?: string | null, accent?: string | null, typography?: { __typename: 'SiteThemeTypography', fontFamily?: string | null, fontSize?: string | null, fontWeight?: string | null, lineHeight?: string | null, letterSpacing?: string | null } | null } | null };
 
-export type AboutPartsFragment = { __typename: 'About', title: string, subtitle?: string | null, location: string, lead: string, narrativeTone: string, contactHighlights?: Array<string | null> | null, portrait: { __typename: 'AboutPortrait', asset: string, alt: string, caption?: string | null, emphasis?: string | null }, gallery?: Array<{ __typename: 'AboutGallery', asset: string, alt: string, caption?: string | null, emphasis?: string | null } | null> | null, skills?: Array<{ __typename: 'AboutSkills', category: string, items: Array<string> } | null> | null, motion?: { __typename: 'AboutMotion', heroVariant?: string | null, heroDuration?: number | null, heroDelay?: number | null, sectionBackground?: string | null, galleryVariant?: string | null, galleryStagger?: number | null, prefersReducedMotionCopy?: string | null } | null };
+export type AboutPartsFragment = { __typename: 'About', title: string, subtitle?: string | null, location: string, lead: string, narrativeTone: string, contactHighlights?: Array<string | null> | null, portrait: { __typename: 'AboutPortrait', asset: string, alt: string, caption?: string | null, emphasis?: string | null }, gallery?: Array<{ __typename: 'AboutGallery', asset: string, alt: string, caption?: string | null, emphasis?: string | null } | null> | null, skills?: Array<{ __typename: 'AboutSkills', category: string, items: Array<string> } | null> | null, motion?: { __typename: 'AboutMotion', heroVariant?: string | null, heroDuration?: number | null, heroDelay?: number | null, sectionBackground?: string | null, galleryVariant?: string | null, galleryStagger?: number | null, prefersReducedMotionCopy?: string | null } | null, theme?: { __typename: 'AboutTheme', bg?: string | null, text?: string | null, accent?: string | null, typography?: { __typename: 'AboutThemeTypography', fontFamily?: string | null, fontSize?: string | null, fontWeight?: string | null, lineHeight?: string | null, letterSpacing?: string | null } | null } | null };
 
 export type ProjectQueryVariables = Exact<{
   relativePath: Scalars['String']['input'];
 }>;
 
 
-export type ProjectQuery = { __typename?: 'Query', project: { __typename: 'Project', id: string, title: string, slug: string, summary: string, storyLayout?: string | null, featured?: boolean | null, role: string, team?: Array<string | null> | null, timeline: string, categories?: Array<string | null> | null, _sys: { __typename?: 'SystemInfo', filename: string, basename: string, hasReferences?: boolean | null, breadcrumbs: Array<string>, path: string, relativePath: string, extension: string }, hero: { __typename: 'ProjectHero', kicker?: string | null, media: { __typename: 'ProjectHeroMedia', asset: string, alt: string, caption?: string | null, emphasis?: string | null } }, gallery?: Array<{ __typename: 'ProjectGallery', asset: string, alt: string, caption?: string | null, emphasis?: string | null, layout: string, motionDelay?: number | null } | null> | null, outcomes?: Array<{ __typename: 'ProjectOutcomes', label: string, value: string, description?: string | null } | null> | null, highlights?: Array<{ __typename: 'ProjectHighlights', title: string, body?: any | null } | null> | null, cta?: { __typename: 'ProjectCta', label: string, href: string, isExternal?: boolean | null } | null, motion?: { __typename: 'ProjectMotion', heroVariant?: string | null, heroDuration?: number | null, heroDelay?: number | null, sectionBackground?: string | null, galleryVariant?: string | null, galleryStagger?: number | null, prefersReducedMotionCopy?: string | null } | null } };
+export type ProjectQuery = { __typename?: 'Query', project: { __typename: 'Project', id: string, title: string, slug: string, summary: string, storyLayout?: string | null, featured?: boolean | null, role: string, team?: Array<string | null> | null, timeline: string, categories?: Array<string | null> | null, _sys: { __typename?: 'SystemInfo', filename: string, basename: string, hasReferences?: boolean | null, breadcrumbs: Array<string>, path: string, relativePath: string, extension: string }, hero: { __typename: 'ProjectHero', kicker?: string | null, media: { __typename: 'ProjectHeroMedia', asset: string, alt: string, caption?: string | null, emphasis?: string | null } }, gallery?: Array<{ __typename: 'ProjectGallery', asset: string, alt: string, caption?: string | null, emphasis?: string | null, layout: string, motionDelay?: number | null } | null> | null, outcomes?: Array<{ __typename: 'ProjectOutcomes', label: string, value: string, description?: string | null } | null> | null, highlights?: Array<{ __typename: 'ProjectHighlights', title: string, body?: any | null } | null> | null, cta?: { __typename: 'ProjectCta', label: string, href: string, isExternal?: boolean | null } | null, motion?: { __typename: 'ProjectMotion', heroVariant?: string | null, heroDuration?: number | null, heroDelay?: number | null, sectionBackground?: string | null, galleryVariant?: string | null, galleryStagger?: number | null, prefersReducedMotionCopy?: string | null } | null, theme?: { __typename: 'ProjectTheme', bg?: string | null, text?: string | null, accent?: string | null, typography?: { __typename: 'ProjectThemeTypography', fontFamily?: string | null, fontSize?: string | null, fontWeight?: string | null, lineHeight?: string | null, letterSpacing?: string | null } | null } | null } };
 
 export type ProjectConnectionQueryVariables = Exact<{
   before?: InputMaybe<Scalars['String']['input']>;
@@ -916,14 +1066,14 @@ export type ProjectConnectionQueryVariables = Exact<{
 }>;
 
 
-export type ProjectConnectionQuery = { __typename?: 'Query', projectConnection: { __typename?: 'ProjectConnection', totalCount: number, pageInfo: { __typename?: 'PageInfo', hasPreviousPage: boolean, hasNextPage: boolean, startCursor: string, endCursor: string }, edges?: Array<{ __typename?: 'ProjectConnectionEdges', cursor: string, node?: { __typename: 'Project', id: string, title: string, slug: string, summary: string, storyLayout?: string | null, featured?: boolean | null, role: string, team?: Array<string | null> | null, timeline: string, categories?: Array<string | null> | null, _sys: { __typename?: 'SystemInfo', filename: string, basename: string, hasReferences?: boolean | null, breadcrumbs: Array<string>, path: string, relativePath: string, extension: string }, hero: { __typename: 'ProjectHero', kicker?: string | null, media: { __typename: 'ProjectHeroMedia', asset: string, alt: string, caption?: string | null, emphasis?: string | null } }, gallery?: Array<{ __typename: 'ProjectGallery', asset: string, alt: string, caption?: string | null, emphasis?: string | null, layout: string, motionDelay?: number | null } | null> | null, outcomes?: Array<{ __typename: 'ProjectOutcomes', label: string, value: string, description?: string | null } | null> | null, highlights?: Array<{ __typename: 'ProjectHighlights', title: string, body?: any | null } | null> | null, cta?: { __typename: 'ProjectCta', label: string, href: string, isExternal?: boolean | null } | null, motion?: { __typename: 'ProjectMotion', heroVariant?: string | null, heroDuration?: number | null, heroDelay?: number | null, sectionBackground?: string | null, galleryVariant?: string | null, galleryStagger?: number | null, prefersReducedMotionCopy?: string | null } | null } | null } | null> | null } };
+export type ProjectConnectionQuery = { __typename?: 'Query', projectConnection: { __typename?: 'ProjectConnection', totalCount: number, pageInfo: { __typename?: 'PageInfo', hasPreviousPage: boolean, hasNextPage: boolean, startCursor: string, endCursor: string }, edges?: Array<{ __typename?: 'ProjectConnectionEdges', cursor: string, node?: { __typename: 'Project', id: string, title: string, slug: string, summary: string, storyLayout?: string | null, featured?: boolean | null, role: string, team?: Array<string | null> | null, timeline: string, categories?: Array<string | null> | null, _sys: { __typename?: 'SystemInfo', filename: string, basename: string, hasReferences?: boolean | null, breadcrumbs: Array<string>, path: string, relativePath: string, extension: string }, hero: { __typename: 'ProjectHero', kicker?: string | null, media: { __typename: 'ProjectHeroMedia', asset: string, alt: string, caption?: string | null, emphasis?: string | null } }, gallery?: Array<{ __typename: 'ProjectGallery', asset: string, alt: string, caption?: string | null, emphasis?: string | null, layout: string, motionDelay?: number | null } | null> | null, outcomes?: Array<{ __typename: 'ProjectOutcomes', label: string, value: string, description?: string | null } | null> | null, highlights?: Array<{ __typename: 'ProjectHighlights', title: string, body?: any | null } | null> | null, cta?: { __typename: 'ProjectCta', label: string, href: string, isExternal?: boolean | null } | null, motion?: { __typename: 'ProjectMotion', heroVariant?: string | null, heroDuration?: number | null, heroDelay?: number | null, sectionBackground?: string | null, galleryVariant?: string | null, galleryStagger?: number | null, prefersReducedMotionCopy?: string | null } | null, theme?: { __typename: 'ProjectTheme', bg?: string | null, text?: string | null, accent?: string | null, typography?: { __typename: 'ProjectThemeTypography', fontFamily?: string | null, fontSize?: string | null, fontWeight?: string | null, lineHeight?: string | null, letterSpacing?: string | null } | null } | null } | null } | null> | null } };
 
 export type SiteQueryVariables = Exact<{
   relativePath: Scalars['String']['input'];
 }>;
 
 
-export type SiteQuery = { __typename?: 'Query', site: { __typename: 'Site', id: string, title: string, heroTagline: string, location: string, intro: string, bioSnippet?: string | null, email: string, contactCopy?: string | null, _sys: { __typename?: 'SystemInfo', filename: string, basename: string, hasReferences?: boolean | null, breadcrumbs: Array<string>, path: string, relativePath: string, extension: string }, featuredProject: { __typename: 'Project', title: string, slug: string, summary: string, storyLayout?: string | null, featured?: boolean | null, role: string, team?: Array<string | null> | null, timeline: string, categories?: Array<string | null> | null, id: string, hero: { __typename: 'ProjectHero', kicker?: string | null, media: { __typename: 'ProjectHeroMedia', asset: string, alt: string, caption?: string | null, emphasis?: string | null } }, gallery?: Array<{ __typename: 'ProjectGallery', asset: string, alt: string, caption?: string | null, emphasis?: string | null, layout: string, motionDelay?: number | null } | null> | null, outcomes?: Array<{ __typename: 'ProjectOutcomes', label: string, value: string, description?: string | null } | null> | null, highlights?: Array<{ __typename: 'ProjectHighlights', title: string, body?: any | null } | null> | null, cta?: { __typename: 'ProjectCta', label: string, href: string, isExternal?: boolean | null } | null, motion?: { __typename: 'ProjectMotion', heroVariant?: string | null, heroDuration?: number | null, heroDelay?: number | null, sectionBackground?: string | null, galleryVariant?: string | null, galleryStagger?: number | null, prefersReducedMotionCopy?: string | null } | null, _sys: { __typename?: 'SystemInfo', filename: string, basename: string, hasReferences?: boolean | null, breadcrumbs: Array<string>, path: string, relativePath: string, extension: string } }, navLinks: Array<{ __typename: 'SiteNavLinks', label: string, href: string }>, socialLinks?: Array<{ __typename: 'SiteSocialLinks', label: string, url: string, ariaLabel?: string | null } | null> | null, resume: { __typename: 'SiteResume', label: string, file: string, size?: number | null }, heroCarousel?: Array<{ __typename: 'SiteHeroCarousel', asset: string, alt: string, caption?: string | null, emphasis?: string | null } | null> | null, motion?: { __typename: 'SiteMotion', heroVariant?: string | null, heroDuration?: number | null, heroDelay?: number | null, sectionBackground?: string | null, galleryVariant?: string | null, galleryStagger?: number | null, prefersReducedMotionCopy?: string | null } | null } };
+export type SiteQuery = { __typename?: 'Query', site: { __typename: 'Site', id: string, title: string, heroTagline: string, location: string, intro: string, bioSnippet?: string | null, email: string, contactCopy?: string | null, _sys: { __typename?: 'SystemInfo', filename: string, basename: string, hasReferences?: boolean | null, breadcrumbs: Array<string>, path: string, relativePath: string, extension: string }, featuredProject: { __typename: 'Project', title: string, slug: string, summary: string, storyLayout?: string | null, featured?: boolean | null, role: string, team?: Array<string | null> | null, timeline: string, categories?: Array<string | null> | null, id: string, hero: { __typename: 'ProjectHero', kicker?: string | null, media: { __typename: 'ProjectHeroMedia', asset: string, alt: string, caption?: string | null, emphasis?: string | null } }, gallery?: Array<{ __typename: 'ProjectGallery', asset: string, alt: string, caption?: string | null, emphasis?: string | null, layout: string, motionDelay?: number | null } | null> | null, outcomes?: Array<{ __typename: 'ProjectOutcomes', label: string, value: string, description?: string | null } | null> | null, highlights?: Array<{ __typename: 'ProjectHighlights', title: string, body?: any | null } | null> | null, cta?: { __typename: 'ProjectCta', label: string, href: string, isExternal?: boolean | null } | null, motion?: { __typename: 'ProjectMotion', heroVariant?: string | null, heroDuration?: number | null, heroDelay?: number | null, sectionBackground?: string | null, galleryVariant?: string | null, galleryStagger?: number | null, prefersReducedMotionCopy?: string | null } | null, theme?: { __typename: 'ProjectTheme', bg?: string | null, text?: string | null, accent?: string | null, typography?: { __typename: 'ProjectThemeTypography', fontFamily?: string | null, fontSize?: string | null, fontWeight?: string | null, lineHeight?: string | null, letterSpacing?: string | null } | null } | null, _sys: { __typename?: 'SystemInfo', filename: string, basename: string, hasReferences?: boolean | null, breadcrumbs: Array<string>, path: string, relativePath: string, extension: string } }, navLinks: Array<{ __typename: 'SiteNavLinks', label: string, href: string }>, socialLinks?: Array<{ __typename: 'SiteSocialLinks', label: string, url: string, ariaLabel?: string | null } | null> | null, resume: { __typename: 'SiteResume', label: string, file: string, size?: number | null }, heroCarousel?: Array<{ __typename: 'SiteHeroCarousel', asset: string, alt: string, caption?: string | null, emphasis?: string | null } | null> | null, motion?: { __typename: 'SiteMotion', heroVariant?: string | null, heroDuration?: number | null, heroDelay?: number | null, sectionBackground?: string | null, galleryVariant?: string | null, galleryStagger?: number | null, prefersReducedMotionCopy?: string | null } | null, theme?: { __typename: 'SiteTheme', bg?: string | null, text?: string | null, accent?: string | null, typography?: { __typename: 'SiteThemeTypography', fontFamily?: string | null, fontSize?: string | null, fontWeight?: string | null, lineHeight?: string | null, letterSpacing?: string | null } | null } | null } };
 
 export type SiteConnectionQueryVariables = Exact<{
   before?: InputMaybe<Scalars['String']['input']>;
@@ -935,14 +1085,14 @@ export type SiteConnectionQueryVariables = Exact<{
 }>;
 
 
-export type SiteConnectionQuery = { __typename?: 'Query', siteConnection: { __typename?: 'SiteConnection', totalCount: number, pageInfo: { __typename?: 'PageInfo', hasPreviousPage: boolean, hasNextPage: boolean, startCursor: string, endCursor: string }, edges?: Array<{ __typename?: 'SiteConnectionEdges', cursor: string, node?: { __typename: 'Site', id: string, title: string, heroTagline: string, location: string, intro: string, bioSnippet?: string | null, email: string, contactCopy?: string | null, _sys: { __typename?: 'SystemInfo', filename: string, basename: string, hasReferences?: boolean | null, breadcrumbs: Array<string>, path: string, relativePath: string, extension: string }, featuredProject: { __typename: 'Project', title: string, slug: string, summary: string, storyLayout?: string | null, featured?: boolean | null, role: string, team?: Array<string | null> | null, timeline: string, categories?: Array<string | null> | null, id: string, hero: { __typename: 'ProjectHero', kicker?: string | null, media: { __typename: 'ProjectHeroMedia', asset: string, alt: string, caption?: string | null, emphasis?: string | null } }, gallery?: Array<{ __typename: 'ProjectGallery', asset: string, alt: string, caption?: string | null, emphasis?: string | null, layout: string, motionDelay?: number | null } | null> | null, outcomes?: Array<{ __typename: 'ProjectOutcomes', label: string, value: string, description?: string | null } | null> | null, highlights?: Array<{ __typename: 'ProjectHighlights', title: string, body?: any | null } | null> | null, cta?: { __typename: 'ProjectCta', label: string, href: string, isExternal?: boolean | null } | null, motion?: { __typename: 'ProjectMotion', heroVariant?: string | null, heroDuration?: number | null, heroDelay?: number | null, sectionBackground?: string | null, galleryVariant?: string | null, galleryStagger?: number | null, prefersReducedMotionCopy?: string | null } | null, _sys: { __typename?: 'SystemInfo', filename: string, basename: string, hasReferences?: boolean | null, breadcrumbs: Array<string>, path: string, relativePath: string, extension: string } }, navLinks: Array<{ __typename: 'SiteNavLinks', label: string, href: string }>, socialLinks?: Array<{ __typename: 'SiteSocialLinks', label: string, url: string, ariaLabel?: string | null } | null> | null, resume: { __typename: 'SiteResume', label: string, file: string, size?: number | null }, heroCarousel?: Array<{ __typename: 'SiteHeroCarousel', asset: string, alt: string, caption?: string | null, emphasis?: string | null } | null> | null, motion?: { __typename: 'SiteMotion', heroVariant?: string | null, heroDuration?: number | null, heroDelay?: number | null, sectionBackground?: string | null, galleryVariant?: string | null, galleryStagger?: number | null, prefersReducedMotionCopy?: string | null } | null } | null } | null> | null } };
+export type SiteConnectionQuery = { __typename?: 'Query', siteConnection: { __typename?: 'SiteConnection', totalCount: number, pageInfo: { __typename?: 'PageInfo', hasPreviousPage: boolean, hasNextPage: boolean, startCursor: string, endCursor: string }, edges?: Array<{ __typename?: 'SiteConnectionEdges', cursor: string, node?: { __typename: 'Site', id: string, title: string, heroTagline: string, location: string, intro: string, bioSnippet?: string | null, email: string, contactCopy?: string | null, _sys: { __typename?: 'SystemInfo', filename: string, basename: string, hasReferences?: boolean | null, breadcrumbs: Array<string>, path: string, relativePath: string, extension: string }, featuredProject: { __typename: 'Project', title: string, slug: string, summary: string, storyLayout?: string | null, featured?: boolean | null, role: string, team?: Array<string | null> | null, timeline: string, categories?: Array<string | null> | null, id: string, hero: { __typename: 'ProjectHero', kicker?: string | null, media: { __typename: 'ProjectHeroMedia', asset: string, alt: string, caption?: string | null, emphasis?: string | null } }, gallery?: Array<{ __typename: 'ProjectGallery', asset: string, alt: string, caption?: string | null, emphasis?: string | null, layout: string, motionDelay?: number | null } | null> | null, outcomes?: Array<{ __typename: 'ProjectOutcomes', label: string, value: string, description?: string | null } | null> | null, highlights?: Array<{ __typename: 'ProjectHighlights', title: string, body?: any | null } | null> | null, cta?: { __typename: 'ProjectCta', label: string, href: string, isExternal?: boolean | null } | null, motion?: { __typename: 'ProjectMotion', heroVariant?: string | null, heroDuration?: number | null, heroDelay?: number | null, sectionBackground?: string | null, galleryVariant?: string | null, galleryStagger?: number | null, prefersReducedMotionCopy?: string | null } | null, theme?: { __typename: 'ProjectTheme', bg?: string | null, text?: string | null, accent?: string | null, typography?: { __typename: 'ProjectThemeTypography', fontFamily?: string | null, fontSize?: string | null, fontWeight?: string | null, lineHeight?: string | null, letterSpacing?: string | null } | null } | null, _sys: { __typename?: 'SystemInfo', filename: string, basename: string, hasReferences?: boolean | null, breadcrumbs: Array<string>, path: string, relativePath: string, extension: string } }, navLinks: Array<{ __typename: 'SiteNavLinks', label: string, href: string }>, socialLinks?: Array<{ __typename: 'SiteSocialLinks', label: string, url: string, ariaLabel?: string | null } | null> | null, resume: { __typename: 'SiteResume', label: string, file: string, size?: number | null }, heroCarousel?: Array<{ __typename: 'SiteHeroCarousel', asset: string, alt: string, caption?: string | null, emphasis?: string | null } | null> | null, motion?: { __typename: 'SiteMotion', heroVariant?: string | null, heroDuration?: number | null, heroDelay?: number | null, sectionBackground?: string | null, galleryVariant?: string | null, galleryStagger?: number | null, prefersReducedMotionCopy?: string | null } | null, theme?: { __typename: 'SiteTheme', bg?: string | null, text?: string | null, accent?: string | null, typography?: { __typename: 'SiteThemeTypography', fontFamily?: string | null, fontSize?: string | null, fontWeight?: string | null, lineHeight?: string | null, letterSpacing?: string | null } | null } | null } | null } | null> | null } };
 
 export type AboutQueryVariables = Exact<{
   relativePath: Scalars['String']['input'];
 }>;
 
 
-export type AboutQuery = { __typename?: 'Query', about: { __typename: 'About', id: string, title: string, subtitle?: string | null, location: string, lead: string, narrativeTone: string, contactHighlights?: Array<string | null> | null, _sys: { __typename?: 'SystemInfo', filename: string, basename: string, hasReferences?: boolean | null, breadcrumbs: Array<string>, path: string, relativePath: string, extension: string }, portrait: { __typename: 'AboutPortrait', asset: string, alt: string, caption?: string | null, emphasis?: string | null }, gallery?: Array<{ __typename: 'AboutGallery', asset: string, alt: string, caption?: string | null, emphasis?: string | null } | null> | null, skills?: Array<{ __typename: 'AboutSkills', category: string, items: Array<string> } | null> | null, motion?: { __typename: 'AboutMotion', heroVariant?: string | null, heroDuration?: number | null, heroDelay?: number | null, sectionBackground?: string | null, galleryVariant?: string | null, galleryStagger?: number | null, prefersReducedMotionCopy?: string | null } | null } };
+export type AboutQuery = { __typename?: 'Query', about: { __typename: 'About', id: string, title: string, subtitle?: string | null, location: string, lead: string, narrativeTone: string, contactHighlights?: Array<string | null> | null, _sys: { __typename?: 'SystemInfo', filename: string, basename: string, hasReferences?: boolean | null, breadcrumbs: Array<string>, path: string, relativePath: string, extension: string }, portrait: { __typename: 'AboutPortrait', asset: string, alt: string, caption?: string | null, emphasis?: string | null }, gallery?: Array<{ __typename: 'AboutGallery', asset: string, alt: string, caption?: string | null, emphasis?: string | null } | null> | null, skills?: Array<{ __typename: 'AboutSkills', category: string, items: Array<string> } | null> | null, motion?: { __typename: 'AboutMotion', heroVariant?: string | null, heroDuration?: number | null, heroDelay?: number | null, sectionBackground?: string | null, galleryVariant?: string | null, galleryStagger?: number | null, prefersReducedMotionCopy?: string | null } | null, theme?: { __typename: 'AboutTheme', bg?: string | null, text?: string | null, accent?: string | null, typography?: { __typename: 'AboutThemeTypography', fontFamily?: string | null, fontSize?: string | null, fontWeight?: string | null, lineHeight?: string | null, letterSpacing?: string | null } | null } | null } };
 
 export type AboutConnectionQueryVariables = Exact<{
   before?: InputMaybe<Scalars['String']['input']>;
@@ -954,7 +1104,7 @@ export type AboutConnectionQueryVariables = Exact<{
 }>;
 
 
-export type AboutConnectionQuery = { __typename?: 'Query', aboutConnection: { __typename?: 'AboutConnection', totalCount: number, pageInfo: { __typename?: 'PageInfo', hasPreviousPage: boolean, hasNextPage: boolean, startCursor: string, endCursor: string }, edges?: Array<{ __typename?: 'AboutConnectionEdges', cursor: string, node?: { __typename: 'About', id: string, title: string, subtitle?: string | null, location: string, lead: string, narrativeTone: string, contactHighlights?: Array<string | null> | null, _sys: { __typename?: 'SystemInfo', filename: string, basename: string, hasReferences?: boolean | null, breadcrumbs: Array<string>, path: string, relativePath: string, extension: string }, portrait: { __typename: 'AboutPortrait', asset: string, alt: string, caption?: string | null, emphasis?: string | null }, gallery?: Array<{ __typename: 'AboutGallery', asset: string, alt: string, caption?: string | null, emphasis?: string | null } | null> | null, skills?: Array<{ __typename: 'AboutSkills', category: string, items: Array<string> } | null> | null, motion?: { __typename: 'AboutMotion', heroVariant?: string | null, heroDuration?: number | null, heroDelay?: number | null, sectionBackground?: string | null, galleryVariant?: string | null, galleryStagger?: number | null, prefersReducedMotionCopy?: string | null } | null } | null } | null> | null } };
+export type AboutConnectionQuery = { __typename?: 'Query', aboutConnection: { __typename?: 'AboutConnection', totalCount: number, pageInfo: { __typename?: 'PageInfo', hasPreviousPage: boolean, hasNextPage: boolean, startCursor: string, endCursor: string }, edges?: Array<{ __typename?: 'AboutConnectionEdges', cursor: string, node?: { __typename: 'About', id: string, title: string, subtitle?: string | null, location: string, lead: string, narrativeTone: string, contactHighlights?: Array<string | null> | null, _sys: { __typename?: 'SystemInfo', filename: string, basename: string, hasReferences?: boolean | null, breadcrumbs: Array<string>, path: string, relativePath: string, extension: string }, portrait: { __typename: 'AboutPortrait', asset: string, alt: string, caption?: string | null, emphasis?: string | null }, gallery?: Array<{ __typename: 'AboutGallery', asset: string, alt: string, caption?: string | null, emphasis?: string | null } | null> | null, skills?: Array<{ __typename: 'AboutSkills', category: string, items: Array<string> } | null> | null, motion?: { __typename: 'AboutMotion', heroVariant?: string | null, heroDuration?: number | null, heroDelay?: number | null, sectionBackground?: string | null, galleryVariant?: string | null, galleryStagger?: number | null, prefersReducedMotionCopy?: string | null } | null, theme?: { __typename: 'AboutTheme', bg?: string | null, text?: string | null, accent?: string | null, typography?: { __typename: 'AboutThemeTypography', fontFamily?: string | null, fontSize?: string | null, fontWeight?: string | null, lineHeight?: string | null, letterSpacing?: string | null } | null } | null } | null } | null> | null } };
 
 export const ProjectPartsFragmentDoc = gql`
     fragment ProjectParts on Project {
@@ -1014,6 +1164,20 @@ export const ProjectPartsFragmentDoc = gql`
     galleryVariant
     galleryStagger
     prefersReducedMotionCopy
+  }
+  theme {
+    __typename
+    bg
+    text
+    accent
+    typography {
+      __typename
+      fontFamily
+      fontSize
+      fontWeight
+      lineHeight
+      letterSpacing
+    }
   }
 }
     `;
@@ -1085,6 +1249,20 @@ export const SitePartsFragmentDoc = gql`
         galleryStagger
         prefersReducedMotionCopy
       }
+      theme {
+        __typename
+        bg
+        text
+        accent
+        typography {
+          __typename
+          fontFamily
+          fontSize
+          fontWeight
+          lineHeight
+          letterSpacing
+        }
+      }
     }
     ... on Document {
       _sys {
@@ -1134,6 +1312,20 @@ export const SitePartsFragmentDoc = gql`
     galleryStagger
     prefersReducedMotionCopy
   }
+  theme {
+    __typename
+    bg
+    text
+    accent
+    typography {
+      __typename
+      fontFamily
+      fontSize
+      fontWeight
+      lineHeight
+      letterSpacing
+    }
+  }
 }
     `;
 export const AboutPartsFragmentDoc = gql`
@@ -1173,6 +1365,20 @@ export const AboutPartsFragmentDoc = gql`
     galleryVariant
     galleryStagger
     prefersReducedMotionCopy
+  }
+  theme {
+    __typename
+    bg
+    text
+    accent
+    typography {
+      __typename
+      fontFamily
+      fontSize
+      fontWeight
+      lineHeight
+      letterSpacing
+    }
   }
 }
     `;

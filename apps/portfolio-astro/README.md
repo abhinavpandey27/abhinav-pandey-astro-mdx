@@ -24,6 +24,7 @@ All collections extend the shared motion-aware schemas defined in `src/content/s
 3. **Alt text is required everywhere.** Write narrative alt text that makes sense without visuals.
 4. **Slugs** must stay lowercase + kebab-case. Tina will block invalid values but double-check before committing.
 5. **Project galleries** need at least one asset; aim for two or more to showcase motion states.
+6. **Theme objects** (optional) define per-section palettes for scroll-driven theming. Each section can specify `bg`, `text`, `accent`, and `typography` overrides.
 
 ### MDX Helpers
 - Standard Markdown headings and lists work out of the box.
@@ -72,6 +73,54 @@ Before you mark task **1.3 Authoring handbook and starter content** complete:
 - [ ] Document any manual testing (designer review notes) in the PR description.
 
 Happy storytelling—motion-first and accessible by default!
+
+## Scroll-Driven Theming
+
+The homepage implements scroll-driven theming: as visitors scroll through sections, the active section's theme (background, text, accent colors, and typography) becomes the site-wide theme until the next section takes over.
+
+### How It Works
+
+1. **Theme Registry**: Each section (hero, projects, about, contact) can define a `theme` object in its frontmatter with:
+   - `bg`: Background color (hex or CSS color value)
+   - `text`: Text color (hex or CSS color value)
+   - `accent`: Accent color for CTAs and highlights
+   - `typography`: Optional object with `fontFamily`, `fontSize`, `fontWeight`, `lineHeight`, `letterSpacing`
+
+2. **IntersectionObserver**: The page tracks which section dominates the viewport and updates root CSS variables (`--theme-bg`, `--theme-text`, etc.) accordingly.
+
+3. **Smooth Transitions**: Theme changes animate smoothly (0.6s by default, 0.15s for reduced-motion users) to avoid jarring shifts.
+
+4. **Fallbacks**: If a section doesn't define a theme, defaults are derived from the `sectionBackground` motion directive (light/dark/accent).
+
+### Setting Themes in Tina
+
+1. Navigate to **Projects** → select a project → scroll to **Theme** section
+2. Use the color pickers for `bg`, `text`, and `accent` (or enter hex values)
+3. Optionally customize typography overrides
+4. Save and preview - theme changes apply when that section is dominant in viewport
+
+### Accessibility & Performance
+
+- **Reduced Motion**: Theme transitions respect `prefers-reduced-motion` (0.15s instead of 0.6s)
+- **Focus Indicators**: All focus states use `--theme-accent` to ensure visibility across backgrounds
+- **Contrast**: Ensure theme colors meet WCAG AA contrast ratios (4.5:1 for normal text)
+- **Mobile Optimized**: Lower intersection thresholds on mobile prevent flicker during rapid scrolling
+- **Viewport Height**: All sections enforce `min-height: 100vh` to give themes time to breathe
+
+### QA Checklist for Scroll-Driven Theming
+
+Before marking scroll-driven theming complete:
+
+- [ ] Scroll through homepage and verify each section's theme applies when it dominates the viewport
+- [ ] Check theme transitions are smooth (not instant) on desktop
+- [ ] Enable reduced-motion in OS settings and verify transitions are ≤150ms
+- [ ] Test on mobile: scroll rapidly and confirm no flicker or theme jitter
+- [ ] Verify focus indicators are visible on all backgrounds (test keyboard navigation)
+- [ ] Check contrast ratios: text should be readable on background colors (WCAG AA: 4.5:1)
+- [ ] Add a new project with custom theme in Tina and verify it appears correctly
+- [ ] Test with sections that don't define themes - ensure fallbacks work based on `sectionBackground`
+- [ ] Verify navigation header adapts to theme changes (background and text colors)
+- [ ] Check that all interactive elements (buttons, links) use theme-accent for focus states
 
 ### MDX Shortcodes
 

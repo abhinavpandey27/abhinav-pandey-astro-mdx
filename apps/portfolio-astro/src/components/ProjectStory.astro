@@ -12,9 +12,10 @@ interface Props {
   project: ProjectEntry;
   variant?: Variant;
   id?: string;
+  'data-theme-section'?: string;
 }
 
-const { project, variant = 'case-study', id } = Astro.props as Props;
+const { project, variant = 'case-study', id, 'data-theme-section': themeSection } = Astro.props as Props;
 const data = project.data;
 const layoutVariant = data.storyLayout ?? variant;
 const { Content } = await project.render();
@@ -51,7 +52,12 @@ const metadata = [
 ].filter(Boolean) as Array<{ label: string; value: string }>;
 ---
 
-<section class={sectionClasses} id={id ?? project.slug} data-variant={layoutVariant}>
+<section
+  class={sectionClasses}
+  id={id ?? project.slug}
+  data-variant={layoutVariant}
+  data-theme-section={themeSection ?? project.slug}
+>
   <div class="project-story__wrapper">
     <div class="project-story__inner">
       <header class="project-story__header">
@@ -142,22 +148,31 @@ const metadata = [
 <style>
   .project-story {
     padding: var(--space-sm) 0;
-    transition: background 0.6s ease, color 0.6s ease;
+    min-height: 100vh;
+    background: var(--theme-bg, #090e03);
+    color: var(--theme-text, var(--color-label-primary-dark));
+    transition: background-color 0.6s ease, color 0.6s ease;
   }
 
   .project-story--dark {
-    background: #090e03;
-    color: var(--color-label-primary-dark);
+    background: var(--theme-bg, #090e03);
+    color: var(--theme-text, var(--color-label-primary-dark));
   }
 
   .project-story--light {
-    background: #f6f6fb;
-    color: var(--color-label-primary);
+    background: var(--theme-bg, #f6f6fb);
+    color: var(--theme-text, var(--color-label-primary));
   }
 
   .project-story--accent {
-    background: radial-gradient(120% 120% at 10% 10%, #1d2032 0%, #0b0c11 90%);
-    color: var(--color-label-primary-dark);
+    background: var(--theme-bg, radial-gradient(120% 120% at 10% 10%, #1d2032 0%, #0b0c11 90%));
+    color: var(--theme-text, var(--color-label-primary-dark));
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .project-story {
+      transition: background-color 0.15s ease, color 0.15s ease;
+    }
   }
 
   .project-story__wrapper {
@@ -210,30 +225,31 @@ const metadata = [
 
   .project-story__title {
     margin: 0;
-    font-family: var(--font-family-heading);
-    font-size: var(--font-size-h4);
-    line-height: var(--line-height-h4);
-    letter-spacing: var(--letter-spacing-h4);
-    font-weight: var(--font-weight-h4);
-    color: var(--color-label-primary-dark);
+    font-family: var(--theme-font-family, var(--font-family-heading));
+    font-size: var(--theme-font-size, var(--font-size-h4));
+    line-height: var(--theme-line-height, var(--line-height-h4));
+    letter-spacing: var(--theme-letter-spacing, var(--letter-spacing-h4));
+    font-weight: var(--theme-font-weight, var(--font-weight-h4));
+    color: var(--theme-text, var(--color-label-primary-dark));
   }
 
   .project-story__subtitle {
     margin: 0;
-    font-family: var(--font-family-heading);
-    font-size: var(--font-size-h4);
-    line-height: var(--line-height-h4);
-    letter-spacing: var(--letter-spacing-h4);
-    color: var(--color-label-secondary-dark);
+    font-family: var(--theme-font-family, var(--font-family-heading));
+    font-size: var(--theme-font-size, var(--font-size-h4));
+    line-height: var(--theme-line-height, var(--line-height-h4));
+    letter-spacing: var(--theme-letter-spacing, var(--letter-spacing-h4));
+    color: var(--theme-text, var(--color-label-secondary-dark));
+    opacity: 0.6;
   }
 
   .project-story__summary {
     margin: 0;
-    font-family: var(--font-family-body);
-    font-size: var(--font-size-body-md);
-    line-height: var(--line-height-body-md);
-    letter-spacing: var(--letter-spacing-body-md);
-    color: var(--color-label-primary-dark);
+    font-family: var(--theme-font-family, var(--font-family-body));
+    font-size: var(--theme-font-size, var(--font-size-body-md));
+    line-height: var(--theme-line-height, var(--line-height-body-md));
+    letter-spacing: var(--theme-letter-spacing, var(--letter-spacing-body-md));
+    color: var(--theme-text, var(--color-label-primary-dark));
   }
 
   .project-story__middle {
@@ -264,17 +280,18 @@ const metadata = [
     line-height: var(--line-height-label-lg);
     letter-spacing: var(--letter-spacing-label-lg);
     text-transform: uppercase;
-    color: var(--color-label-secondary-dark);
+    color: var(--theme-text, var(--color-label-secondary-dark));
+    opacity: 0.6;
     width: 92px;
     flex-shrink: 0;
   }
 
   .project-story__metadata-value {
-    font-family: var(--font-family-body);
-    font-size: var(--font-size-body-md);
-    line-height: var(--line-height-body-md);
-    letter-spacing: var(--letter-spacing-body-md);
-    color: var(--color-label-primary-dark);
+    font-family: var(--theme-font-family, var(--font-family-body));
+    font-size: var(--theme-font-size, var(--font-size-body-md));
+    line-height: var(--theme-line-height, var(--line-height-body-md));
+    letter-spacing: var(--theme-letter-spacing, var(--letter-spacing-body-md));
+    color: var(--theme-text, var(--color-label-primary-dark));
     flex: 1;
   }
 
@@ -288,12 +305,13 @@ const metadata = [
   .project-story__category-chip {
     padding: 2px var(--space-xs);
     border-radius: var(--space-xs);
-    background: var(--color-label-quaternary-dark);
-    font-family: var(--font-family-body);
-    font-size: var(--font-size-body-md);
-    line-height: var(--line-height-body-md);
-    letter-spacing: var(--letter-spacing-body-md);
-    color: var(--color-label-primary-dark);
+    background: var(--theme-text, var(--color-label-quaternary-dark));
+    opacity: 0.18;
+    font-family: var(--theme-font-family, var(--font-family-body));
+    font-size: var(--theme-font-size, var(--font-size-body-md));
+    line-height: var(--theme-line-height, var(--line-height-body-md));
+    letter-spacing: var(--theme-letter-spacing, var(--letter-spacing-body-md));
+    color: var(--theme-text, var(--color-label-primary-dark));
   }
 
   .project-story__right {
@@ -322,12 +340,12 @@ const metadata = [
   }
 
   .project-story__outcome-value {
-    font-family: var(--font-family-heading);
-    font-size: var(--font-size-h4);
-    line-height: var(--line-height-h4);
-    letter-spacing: var(--letter-spacing-h4);
-    font-weight: var(--font-weight-h4);
-    color: var(--color-label-primary-dark);
+    font-family: var(--theme-font-family, var(--font-family-heading));
+    font-size: var(--theme-font-size, var(--font-size-h4));
+    line-height: var(--theme-line-height, var(--line-height-h4));
+    letter-spacing: var(--theme-letter-spacing, var(--letter-spacing-h4));
+    font-weight: var(--theme-font-weight, var(--font-weight-h4));
+    color: var(--theme-text, var(--color-label-primary-dark));
     list-style-position: inside;
   }
 
@@ -360,14 +378,14 @@ const metadata = [
     gap: var(--space-xs);
     padding: var(--space-xs) var(--space-sm);
     border-radius: var(--radius-lg);
-    background: var(--color-label-primary-dark);
-    color: var(--color-surface-white);
+    background: var(--theme-accent, var(--color-label-primary-dark));
+    color: var(--theme-text, var(--color-surface-white));
     font-family: var(--font-family-ui);
     font-size: var(--font-size-label-lg);
     line-height: var(--line-height-label-lg);
     letter-spacing: var(--letter-spacing-label-lg);
     text-transform: uppercase;
-    transition: transform 0.2s ease, opacity 0.2s ease;
+    transition: transform 0.2s ease, opacity 0.2s ease, background-color 0.2s ease;
     margin-top: var(--space-xs);
   }
 

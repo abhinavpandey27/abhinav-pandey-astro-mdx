@@ -2,6 +2,24 @@ import { z } from 'zod';
 
 const mediaPathSchema = z.string().min(1, 'Provide a media path');
 
+export const themeSchema = z
+  .object({
+    bg: z.string().optional(),
+    text: z.string().optional(),
+    accent: z.string().optional(),
+    typography: z
+      .object({
+        fontFamily: z.string().optional(),
+        fontSize: z.string().optional(),
+        fontWeight: z.string().optional(),
+        lineHeight: z.string().optional(),
+        letterSpacing: z.string().optional()
+      })
+      .optional()
+  })
+  .partial()
+  .optional();
+
 export const motionDirectivesSchema = z
   .object({
     heroVariant: z.enum(['fade', 'rise', 'slide', 'scale', 'static']).default('fade'),
@@ -73,7 +91,8 @@ export const createProjectFrontmatterSchema = () => {
         isExternal: z.boolean().default(true)
       })
       .optional(),
-    motion: motionDirectivesSchema
+    motion: motionDirectivesSchema,
+    theme: themeSchema
   });
 };
 
@@ -114,7 +133,8 @@ export const createSiteSettingsFrontmatterSchema = (projectRef: z.ZodTypeAny) =>
     }),
     heroCarousel: z.array(mediaItem).default([]),
     contactCopy: z.string().optional(),
-    motion: motionDirectivesSchema
+    motion: motionDirectivesSchema,
+    theme: themeSchema
   });
 };
 
@@ -140,6 +160,7 @@ export const createAboutFrontmatterSchema = () => {
       )
       .default([]),
     contactHighlights: z.array(z.string()).default([]),
-    motion: motionDirectivesSchema
+    motion: motionDirectivesSchema,
+    theme: themeSchema
   });
 };

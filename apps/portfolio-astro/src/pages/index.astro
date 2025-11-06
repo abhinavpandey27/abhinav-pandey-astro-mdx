@@ -103,6 +103,120 @@ const heroCarousel: HeroCarouselItem[] = (site.heroCarousel?.length ? site.heroC
 const projects = await getCollection('projects');
 const [aboutEntry] = await getCollection('about');
 
+// Theme registry: maps section IDs to theme tokens
+type ThemeTokens = {
+  bg?: string;
+  text?: string;
+  accent?: string;
+  typography?: {
+    fontFamily?: string;
+    fontSize?: string;
+    fontWeight?: string;
+    lineHeight?: string;
+    letterSpacing?: string;
+  };
+};
+
+const normalizeTheme = (theme?: ThemeTokens): ThemeTokens => {
+  if (!theme) {
+    return {};
+  }
+  return {
+    bg: theme.bg,
+    text: theme.text,
+    accent: theme.accent,
+    typography: theme.typography
+  };
+};
+
+const themeMap: Record<string, ThemeTokens> = {};
+
+// Hero section theme (from site settings)
+const heroTheme = normalizeTheme(site.theme);
+if (Object.keys(heroTheme).length > 0) {
+  themeMap['top'] = heroTheme;
+} else {
+  // Default hero theme
+  themeMap['top'] = {
+    bg: '#ffffff',
+    text: '#0b0c11',
+    accent: '#5763ff',
+    typography: {
+      fontFamily: 'Instrument Sans',
+      fontSize: '16px',
+      fontWeight: '500',
+      lineHeight: '24px',
+      letterSpacing: '-0.2px'
+    }
+  };
+}
+
+// Project themes
+projects.forEach((project) => {
+  const projectTheme = normalizeTheme(project.data.theme);
+  if (Object.keys(projectTheme).length > 0) {
+    themeMap[project.slug] = projectTheme;
+  } else {
+    // Default project theme based on sectionBackground
+    const bgType = project.data.motion?.sectionBackground ?? 'dark';
+    if (bgType === 'dark') {
+      themeMap[project.slug] = {
+        bg: '#090e03',
+        text: '#ffffff',
+        accent: '#5763ff'
+      };
+    } else if (bgType === 'light') {
+      themeMap[project.slug] = {
+        bg: '#f6f6fb',
+        text: '#0b0c11',
+        accent: '#5763ff'
+      };
+    } else {
+      themeMap[project.slug] = {
+        bg: '#1d2032',
+        text: '#ffffff',
+        accent: '#5763ff'
+      };
+    }
+  }
+});
+
+// About section theme
+if (aboutEntry) {
+  const aboutTheme = normalizeTheme(aboutEntry.data.theme);
+  if (Object.keys(aboutTheme).length > 0) {
+    themeMap['about'] = aboutTheme;
+  } else {
+    const bgType = aboutEntry.data.motion?.sectionBackground ?? 'light';
+    if (bgType === 'dark') {
+      themeMap['about'] = {
+        bg: '#0b0c11',
+        text: '#ffffff',
+        accent: '#5763ff'
+      };
+    } else if (bgType === 'light') {
+      themeMap['about'] = {
+        bg: '#f8f8fb',
+        text: '#0b0c11',
+        accent: '#5763ff'
+      };
+    } else {
+      themeMap['about'] = {
+        bg: '#24263e',
+        text: '#ffffff',
+        accent: '#5763ff'
+      };
+    }
+  }
+}
+
+// Contact section default theme
+themeMap['contact'] = {
+  bg: '#0b0c11',
+  text: '#ffffff',
+  accent: '#5763ff'
+};
+
 const fallbackProject = {
   kicker: 'Featured project',
   title: 'Add a highlighted project in Tina',
@@ -160,7 +274,7 @@ if (siteEntry && site.featuredProject) {
     <a class="sr-only" href="#main">Skip to content</a>
 
     <main id="main">
-      <div class="hero-wrapper">
+      <div class="hero-wrapper" data-theme-section="top">
         <div class="hero-grid">
           <div class="hero-grid__nav">
             <NavHeader
@@ -189,23 +303,143 @@ if (siteEntry && site.featuredProject) {
             <ProjectStory
               project={project}
               variant={project.data.storyLayout ?? (index % 2 === 0 ? 'case-study' : 'metrics')}
+              data-theme-section={project.slug}
             />
           ))}
         </section>
       )}
 
       {aboutEntry && (
-        <AboutSection about={aboutEntry} />
+        <div data-theme-section="about">
+          <AboutSection about={aboutEntry} />
+        </div>
       )}
 
-      <ContactStrip site={siteEntryActual} />
+      <div data-theme-section="contact">
+        <ContactStrip site={siteEntryActual} />
+      </div>
     </main>
+
+    <script define:vars={{ themeMap: JSON.stringify(themeMap) }}>
+      (function initScrollTheming() {
+        const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+        const themeMapObj = JSON.parse(themeMap);
+        const root = document.documentElement;
+        let activeId: string | null = null;
+
+        // Apply theme to root CSS variables
+        const applyTheme = (sectionId: string) => {
+          const theme = themeMapObj[sectionId];
+          if (!theme) return;
+
+          if (theme.bg) {
+            root.style.setProperty('--theme-bg', theme.bg);
+          }
+          if (theme.text) {
+            root.style.setProperty('--theme-text', theme.text);
+          }
+          if (theme.accent) {
+            root.style.setProperty('--theme-accent', theme.accent);
+          }
+          if (theme.typography) {
+            if (theme.typography.fontFamily) {
+              root.style.setProperty('--theme-font-family', theme.typography.fontFamily);
+            }
+            if (theme.typography.fontSize) {
+              root.style.setProperty('--theme-font-size', theme.typography.fontSize);
+            }
+            if (theme.typography.fontWeight) {
+              root.style.setProperty('--theme-font-weight', theme.typography.fontWeight);
+            }
+            if (theme.typography.lineHeight) {
+              root.style.setProperty('--theme-line-height', theme.typography.lineHeight);
+            }
+            if (theme.typography.letterSpacing) {
+              root.style.setProperty('--theme-letter-spacing', theme.typography.letterSpacing);
+            }
+          }
+
+          root.setAttribute('data-active-theme', sectionId);
+        };
+
+        // Initialize with first section
+        const sections = Array.from(document.querySelectorAll('[data-theme-section]'));
+        if (sections.length > 0) {
+          const firstSection = sections[0] as HTMLElement;
+          const firstId = firstSection.getAttribute('data-theme-section');
+          if (firstId) {
+            activeId = firstId;
+            applyTheme(firstId);
+          }
+        }
+
+        // Set up IntersectionObserver
+        const isMobile = window.innerWidth < 768;
+        const threshold = isMobile ? 0.3 : 0.5; // Lower threshold on mobile to prevent flicker
+
+        const observer = new IntersectionObserver(
+          (entries) => {
+            // Find the entry with the highest intersection ratio
+            let maxRatio = 0;
+            let dominantEntry: IntersectionObserverEntry | null = null;
+
+            entries.forEach((entry) => {
+              if (entry.isIntersecting && entry.intersectionRatio > maxRatio) {
+                maxRatio = entry.intersectionRatio;
+                dominantEntry = entry;
+              }
+            });
+
+            if (dominantEntry && dominantEntry.isIntersecting) {
+              const target = dominantEntry.target as HTMLElement;
+              const sectionId = target.getAttribute('data-theme-section');
+              if (sectionId && sectionId !== activeId) {
+                activeId = sectionId;
+                applyTheme(sectionId);
+              }
+            }
+          },
+          {
+            threshold: [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0],
+            rootMargin: isMobile ? '-20% 0px -20% 0px' : '-10% 0px -10% 0px'
+          }
+        );
+
+        // Observe all theme sections
+        sections.forEach((section) => {
+          observer.observe(section);
+        });
+
+        // Handle resize to adjust thresholds
+        let resizeTimeout: number;
+        window.addEventListener('resize', () => {
+          clearTimeout(resizeTimeout);
+          resizeTimeout = window.setTimeout(() => {
+            // Re-check on resize
+            sections.forEach((section) => {
+              observer.unobserve(section);
+              observer.observe(section);
+            });
+          }, 150);
+        });
+      })();
+    </script>
   </body>
 </html>
 
 <style>
   .hero-wrapper {
     padding: var(--space-sm) 0;
+    min-height: 100vh;
+    background: var(--theme-bg, #ffffff);
+    color: var(--theme-text, var(--color-label-primary));
+    transition: background-color 0.6s ease, color 0.6s ease;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .hero-wrapper {
+      transition: background-color 0.15s ease, color 0.15s ease;
+    }
   }
 
   .hero-grid {
@@ -213,7 +447,7 @@ if (siteEntry && site.featuredProject) {
     grid-template-columns: repeat(12, 1fr);
     grid-template-rows: repeat(16, minmax(0, 1fr));
     gap: var(--grid-gap);
-    height: 1097px;
+    min-height: 100vh;
     border: 1px solid var(--color-label-quaternary);
     border-top: none;
     border-bottom: none;

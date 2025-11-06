@@ -8,9 +8,12 @@
 
 html {
   font-family: var(--font-family-body);
-  color: var(--color-label-primary);
-  background-color: var(--color-surface-white);
+  color: var(--theme-text, var(--color-label-primary));
+  background-color: var(--theme-bg, var(--color-surface-white));
   scroll-behavior: smooth;
+  /* Theme transitions use centralized timing for consistency */
+  transition: background-color var(--theme-transition-duration, 0.6s) var(--theme-transition-easing, cubic-bezier(0.4, 0, 0.2, 1)),
+    color var(--theme-transition-duration, 0.6s) var(--theme-transition-easing, cubic-bezier(0.4, 0, 0.2, 1));
 }
 
 body {
@@ -19,7 +22,20 @@ body {
   line-height: var(--line-height-body-md);
   letter-spacing: var(--letter-spacing-body-md);
   min-height: 100vh;
-  background: linear-gradient(180deg, #f7f7f9 0%, #ffffff 28%, #f5f5f8 100%);
+  background-color: var(--theme-bg, #f7f7f9);
+  background-image: none;
+  color: var(--theme-text, var(--color-label-primary));
+  /* Theme transitions use centralized timing for consistency */
+  transition: background-color var(--theme-transition-duration, 0.6s) var(--theme-transition-easing, cubic-bezier(0.4, 0, 0.2, 1)),
+    color var(--theme-transition-duration, 0.6s) var(--theme-transition-easing, cubic-bezier(0.4, 0, 0.2, 1));
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html,
+  body {
+    /* Reduced motion timing is handled by --theme-transition-duration override */
+    transition-duration: var(--theme-transition-duration, 0.15s);
+  }
 }
 
 img {

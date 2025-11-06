@@ -5,9 +5,12 @@ import HeroSection from '../components/HeroSection.astro';
 import ProjectStory from '../components/ProjectStory.astro';
 import AboutSection from '../components/AboutSection.astro';
 import ContactStrip from '../components/ContactStrip.astro';
+import ThemeController from '../components/ThemeController.astro';
 import type { HeroCarouselItem } from '../components/HeroSection.astro';
 import type { CollectionEntry } from 'astro:content';
 import { getCollection, getEntry } from 'astro:content';
+import { normalizeTheme } from '../lib/theme/manager';
+import type { ThemeTokens } from '../lib/theme/types';
 const FALLBACK_MEDIA = '/media/placeholder.webp';
 
 const fallbackSite = {
@@ -104,31 +107,6 @@ const projects = await getCollection('projects');
 const [aboutEntry] = await getCollection('about');
 
 // Theme registry: maps section IDs to theme tokens
-type ThemeTokens = {
-  bg?: string;
-  text?: string;
-  accent?: string;
-  typography?: {
-    fontFamily?: string;
-    fontSize?: string;
-    fontWeight?: string;
-    lineHeight?: string;
-    letterSpacing?: string;
-  };
-};
-
-const normalizeTheme = (theme?: ThemeTokens): ThemeTokens => {
-  if (!theme) {
-    return {};
-  }
-  return {
-    bg: theme.bg,
-    text: theme.text,
-    accent: theme.accent,
-    typography: theme.typography
-  };
-};
-
 const themeMap: Record<string, ThemeTokens> = {};
 
 // Hero section theme (from site settings)
@@ -151,33 +129,20 @@ if (Object.keys(heroTheme).length > 0) {
   };
 }
 
-// Project themes
+// Project themes - Use project-defined themes or fallback to design tokens
 projects.forEach((project) => {
   const projectTheme = normalizeTheme(project.data.theme);
   if (Object.keys(projectTheme).length > 0) {
+    // Project has defined theme - use it
     themeMap[project.slug] = projectTheme;
   } else {
-    // Default project theme based on sectionBackground
-    const bgType = project.data.motion?.sectionBackground ?? 'dark';
-    if (bgType === 'dark') {
-      themeMap[project.slug] = {
-        bg: '#090e03',
-        text: '#ffffff',
-        accent: '#5763ff'
-      };
-    } else if (bgType === 'light') {
-      themeMap[project.slug] = {
-        bg: '#f6f6fb',
-        text: '#0b0c11',
-        accent: '#5763ff'
-      };
-    } else {
-      themeMap[project.slug] = {
-        bg: '#1d2032',
-        text: '#ffffff',
-        accent: '#5763ff'
-      };
-    }
+    // No theme defined - use design tokens for default dark theme
+    // Using CSS custom properties that reference design tokens
+    themeMap[project.slug] = {
+      bg: 'var(--color-surface-black)', // Design token: #000000
+      text: 'var(--color-label-primary-dark)', // Design token: #ffffff
+      accent: 'var(--color-label-primary-dark)' // Design token: #ffffff
+    };
   }
 });
 
@@ -233,6 +198,7 @@ const fallbackProject = {
 };
 
 let featuredProject = fallbackProject;
+let featuredProjectImage: { asset: string; alt: string } | undefined = undefined;
 
 if (siteEntry && site.featuredProject) {
   const featuredProjectEntry = await getEntry(site.featuredProject);
@@ -258,6 +224,14 @@ if (siteEntry && site.featuredProject) {
       ],
       cta: projectCta
     };
+
+    // Extract image from featured project for hero card thumbnail
+    if (project.hero?.media) {
+      featuredProjectImage = {
+        asset: project.hero.media.asset,
+        alt: project.hero.media.alt
+      };
+    }
   }
 }
 ---
@@ -274,154 +248,208 @@ if (siteEntry && site.featuredProject) {
     <a class="sr-only" href="#main">Skip to content</a>
 
     <main id="main">
-      <div class="hero-wrapper" data-theme-section="top">
-        <div class="hero-grid">
-          <div class="hero-grid__nav">
-            <NavHeader
-              name={ownerName}
-              location={location}
-              navLinks={navLinks}
-              socialLinks={socialLinks}
-              menuLabel="Menu"
+      <ThemeController sectionId="top" theme={themeMap['top']}>
+        <div class="hero-wrapper">
+          <div class="hero-grid">
+            <div class="hero-grid__nav">
+              <NavHeader
+                name={ownerName}
+                location={location}
+                navLinks={navLinks}
+                socialLinks={socialLinks}
+                menuLabel="Menu"
+              />
+            </div>
+            <HeroSection
+              id="top"
+              heroTagline={heroTagline}
+              intro={introCopy}
+              bioSnippet={bioSnippet}
+              prefersReducedMotionCopy={prefersReducedMotionCopy}
+              featured={featuredProject}
+              featuredImage={featuredProjectImage}
+              carousel={heroCarousel}
             />
           </div>
-          <HeroSection
-            id="top"
-            heroTagline={heroTagline}
-            intro={introCopy}
-            bioSnippet={bioSnippet}
-            prefersReducedMotionCopy={prefersReducedMotionCopy}
-            featured={featuredProject}
-            carousel={heroCarousel}
-          />
         </div>
-      </div>
+      </ThemeController>
 
       {projects.length > 0 && (
         <section id="work" class="work-section">
           {projects.map((project, index) => (
-            <ProjectStory
-              project={project}
-              variant={project.data.storyLayout ?? (index % 2 === 0 ? 'case-study' : 'metrics')}
-              data-theme-section={project.slug}
-            />
+            <ThemeController sectionId={project.slug} theme={themeMap[project.slug]}>
+              <ProjectStory
+                project={project}
+                variant={project.data.storyLayout ?? (index % 2 === 0 ? 'case-study' : 'metrics')}
+              />
+            </ThemeController>
           ))}
         </section>
       )}
 
       {aboutEntry && (
-        <div data-theme-section="about">
+        <ThemeController sectionId="about" theme={themeMap['about']}>
           <AboutSection about={aboutEntry} />
-        </div>
+        </ThemeController>
       )}
 
-      <div data-theme-section="contact">
+      <ThemeController sectionId="contact" theme={themeMap['contact']}>
         <ContactStrip site={siteEntryActual} />
-      </div>
+      </ThemeController>
     </main>
 
-    <script define:vars={{ themeMap: JSON.stringify(themeMap) }}>
-      (function initScrollTheming() {
-        const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
-        const themeMapObj = JSON.parse(themeMap);
-        const root = document.documentElement;
-        let activeId: string | null = null;
+    <div data-default-theme={JSON.stringify(themeMap['top'] || {
+      bg: '#ffffff',
+      text: '#0b0c11',
+      accent: '#5763ff',
+    })} style="display: none;" aria-hidden="true"></div>
 
-        // Apply theme to root CSS variables
-        const applyTheme = (sectionId: string) => {
-          const theme = themeMapObj[sectionId];
-          if (!theme) return;
+    <script type="module">
+      import { initApp } from '../lib/app/init.ts';
+      
+      // Initialize smooth scroll
+      const defaultThemeEl = document.querySelector('[data-default-theme]');
+      const defaultTheme = defaultThemeEl 
+        ? JSON.parse(defaultThemeEl.getAttribute('data-default-theme') || '{}')
+        : { bg: '#ffffff', text: '#0b0c11', accent: '#5763ff' };
+      
+      initApp(defaultTheme);
+    </script>
 
-          if (theme.bg) {
-            root.style.setProperty('--theme-bg', theme.bg);
+    <script>
+      // Theme Switcher - Simple, Direct, Works
+      (function() {
+        console.log('[ThemeSwitcher] Starting...');
+        
+        function init() {
+          console.log('[ThemeSwitcher] Initializing...');
+          
+          const sections = Array.from(document.querySelectorAll('[data-theme-section]'))
+            .map(el => {
+              const id = el.getAttribute('data-theme-section');
+              const json = el.getAttribute('data-theme');
+              if (!id || !json) return null;
+              try {
+                const theme = JSON.parse(json);
+                console.log('[ThemeSwitcher] Found:', id, theme);
+                return { id, el: el, theme: theme };
+              } catch (e) {
+                console.error('[ThemeSwitcher] Parse error:', e);
+                return null;
+              }
+            })
+            .filter(Boolean);
+
+          console.log('[ThemeSwitcher] Total sections:', sections.length);
+
+          if (sections.length === 0) {
+            console.warn('[ThemeSwitcher] No sections!');
+            return;
           }
-          if (theme.text) {
-            root.style.setProperty('--theme-text', theme.text);
+
+          // Set initial theme
+          const first = sections[0];
+          console.log('[ThemeSwitcher] Initial theme:', first.theme);
+          if (first.theme.bg) {
+            document.documentElement.style.setProperty('--theme-bg', first.theme.bg);
+            console.log('[ThemeSwitcher] Set bg:', first.theme.bg);
           }
-          if (theme.accent) {
-            root.style.setProperty('--theme-accent', theme.accent);
+          if (first.theme.text) {
+            document.documentElement.style.setProperty('--theme-text', first.theme.text);
           }
-          if (theme.typography) {
-            if (theme.typography.fontFamily) {
-              root.style.setProperty('--theme-font-family', theme.typography.fontFamily);
+          if (first.theme.accent) {
+            document.documentElement.style.setProperty('--theme-accent', first.theme.accent);
+          }
+
+          let currentId = first.id;
+
+          function applyTheme(target) {
+            if (!target) return;
+            
+            console.log('[ThemeSwitcher] Applying theme:', target.id, target.theme);
+            if (target.theme.bg) {
+              document.documentElement.style.setProperty('--theme-bg', target.theme.bg);
+              console.log('[ThemeSwitcher] Set bg to:', target.theme.bg);
             }
-            if (theme.typography.fontSize) {
-              root.style.setProperty('--theme-font-size', theme.typography.fontSize);
+            if (target.theme.text) {
+              document.documentElement.style.setProperty('--theme-text', target.theme.text);
             }
-            if (theme.typography.fontWeight) {
-              root.style.setProperty('--theme-font-weight', theme.typography.fontWeight);
+            if (target.theme.accent) {
+              document.documentElement.style.setProperty('--theme-accent', target.theme.accent);
             }
-            if (theme.typography.lineHeight) {
-              root.style.setProperty('--theme-line-height', theme.typography.lineHeight);
-            }
-            if (theme.typography.letterSpacing) {
-              root.style.setProperty('--theme-letter-spacing', theme.typography.letterSpacing);
+            currentId = target.id;
+          }
+
+          let frameCount = 0;
+          function updateTheme() {
+            frameCount++;
+            const center = window.innerHeight / 2;
+            let closest = Infinity;
+            let target = null;
+
+            sections.forEach(section => {
+              const rect = section.el.getBoundingClientRect();
+              const elCenter = rect.top + rect.height / 2;
+              const dist = Math.abs(center - elCenter);
+
+              if (rect.top < window.innerHeight && rect.bottom > 0 && dist < closest) {
+                closest = dist;
+                target = section;
+              }
+            });
+
+            if (target) {
+              if (target.id !== currentId) {
+                console.log('[ThemeSwitcher] CHANGE:', currentId, '->', target.id, 'BG:', target.theme.bg);
+                applyTheme(target);
+              } else if (frameCount % 120 === 0) {
+                console.log('[ThemeSwitcher] Current:', target.id, 'BG:', target.theme.bg, 'Scroll:', window.scrollY);
+              }
             }
           }
 
-          root.setAttribute('data-active-theme', sectionId);
-        };
+          // Use IntersectionObserver - most reliable
+          const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+              if (entry.isIntersecting) {
+                const sectionId = entry.target.getAttribute('data-theme-section');
+                const target = sections.find(s => s.id === sectionId);
+                if (target && target.id !== currentId) {
+                  applyTheme(target);
+                }
+              }
+            });
+          }, {
+            rootMargin: '-30% 0px -30% 0px',
+            threshold: [0, 0.1, 0.3, 0.5, 0.7, 1]
+          });
 
-        // Initialize with first section
-        const sections = Array.from(document.querySelectorAll('[data-theme-section]'));
-        if (sections.length > 0) {
-          const firstSection = sections[0] as HTMLElement;
-          const firstId = firstSection.getAttribute('data-theme-section');
-          if (firstId) {
-            activeId = firstId;
-            applyTheme(firstId);
+          sections.forEach(section => {
+            observer.observe(section.el);
+          });
+          console.log('[ThemeSwitcher] Observing', sections.length, 'sections');
+
+          // Also use RAF as backup
+          function rafUpdate() {
+            updateTheme();
+            requestAnimationFrame(rafUpdate);
           }
+          requestAnimationFrame(rafUpdate);
+          console.log('[ThemeSwitcher] Started RAF loop');
+
+          // Also listen to scroll
+          window.addEventListener('scroll', updateTheme, { passive: true });
+          
+          // Initial update
+          updateTheme();
+          console.log('[ThemeSwitcher] Ready');
         }
 
-        // Set up IntersectionObserver
-        const isMobile = window.innerWidth < 768;
-        const threshold = isMobile ? 0.3 : 0.5; // Lower threshold on mobile to prevent flicker
-
-        const observer = new IntersectionObserver(
-          (entries) => {
-            // Find the entry with the highest intersection ratio
-            let maxRatio = 0;
-            let dominantEntry: IntersectionObserverEntry | null = null;
-
-            entries.forEach((entry) => {
-              if (entry.isIntersecting && entry.intersectionRatio > maxRatio) {
-                maxRatio = entry.intersectionRatio;
-                dominantEntry = entry;
-              }
-            });
-
-            if (dominantEntry && dominantEntry.isIntersecting) {
-              const target = dominantEntry.target as HTMLElement;
-              const sectionId = target.getAttribute('data-theme-section');
-              if (sectionId && sectionId !== activeId) {
-                activeId = sectionId;
-                applyTheme(sectionId);
-              }
-            }
-          },
-          {
-            threshold: [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0],
-            rootMargin: isMobile ? '-20% 0px -20% 0px' : '-10% 0px -10% 0px'
-          }
-        );
-
-        // Observe all theme sections
-        sections.forEach((section) => {
-          observer.observe(section);
-        });
-
-        // Handle resize to adjust thresholds
-        let resizeTimeout: number;
-        window.addEventListener('resize', () => {
-          clearTimeout(resizeTimeout);
-          resizeTimeout = window.setTimeout(() => {
-            // Re-check on resize
-            sections.forEach((section) => {
-              observer.unobserve(section);
-              observer.observe(section);
-            });
-          }, 150);
-        });
+        if (document.readyState === 'loading') {
+          document.addEventListener('DOMContentLoaded', init);
+        } else {
+          setTimeout(init, 100);
+        }
       })();
     </script>
   </body>
@@ -433,12 +461,13 @@ if (siteEntry && site.featuredProject) {
     min-height: 100vh;
     background: var(--theme-bg, #ffffff);
     color: var(--theme-text, var(--color-label-primary));
-    transition: background-color 0.6s ease, color 0.6s ease;
+    transition: background-color var(--theme-transition-duration, 0.6s) var(--theme-transition-easing, cubic-bezier(0.4, 0, 0.2, 1)), 
+      color var(--theme-transition-duration, 0.6s) var(--theme-transition-easing, cubic-bezier(0.4, 0, 0.2, 1));
   }
 
   @media (prefers-reduced-motion: reduce) {
     .hero-wrapper {
-      transition: background-color 0.15s ease, color 0.15s ease;
+      transition-duration: var(--theme-transition-duration, 0.15s);
     }
   }
 
@@ -461,7 +490,22 @@ if (siteEntry && site.featuredProject) {
   }
 
   .work-section {
-    display: grid;
-    gap: 0;
+    display: flex;
+    flex-direction: column;
+    background-color: var(--theme-bg, var(--color-surface-white));
+    transition: background-color var(--theme-transition-duration, 1s) var(--theme-transition-easing, cubic-bezier(0.25, 0.46, 0.45, 0.94));
+  }
+
+  /* ThemeController fills space completely - no gaps, no white blocks */
+  .theme-controller {
+    background-color: var(--theme-bg, transparent);
+    transition: background-color var(--theme-transition-duration, 1s) var(--theme-transition-easing, cubic-bezier(0.25, 0.46, 0.45, 0.94));
+    /* Add spacing between projects using padding instead of gap */
+    padding-bottom: clamp(120px, 15vh, 200px);
+  }
+
+  /* Last project doesn't need bottom padding */
+  .work-section > .theme-controller:last-child {
+    padding-bottom: 0;
   }
 </style>

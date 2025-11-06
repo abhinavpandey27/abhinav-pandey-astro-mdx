@@ -58,7 +58,8 @@ const socialLinks = data.socialLinks ?? [];
     color: var(--theme-text, var(--color-label-primary-dark));
     padding: clamp(var(--space-xl), 12vh, 180px) clamp(var(--space-lg), 6vw, 120px);
     min-height: 100vh;
-    transition: background-color 0.6s ease, color 0.6s ease;
+    transition: background-color 0.8s cubic-bezier(0.4, 0, 0.2, 1), 
+      color 0.8s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
   @media (prefers-reduced-motion: reduce) {

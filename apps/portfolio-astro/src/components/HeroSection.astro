@@ -25,6 +25,7 @@ interface Props {
   intro: string;
   bioSnippet?: string;
   featured: HeroHighlight;
+  featuredImage?: { asset: string; alt: string };
   carousel: HeroCarouselItem[];
   prefersReducedMotionCopy?: string;
 }
@@ -35,6 +36,7 @@ const {
   intro,
   bioSnippet,
   featured,
+  featuredImage,
   carousel = [],
   prefersReducedMotionCopy
 } = Astro.props as Props;
@@ -47,18 +49,27 @@ const {
     </div>
 
     <article class="hero__highlight">
-      {featured.kicker && <p class="hero__highlight-kicker">{featured.kicker}</p>}
-      <h2 class="hero__highlight-title">{featured.title}</h2>
-      <p class="hero__highlight-summary">{featured.summary}</p>
-      <a
-        class="hero__cta"
-        href={featured.cta.href}
-        target={featured.cta.isExternal ? '_blank' : undefined}
-        rel={featured.cta.isExternal ? 'noopener noreferrer' : undefined}
-      >
-        <span>{featured.cta.label}</span>
-        <span aria-hidden="true">→</span>
-      </a>
+      <div class="hero__highlight-content">
+        <div class="hero__highlight-text">
+          {featured.kicker && <p class="hero__highlight-kicker">{featured.kicker}</p>}
+          <h2 class="hero__highlight-title">{featured.title}</h2>
+          <p class="hero__highlight-summary">{featured.summary}</p>
+          <a
+            class="hero__cta"
+            href={featured.cta.href}
+            target={featured.cta.isExternal ? '_blank' : undefined}
+            rel={featured.cta.isExternal ? 'noopener noreferrer' : undefined}
+          >
+            <span>{featured.cta.label}</span>
+            <span aria-hidden="true">→</span>
+          </a>
+        </div>
+        {featuredImage && (
+          <div class="hero__highlight-image">
+            <img src={featuredImage.asset} alt={featuredImage.alt} width="150" height="150" />
+          </div>
+        )}
+      </div>
     </article>
   </div>
 
@@ -106,11 +117,37 @@ const {
     border-radius: var(--radius-sm);
     background: var(--color-surface-white);
     border: 0.5px solid var(--color-label-quaternary);
+    width: 565px;
+    flex-shrink: 0;
+  }
+
+  .hero__highlight-content {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: var(--space-sm);
+  }
+
+  .hero__highlight-text {
     display: flex;
     flex-direction: column;
     gap: var(--space-xs);
-    width: 565px;
+    flex: 1;
+  }
+
+  .hero__highlight-image {
     flex-shrink: 0;
+    width: 150px;
+    height: 150px;
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+  }
+
+  .hero__highlight-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
   }
 
   .hero__highlight-kicker {
@@ -150,16 +187,15 @@ const {
     gap: var(--space-xs);
     padding: var(--space-xs) var(--space-sm);
     border-radius: var(--radius-lg);
-    background: var(--theme-accent, var(--color-surface-white));
-    border: 1px solid var(--theme-text, var(--color-label-tertiary));
-    opacity: 0.18;
+    background: var(--color-material-regular);
+    border: 1px solid var(--color-label-tertiary);
     backdrop-filter: blur(8px);
     font-family: var(--font-family-ui);
     font-size: var(--font-size-label-sm);
     line-height: var(--line-height-label-sm);
     letter-spacing: var(--letter-spacing-label-sm);
     text-transform: uppercase;
-    color: var(--theme-text, var(--color-label-primary));
+    color: var(--color-label-primary);
     transition: transform 0.2s ease, border-color 0.2s ease, background-color 0.2s ease;
     margin-top: var(--space-xs);
   }
@@ -168,7 +204,7 @@ const {
   .hero__cta:focus-visible {
     transform: translateY(-1px);
     border-color: var(--color-label-secondary);
-    background: rgba(255, 255, 255, 0.95);
+    background: color-mix(in srgb, var(--color-surface-white) 60%, transparent);
   }
 
   .hero :global(.carousel) {
@@ -184,6 +220,16 @@ const {
 
     .hero__highlight {
       width: 100%;
+    }
+
+    .hero__highlight-content {
+      flex-direction: column;
+    }
+
+    .hero__highlight-image {
+      width: 100%;
+      height: auto;
+      aspect-ratio: 1;
     }
   }
 

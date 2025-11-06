@@ -62,106 +62,178 @@ const hasMultipleSlides = items.length > 1;
 
 {hasMultipleSlides && (
   <script is:inline>
-    const root = document.currentScript?.previousElementSibling;
-    if (!root) {
-      throw new Error('Carousel root not found');
-    }
-
-    root.tabIndex = 0;
-    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
-    const track = root.querySelector('[data-carousel-track]');
-    if (!track) {
-      return;
-    }
-
-    const slides = Array.from(track.children);
-    const dots = Array.from(root.querySelectorAll('.carousel__progress-dot'));
-    const interval = Number(root.dataset.interval) || 5000;
-    let index = 0;
-    let timer;
-
-    const activate = (nextIndex, focus = false) => {
-      index = nextIndex;
-      slides.forEach((slide, slideIndex) => {
-        slide.dataset.active = String(slideIndex === index);
-      });
-      dots.forEach((dot, dotIndex) => {
-        dot.classList.toggle('is-active', dotIndex === index);
-      });
-
-      const target = slides[index];
-      if (target) {
-        (target).scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
-        if (focus) {
-          target.focus({ preventScroll: true });
-        }
+    (function() {
+      const root = document.currentScript?.previousElementSibling;
+      if (!root) {
+        throw new Error('Carousel root not found');
       }
-    };
 
-    const start = () => {
-      if (prefersReducedMotion.matches || slides.length < 2) {
+      root.tabIndex = 0;
+      const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+      const track = root.querySelector('[data-carousel-track]');
+      if (!track) {
         return;
       }
-      stop();
-      timer = window.setInterval(() => {
-        const next = (index + 1) % slides.length;
-        activate(next);
-      }, interval);
-    };
 
-    const stop = () => {
-      if (timer) {
-        window.clearInterval(timer);
-        timer = undefined;
-      }
-    };
+      const slides = Array.from(track.children);
+      const dots = Array.from(root.querySelectorAll('.carousel__progress-dot'));
+      const interval = Number(root.dataset.interval) || 5000;
+      let index = 0;
+      let timer;
+      let isVisible = false;
+      let isAutoplayEnabled = false;
 
-    root.addEventListener('mouseenter', stop);
-    root.addEventListener('mouseleave', start);
-    root.addEventListener('focusin', stop);
-    root.addEventListener('focusout', start);
-    root.addEventListener('keydown', (event) => {
-      if (event.key === 'ArrowRight') {
-        event.preventDefault();
-        const next = (index + 1) % slides.length;
-        activate(next, true);
-      } else if (event.key === 'ArrowLeft') {
-        event.preventDefault();
-        const next = (index - 1 + slides.length) % slides.length;
-        activate(next, true);
-      }
-    });
-    root.addEventListener('click', (event) => {
-      const target = event.target;
-      if (!(target instanceof HTMLElement)) return;
-      if (target.closest('.carousel__progress-dot')) {
-        const dot = target.closest('.carousel__progress-dot');
-        if (!dot) return;
-        const indexAttr = dot.getAttribute('data-index');
-        if (indexAttr) {
-          activate(Number(indexAttr), true);
+      const activate = (nextIndex, focus = false) => {
+        index = nextIndex;
+        slides.forEach((slide, slideIndex) => {
+          slide.dataset.active = String(slideIndex === index);
+        });
+        dots.forEach((dot, dotIndex) => {
+          dot.classList.toggle('is-active', dotIndex === index);
+        });
+
+        const target = slides[index];
+        if (target && track) {
+          // Use scrollTo instead of scrollIntoView to prevent vertical page movement
+          const targetOffsetLeft = target.offsetLeft;
+          const trackWidth = track.clientWidth;
+          const targetWidth = target.clientWidth;
+          const scrollLeft = targetOffsetLeft - (trackWidth - targetWidth) / 2;
+          track.scrollTo({ left: scrollLeft, behavior: 'smooth' });
+          
+          if (focus) {
+            target.focus({ preventScroll: true });
+          }
         }
-      }
-    });
+      };
 
-    prefersReducedMotion.addEventListener('change', (event) => {
-      if (event.matches) {
-        root.classList.add('is-reduced');
+      const start = () => {
+        // Only start if conditions are met
+        if (prefersReducedMotion.matches || slides.length < 2 || !isVisible || isAutoplayEnabled) {
+          return;
+        }
         stop();
+        isAutoplayEnabled = true;
+        timer = window.setInterval(() => {
+          const next = (index + 1) % slides.length;
+          activate(next);
+        }, interval);
+      };
+
+      const stop = () => {
+        if (timer) {
+          window.clearInterval(timer);
+          timer = undefined;
+          isAutoplayEnabled = false;
+        }
+      };
+
+      // IntersectionObserver to gate autoplay based on visibility (≥60% threshold)
+      const visibilityObserver = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            const wasVisible = isVisible;
+            isVisible = entry.isIntersecting && entry.intersectionRatio >= 0.6;
+            
+            if (isVisible && !wasVisible) {
+              // Carousel became visible, start autoplay if conditions allow
+              if (!prefersReducedMotion.matches && slides.length >= 2) {
+                start();
+              }
+            } else if (!isVisible && wasVisible) {
+              // Carousel became hidden or below threshold, stop autoplay
+              stop();
+            }
+          });
+        },
+        {
+          threshold: [0, 0.6, 1.0],
+          rootMargin: '0px'
+        }
+      );
+
+      visibilityObserver.observe(root);
+
+      // Handle page visibility changes
+      document.addEventListener('visibilitychange', () => {
+        if (document.hidden) {
+          stop();
+        } else if (isVisible && !prefersReducedMotion.matches && slides.length >= 2) {
+          start();
+        }
+      });
+
+      // Pause on hover/focus
+      root.addEventListener('mouseenter', stop);
+      root.addEventListener('mouseleave', () => {
+        if (isVisible && !prefersReducedMotion.matches && slides.length >= 2) {
+          start();
+        }
+      });
+      root.addEventListener('focusin', stop);
+      root.addEventListener('focusout', (event) => {
+        // Only restart if focus moved outside the carousel
+        if (!root.contains(event.relatedTarget) && isVisible && !prefersReducedMotion.matches && slides.length >= 2) {
+          start();
+        }
+      });
+
+      // Restrict keyboard handling to only when carousel is focused
+      root.addEventListener('keydown', (event) => {
+        // Only handle if carousel or its children have focus
+        const activeElement = document.activeElement;
+        if (!root.contains(activeElement)) {
+          return;
+        }
+
+        if (event.key === 'ArrowRight') {
+          event.preventDefault();
+          const next = (index + 1) % slides.length;
+          activate(next, true);
+        } else if (event.key === 'ArrowLeft') {
+          event.preventDefault();
+          const next = (index - 1 + slides.length) % slides.length;
+          activate(next, true);
+        }
+      });
+
+      // Click handler for progress dots
+      root.addEventListener('click', (event) => {
+        const target = event.target;
+        if (!(target instanceof HTMLElement)) return;
+        if (target.closest('.carousel__progress-dot')) {
+          const dot = target.closest('.carousel__progress-dot');
+          if (!dot) return;
+          const indexAttr = dot.getAttribute('data-index');
+          if (indexAttr) {
+            activate(Number(indexAttr), true);
+          }
+        }
+      });
+
+      // Handle prefers-reduced-motion changes
+      prefersReducedMotion.addEventListener('change', (event) => {
+        if (event.matches) {
+          root.classList.add('is-reduced');
+          stop();
+        } else {
+          root.classList.remove('is-reduced');
+          if (isVisible && slides.length >= 2) {
+            start();
+          }
+        }
+      });
+
+      // Initial setup
+      if (prefersReducedMotion.matches) {
+        root.classList.add('is-reduced');
       } else {
         root.classList.remove('is-reduced');
-        start();
+        // Don't start immediately - wait for IntersectionObserver to determine visibility
       }
-    });
 
-    if (prefersReducedMotion.matches) {
-      root.classList.add('is-reduced');
-    } else {
-      root.classList.remove('is-reduced');
-      start();
-    }
-
-    activate(0);
+      activate(0);
+    })();
   </script>
 )}
 
@@ -178,6 +250,7 @@ const hasMultipleSlides = items.length > 1;
     overflow-x: auto;
     scroll-snap-type: x mandatory;
     scrollbar-width: none;
+    overscroll-behavior-x: contain;
   }
 
   .carousel__viewport::-webkit-scrollbar {

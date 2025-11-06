@@ -167,13 +167,6 @@ declare module 'astro:content' {
   collection: "projects";
   data: InferEntrySchema<"projects">
 } & { render(): Render[".mdx"] };
-"project-atlas.mdx": {
-	id: "project-atlas.mdx";
-  slug: "project-atlas";
-  body: string;
-  collection: "projects";
-  data: InferEntrySchema<"projects">
-} & { render(): Render[".mdx"] };
 "reve-dating.mdx": {
 	id: "reve-dating.mdx";
   slug: "reve-dating";

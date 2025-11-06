@@ -1,0 +1,28 @@
+---
+import type { ThemeTokens } from '../../lib/theme/types';
+
+interface Props {
+  sectionId: string;
+  theme: ThemeTokens;
+  triggerOffset?: number;
+}
+
+const {
+  sectionId,
+  theme,
+  triggerOffset = 0,
+} = Astro.props;
+
+// Serialize theme for client-side access
+const themeJson = JSON.stringify(theme);
+---
+
+<div
+  class="theme-controller"
+  data-theme-section={sectionId}
+  data-trigger-offset={triggerOffset}
+  data-theme={themeJson}
+>
+  <slot />
+</div>
+

@@ -125,13 +125,13 @@ const metadata = [
             <div class="project-story__outcomes-header">
               <span class="project-story__metadata-label">Outcome</span>
             </div>
-            <div class="project-story__outcomes">
+            <ul class="project-story__outcomes">
               {outcomes.map((outcome) => (
-                <div class="project-story__outcome">
+                <li class="project-story__outcome">
                   <span class="project-story__outcome-value">{outcome.value}</span>
-                </div>
+                </li>
               ))}
-            </div>
+            </ul>
           </div>
         )}
       </header>
@@ -147,11 +147,12 @@ const metadata = [
 
 <style>
   .project-story {
-    padding: var(--space-sm) 0;
+    padding: clamp(80px, 10vh, 120px) 0;
     min-height: 100vh;
     background: var(--theme-bg, #090e03);
     color: var(--theme-text, var(--color-label-primary-dark));
-    transition: background-color 0.6s ease, color 0.6s ease;
+    transition: background-color 0.8s cubic-bezier(0.4, 0, 0.2, 1), 
+      color 0.8s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
   .project-story--dark {
@@ -258,7 +259,7 @@ const metadata = [
     flex-direction: column;
     gap: var(--space-xs);
     padding-top: var(--space-sm);
-    border-top: 1px solid var(--color-label-quaternary-dark);
+    border-top: 1px solid color-mix(in srgb, var(--theme-accent, #5763ff) 24%, transparent);
   }
 
   .project-story__metadata-row {
@@ -266,7 +267,7 @@ const metadata = [
     align-items: flex-start;
     gap: var(--space-sm);
     padding-top: var(--space-sm);
-    border-top: 1px solid var(--color-label-quaternary-dark);
+    border-top: 1px solid color-mix(in srgb, var(--theme-accent, #5763ff) 24%, transparent);
   }
 
   .project-story__metadata-row:first-child {
@@ -305,8 +306,7 @@ const metadata = [
   .project-story__category-chip {
     padding: 2px var(--space-xs);
     border-radius: var(--space-xs);
-    background: var(--theme-text, var(--color-label-quaternary-dark));
-    opacity: 0.18;
+    background: color-mix(in srgb, var(--theme-accent, #5763ff) 24%, transparent);
     font-family: var(--theme-font-family, var(--font-family-body));
     font-size: var(--theme-font-size, var(--font-size-body-md));
     line-height: var(--theme-line-height, var(--line-height-body-md));
@@ -320,7 +320,7 @@ const metadata = [
     flex-direction: column;
     gap: var(--space-sm);
     padding-top: var(--space-sm);
-    border-top: 1px solid var(--color-label-quaternary-dark);
+    border-top: 1px solid color-mix(in srgb, var(--theme-accent, #5763ff) 24%, transparent);
     align-self: start;
   }
 
@@ -332,11 +332,13 @@ const metadata = [
     display: flex;
     flex-direction: column;
     gap: var(--space-sm);
+    margin: 0;
+    padding: 0;
+    list-style: none;
   }
 
   .project-story__outcome {
-    display: flex;
-    flex-direction: column;
+    margin-inline-start: 42px;
   }
 
   .project-story__outcome-value {
@@ -346,7 +348,6 @@ const metadata = [
     letter-spacing: var(--theme-letter-spacing, var(--letter-spacing-h4));
     font-weight: var(--theme-font-weight, var(--font-weight-h4));
     color: var(--theme-text, var(--color-label-primary-dark));
-    list-style-position: inside;
   }
 
   .project-story__gallery {
@@ -378,8 +379,9 @@ const metadata = [
     gap: var(--space-xs);
     padding: var(--space-xs) var(--space-sm);
     border-radius: var(--radius-lg);
-    background: var(--theme-accent, var(--color-label-primary-dark));
-    color: var(--theme-text, var(--color-surface-white));
+    background: color-mix(in srgb, var(--theme-accent, #5763ff) 32%, transparent);
+    color: var(--theme-text, var(--color-surface-black));
+    border: 1px solid color-mix(in srgb, var(--theme-accent, #5763ff) 45%, transparent);
     font-family: var(--font-family-ui);
     font-size: var(--font-size-label-lg);
     line-height: var(--line-height-label-lg);
@@ -391,8 +393,9 @@ const metadata = [
 
   .project-story__cta:hover,
   .project-story__cta:focus-visible {
-    opacity: 0.9;
+    opacity: 0.92;
     transform: translateY(-1px);
+    background: color-mix(in srgb, var(--theme-accent, #5763ff) 46%, transparent);
   }
 
   @media (max-width: 960px) {

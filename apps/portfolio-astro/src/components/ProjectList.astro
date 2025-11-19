@@ -1,0 +1,172 @@
+---
+export type ProjectListItem = {
+  slug: string;
+  title: string;
+  summary: string;
+  timeline: string;
+  categories: string[];
+  heroIcon?: {
+    asset: string;
+    alt: string;
+  };
+  href?: string;
+};
+
+interface Props {
+  projects: ProjectListItem[];
+}
+
+const { projects = [] } = Astro.props as Props;
+---
+
+<div class="project-list">
+  {projects.map((project) => (
+    <a
+      href={project.href ?? `#${project.slug}`}
+      class="project-row"
+      data-slug={project.slug}
+    >
+      <div class="project-row__main">
+        {project.heroIcon && (
+          <div class="project-row__icon-wrapper">
+            <img
+              src={project.heroIcon.asset}
+              alt={project.heroIcon.alt}
+              class="project-row__icon"
+              width="32"
+              height="32"
+            />
+          </div>
+        )}
+        <div class="project-row__info">
+          <h3 class="project-row__title">{project.title}</h3>
+          <p class="project-row__summary">{project.summary}</p>
+        </div>
+      </div>
+      
+      <div class="project-row__meta">
+        {project.categories.length > 0 && (
+          <span class="project-row__category">{project.categories[0]}</span>
+        )}
+        <span class="project-row__timeline">{project.timeline}</span>
+      </div>
+    </a>
+  ))}
+</div>
+
+<style>
+  .project-list {
+    display: flex;
+    flex-direction: column;
+    gap: 4px; /* Very tight vertical gap for list items */
+    width: 100%;
+  }
+
+  .project-row {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: var(--space-md);
+    padding: 12px; /* Lean padding */
+    border-radius: var(--radius-sm);
+    text-decoration: none;
+    color: inherit;
+    transition: background-color 0.2s ease;
+    align-items: center;
+  }
+
+  .project-row:hover,
+  .project-row:focus-visible {
+    background-color: var(--color-label-quaternary); /* Gray hover state */
+  }
+
+  .project-row__main {
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+  }
+
+  .project-row__icon-wrapper {
+    width: 32px;
+    height: 32px;
+    border-radius: 6px;
+    background: var(--surface-sidebar);
+    overflow: hidden;
+    flex-shrink: 0;
+    border: 1px solid rgba(0,0,0,0.04);
+  }
+
+  .project-row__icon {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .project-row__info {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .project-row__title {
+    margin: 0;
+    font-family: var(--font-sans);
+    font-size: var(--text-body-size);
+    line-height: var(--text-body-height);
+    font-weight: 600;
+    color: var(--color-label-primary);
+  }
+
+  .project-row__summary {
+    margin: 0;
+    font-family: var(--font-sans);
+    font-size: var(--text-secondary-size);
+    line-height: var(--text-secondary-height);
+    font-weight: var(--text-secondary-weight);
+    color: var(--color-label-secondary);
+  }
+
+  .project-row__meta {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 0;
+    text-align: right;
+  }
+
+  .project-row__category {
+    font-family: var(--font-sans);
+    font-size: var(--text-label-size);
+    line-height: var(--text-label-height);
+    letter-spacing: var(--text-label-spacing);
+    font-weight: var(--text-label-weight);
+    text-transform: var(--text-label-case);
+    color: var(--color-label-secondary);
+    opacity: 0.8;
+  }
+
+  .project-row__timeline {
+    font-family: var(--font-sans);
+    font-size: var(--text-label-size);
+    line-height: var(--text-label-height);
+    letter-spacing: var(--text-label-spacing);
+    font-weight: var(--text-label-weight);
+    text-transform: var(--text-label-case);
+    color: var(--color-label-tertiary);
+  }
+
+  @media (max-width: 640px) {
+    .project-row {
+      grid-template-columns: 1fr;
+      align-items: flex-start;
+      gap: var(--space-sm);
+    }
+
+    .project-row__meta {
+      flex-direction: row;
+      align-items: center;
+      justify-content: flex-start;
+      gap: var(--space-md);
+      padding-left: 48px; /* Align with text */
+    }
+  }
+</style>

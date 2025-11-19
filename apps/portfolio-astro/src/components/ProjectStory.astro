@@ -5,7 +5,6 @@ import type { HeroCarouselItem } from './HeroSection.astro';
 import { Callout, OutcomeMetric } from './mdx';
 
 type ProjectEntry = CollectionEntry<'projects'>;
-
 type Variant = 'case-study' | 'metrics';
 
 interface Props {
@@ -21,10 +20,10 @@ const layoutVariant = data.storyLayout ?? variant;
 const { Content } = await project.render();
 const mdxComponents = { Callout, OutcomeMetric };
 
-const team = data.team.length ? data.team.join(', ') : undefined;
-const categories = data.categories ?? [];
 const outcomes = data.outcomes ?? [];
-const highlights = data.highlights ?? [];
+const deliverables = data.deliverables ?? [];
+const ctas = data.ctas ?? [];
+const legacyCta = data.cta;
 
 const gallery: HeroCarouselItem[] = data.gallery.map((item) => ({
   src: item.asset,
@@ -37,19 +36,12 @@ const gallery: HeroCarouselItem[] = data.gallery.map((item) => ({
 }));
 
 const background = data.motion?.sectionBackground ?? 'dark';
-const prefersReducedMotionCopy = data.motion?.prefersReducedMotionCopy;
 
 const sectionClasses = [
   'project-story',
   `project-story--${background}`,
   `project-story--${layoutVariant}`
 ].join(' ');
-
-const metadata = [
-  { label: 'Role', value: data.role },
-  { label: 'Timeline', value: data.timeline },
-  team ? { label: 'Team', value: team } : undefined
-].filter(Boolean) as Array<{ label: string; value: string }>;
 ---
 
 <section
@@ -59,360 +51,309 @@ const metadata = [
   data-theme-section={themeSection ?? project.slug}
 >
   <div class="project-story__wrapper">
-    <div class="project-story__inner">
-      <header class="project-story__header">
-        <div class="project-story__left">
-          <div class="project-story__header-top">
-            {data.hero?.media && (
-              <img 
-                src={data.hero.media.asset} 
-                alt={data.hero.media.alt} 
-                class="project-story__icon"
-                width="64"
-                height="64"
-              />
+    <div class="project-story__header">
+      <div class="project-story__main-info">
+        <div class="project-story__title-row">
+          {data.hero?.media && (
+            <img 
+              src={data.hero.media.asset} 
+              alt={data.hero.media.alt} 
+              class="project-story__icon"
+              width="48"
+              height="48"
+            />
+          )}
+          <div class="project-story__titles">
+            <h2 class="project-story__title">{data.title}</h2>
+            {data.hero?.kicker && (
+              <p class="project-story__subtitle">{data.hero.kicker}</p>
             )}
-            <div class="project-story__title-group">
-              <h2 class="project-story__title">{data.title}</h2>
-              {data.hero?.kicker && (
-                <p class="project-story__subtitle">{data.hero.kicker}</p>
-              )}
-            </div>
           </div>
+        </div>
+
+        <div class="project-story__body">
           <p class="project-story__summary">{data.summary}</p>
-          {data.cta && (
-            <a
-              class="project-story__cta"
-              href={data.cta.href}
-              target={data.cta.isExternal ? '_blank' : undefined}
-              rel={data.cta.isExternal ? 'noopener noreferrer' : undefined}
-            >
-              <span>{data.cta.label}</span>
-              <span aria-hidden="true">→</span>
-            </a>
-          )}
-        </div>
-
-        <div class="project-story__middle">
-          {team && (
-            <div class="project-story__metadata-row">
-              <span class="project-story__metadata-label">Team</span>
-              <span class="project-story__metadata-value">{team}</span>
-            </div>
-          )}
-          {categories.length > 0 && (
-            <div class="project-story__metadata-row">
-              <span class="project-story__metadata-label">Category</span>
-              <div class="project-story__categories">
-                {categories.map((category) => (
-                  <span class="project-story__category-chip">{category}</span>
+          
+          <div class="project-story__tags">
+            {deliverables.length > 0 && deliverables.map((d) => (
+              <span class="project-story__tag">{d}</span>
+            ))}
+            
+            {(ctas.length > 0 || legacyCta) && (
+              <div class="project-story__actions">
+                {ctas.map((cta) => (
+                  <a
+                    class="project-story__tag project-story__tag--action"
+                    href={cta.href}
+                    target={cta.isExternal ? '_blank' : undefined}
+                    rel={cta.isExternal ? 'noopener noreferrer' : undefined}
+                  >
+                    {cta.label}
+                  </a>
                 ))}
+                {legacyCta && ctas.length === 0 && (
+                  <a
+                    class="project-story__tag project-story__tag--action"
+                    href={legacyCta.href}
+                    target={legacyCta.isExternal ? '_blank' : undefined}
+                    rel={legacyCta.isExternal ? 'noopener noreferrer' : undefined}
+                  >
+                    {legacyCta.label}
+                  </a>
+                )}
               </div>
-            </div>
-          )}
-          <div class="project-story__metadata-row">
-            <span class="project-story__metadata-label">Role</span>
-            <span class="project-story__metadata-value">{data.role}</span>
-          </div>
-          <div class="project-story__metadata-row">
-            <span class="project-story__metadata-label">Timeline</span>
-            <span class="project-story__metadata-value">{data.timeline}</span>
+            )}
           </div>
         </div>
+      </div>
 
-        {outcomes.length > 0 && (
-          <div class="project-story__right">
-            <div class="project-story__outcomes-header">
-              <span class="project-story__metadata-label">Outcome</span>
-            </div>
-            <ul class="project-story__outcomes">
-              {outcomes.map((outcome) => (
-                <li class="project-story__outcome">
-                  <span class="project-story__outcome-value">{outcome.value}</span>
-                </li>
-              ))}
-            </ul>
+      {outcomes.length > 0 && (
+        <div class="project-story__metrics">
+          <ul class="project-story__metrics-list">
+            {outcomes.map((outcome) => (
+              <li class="project-story__metric-item">
+                <span class="project-story__metric-value">{outcome.value}</span>
+                <span class="project-story__metric-label">{outcome.label}</span>
+              </li>
+            ))}
+          </ul>
+          
+          <div class="project-story__meta">
+            <span class="project-story__meta-item">{data.role}</span>
+            <span class="project-story__meta-item">{data.timeline}</span>
           </div>
-        )}
-      </header>
-
-      {gallery.length > 0 && (
-        <div class="project-story__gallery">
-          <CarouselIsland id={`${project.slug}-gallery`} items={gallery} autoplayInterval={6000} />
         </div>
       )}
     </div>
+
+    {gallery.length > 0 && (
+      <div class="project-story__gallery">
+        <CarouselIsland id={`${project.slug}-gallery`} items={gallery} autoplayInterval={6000} />
+      </div>
+    )}
   </div>
 </section>
 
 <style>
   .project-story {
-    padding: clamp(80px, 10vh, 120px) 0;
-    min-height: 100vh;
-    background: var(--theme-bg, #090e03);
-    color: var(--theme-text, var(--color-label-primary-dark));
-    transition: background-color 0.8s cubic-bezier(0.4, 0, 0.2, 1), 
-      color 0.8s cubic-bezier(0.4, 0, 0.2, 1);
-  }
-
-  .project-story--dark {
-    background: var(--theme-bg, #090e03);
-    color: var(--theme-text, var(--color-label-primary-dark));
-  }
-
-  .project-story--light {
-    background: var(--theme-bg, #f6f6fb);
-    color: var(--theme-text, var(--color-label-primary));
-  }
-
-  .project-story--accent {
-    background: var(--theme-bg, radial-gradient(120% 120% at 10% 10%, #1d2032 0%, #0b0c11 90%));
-    color: var(--theme-text, var(--color-label-primary-dark));
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    .project-story {
-      transition: background-color 0.15s ease, color 0.15s ease;
-    }
+    padding: var(--space-2xl) 0;
+    min-height: auto;
+    background: transparent;
+    color: var(--color-label-primary);
   }
 
   .project-story__wrapper {
-    padding: var(--grid-padding);
-  }
-
-  .project-story__inner {
-    display: grid;
-    grid-template-columns: repeat(12, 1fr);
-    gap: var(--grid-gap);
-    max-width: var(--grid-max-width);
+    width: 100%;
+    max-width: 1400px;
     margin: 0 auto;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xl);
   }
 
   .project-story__header {
-    grid-column: 1 / span 12;
     display: grid;
-    grid-template-columns: repeat(12, 1fr);
-    gap: var(--grid-gap);
-    padding: var(--space-xl) 0;
-    border-top: 1px solid var(--color-material-thin);
+    grid-template-columns: 1.5fr 1fr;
+    gap: var(--space-2xl);
+    align-items: start;
+    border-bottom: 1px solid var(--color-label-quaternary);
+    padding-bottom: var(--space-xl);
   }
 
-  .project-story__left {
-    grid-column: 1 / span 5;
+  .project-story__main-info {
     display: flex;
     flex-direction: column;
-    gap: var(--space-sm);
+    gap: var(--space-lg);
   }
 
-  .project-story__header-top {
+  .project-story__title-row {
     display: flex;
-    align-items: center;
-    gap: var(--space-sm);
+    align-items: flex-start; /* Changed from center to start for better alignment with multi-line titles */
+    gap: var(--space-md);
   }
 
   .project-story__icon {
-    width: 64px;
-    height: 64px;
+    width: 48px;
+    height: 48px;
     border-radius: var(--radius-sm);
     object-fit: cover;
     flex-shrink: 0;
+    background: var(--surface-sidebar);
   }
 
-  .project-story__title-group {
+  .project-story__titles {
     display: flex;
     flex-direction: column;
-    gap: 0;
+    gap: 4px;
+    padding-top: 2px; /* Optical alignment with icon */
   }
 
   .project-story__title {
     margin: 0;
-    font-family: var(--theme-font-family, var(--font-family-heading));
-    font-size: var(--theme-font-size, var(--font-size-h4));
-    line-height: var(--theme-line-height, var(--line-height-h4));
-    letter-spacing: var(--theme-letter-spacing, var(--letter-spacing-h4));
-    font-weight: var(--theme-font-weight, var(--font-weight-h4));
-    color: var(--theme-text, var(--color-label-primary-dark));
+    font-family: var(--font-sans);
+    font-size: var(--text-title-size);
+    line-height: var(--text-title-height);
+    font-weight: 600;
+    color: var(--color-label-primary);
   }
 
   .project-story__subtitle {
     margin: 0;
-    font-family: var(--theme-font-family, var(--font-family-heading));
-    font-size: var(--theme-font-size, var(--font-size-h4));
-    line-height: var(--theme-line-height, var(--line-height-h4));
-    letter-spacing: var(--theme-letter-spacing, var(--letter-spacing-h4));
-    color: var(--theme-text, var(--color-label-secondary-dark));
-    opacity: 0.6;
+    font-family: var(--font-sans);
+    font-size: var(--text-body-size);
+    line-height: var(--text-body-height);
+    color: var(--color-label-secondary);
+  }
+
+  .project-story__body {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
   }
 
   .project-story__summary {
     margin: 0;
-    font-family: var(--theme-font-family, var(--font-family-body));
-    font-size: var(--theme-font-size, var(--font-size-body-md));
-    line-height: var(--theme-line-height, var(--line-height-body-md));
-    letter-spacing: var(--theme-letter-spacing, var(--letter-spacing-body-md));
-    color: var(--theme-text, var(--color-label-primary-dark));
+    font-family: var(--font-sans);
+    font-size: var(--text-body-size);
+    line-height: var(--text-body-height);
+    color: var(--color-label-primary);
+    max-width: 60ch;
   }
 
-  .project-story__middle {
-    grid-column: 6 / span 4;
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-xs);
-    padding-top: var(--space-sm);
-    border-top: 1px solid color-mix(in srgb, var(--theme-accent, #5763ff) 24%, transparent);
-  }
-
-  .project-story__metadata-row {
-    display: flex;
-    align-items: flex-start;
-    gap: var(--space-sm);
-    padding-top: var(--space-sm);
-    border-top: 1px solid color-mix(in srgb, var(--theme-accent, #5763ff) 24%, transparent);
-  }
-
-  .project-story__metadata-row:first-child {
-    border-top: none;
-    padding-top: 0;
-  }
-
-  .project-story__metadata-label {
-    font-family: var(--font-family-ui);
-    font-size: var(--font-size-label-lg);
-    line-height: var(--line-height-label-lg);
-    letter-spacing: var(--letter-spacing-label-lg);
-    text-transform: uppercase;
-    color: var(--theme-text, var(--color-label-secondary-dark));
-    opacity: 0.6;
-    width: 92px;
-    flex-shrink: 0;
-  }
-
-  .project-story__metadata-value {
-    font-family: var(--theme-font-family, var(--font-family-body));
-    font-size: var(--theme-font-size, var(--font-size-body-md));
-    line-height: var(--theme-line-height, var(--line-height-body-md));
-    letter-spacing: var(--theme-letter-spacing, var(--letter-spacing-body-md));
-    color: var(--theme-text, var(--color-label-primary-dark));
-    flex: 1;
-  }
-
-  .project-story__categories {
+  .project-story__tags {
     display: flex;
     flex-wrap: wrap;
-    gap: var(--space-xs);
-    flex: 1;
+    gap: 8px;
   }
 
-  .project-story__category-chip {
-    padding: 2px var(--space-xs);
-    border-radius: var(--space-xs);
-    background: color-mix(in srgb, var(--theme-accent, #5763ff) 24%, transparent);
-    font-family: var(--theme-font-family, var(--font-family-body));
-    font-size: var(--theme-font-size, var(--font-size-body-md));
-    line-height: var(--theme-line-height, var(--line-height-body-md));
-    letter-spacing: var(--theme-letter-spacing, var(--letter-spacing-body-md));
-    color: var(--theme-text, var(--color-label-primary-dark));
+  .project-story__tag {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 12px;
+    background: var(--color-label-quaternary);
+    border-radius: 99px;
+    font-family: var(--font-sans);
+    font-size: var(--text-label-size);
+    line-height: var(--text-label-height);
+    letter-spacing: var(--text-label-spacing);
+    font-weight: 600;
+    text-transform: uppercase;
+    color: var(--color-label-primary);
+    text-decoration: none;
   }
 
-  .project-story__right {
-    grid-column: 10 / span 3;
+  .project-story__tag--action {
+    background: var(--color-label-primary);
+    color: var(--color-surface-white);
+    transition: opacity 0.2s ease;
+  }
+  
+  .project-story__tag--action:hover {
+    opacity: 0.9;
+  }
+  
+  .project-story__actions {
+    display: contents;
+  }
+
+  .project-story__metrics {
     display: flex;
     flex-direction: column;
-    gap: var(--space-sm);
-    padding-top: var(--space-sm);
-    border-top: 1px solid color-mix(in srgb, var(--theme-accent, #5763ff) 24%, transparent);
-    align-self: start;
+    gap: var(--space-lg);
+    padding-left: var(--space-xl);
+    border-left: 1px solid var(--color-label-quaternary);
   }
 
-  .project-story__outcomes-header {
-    margin-bottom: var(--space-sm);
-  }
-
-  .project-story__outcomes {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-sm);
+  .project-story__metrics-list {
     margin: 0;
     padding: 0;
     list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
   }
 
-  .project-story__outcome {
-    margin-inline-start: 42px;
+  .project-story__metric-item {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  
+  .project-story__metric-item::before {
+    content: "•";
+    color: var(--color-label-primary);
+    position: absolute;
+    margin-left: -16px;
+    font-weight: bold;
+  }
+  
+  .project-story__metric-item {
+    position: relative;
+    margin-left: 16px;
   }
 
-  .project-story__outcome-value {
-    font-family: var(--theme-font-family, var(--font-family-heading));
-    font-size: var(--theme-font-size, var(--font-size-h4));
-    line-height: var(--theme-line-height, var(--line-height-h4));
-    letter-spacing: var(--theme-letter-spacing, var(--letter-spacing-h4));
-    font-weight: var(--theme-font-weight, var(--font-weight-h4));
-    color: var(--theme-text, var(--color-label-primary-dark));
+  .project-story__metric-value {
+    font-family: var(--font-sans);
+    font-size: var(--text-title-size);
+    line-height: var(--text-title-height);
+    font-weight: 600;
+    color: var(--color-label-primary);
+  }
+
+  .project-story__metric-label {
+    font-family: var(--font-sans);
+    font-size: var(--text-secondary-size);
+    line-height: var(--text-secondary-height);
+    color: var(--color-label-secondary);
+  }
+
+  .project-story__meta {
+    display: flex;
+    gap: var(--space-lg);
+    margin-top: var(--space-md);
+    padding-top: var(--space-md);
+    border-top: 1px solid var(--color-label-quaternary);
+  }
+
+  .project-story__meta-item {
+    font-family: var(--font-sans);
+    font-size: var(--text-label-size);
+    line-height: var(--text-label-height);
+    letter-spacing: var(--text-label-spacing);
+    text-transform: uppercase;
+    color: var(--color-label-tertiary);
+    font-weight: 600;
   }
 
   .project-story__gallery {
-    grid-column: 1 / span 12;
-    height: 629px;
+    width: 100%;
+    /* Aspect ratio or fixed height? Reference shows full width bleed or contained */
+    height: auto;
   }
-
+  
   .project-story__gallery :global(.carousel) {
-    height: 100%;
-  }
-
-  .project-story__gallery :global(.carousel__viewport) {
-    height: 100%;
-  }
-
-  .project-story__gallery :global(.carousel__slide) {
-    height: 100%;
-  }
-
-  .project-story__gallery :global(.carousel__slide img) {
-    height: 100%;
-    object-fit: cover;
-  }
-
-  .project-story__cta {
-    align-self: flex-start;
-    display: inline-flex;
-    align-items: center;
-    gap: var(--space-xs);
-    padding: var(--space-xs) var(--space-sm);
-    border-radius: var(--radius-lg);
-    background: color-mix(in srgb, var(--theme-accent, #5763ff) 32%, transparent);
-    color: var(--theme-text, var(--color-surface-black));
-    border: 1px solid color-mix(in srgb, var(--theme-accent, #5763ff) 45%, transparent);
-    font-family: var(--font-family-ui);
-    font-size: var(--font-size-label-lg);
-    line-height: var(--line-height-label-lg);
-    letter-spacing: var(--letter-spacing-label-lg);
-    text-transform: uppercase;
-    transition: transform 0.2s ease, opacity 0.2s ease, background-color 0.2s ease;
-    margin-top: var(--space-xs);
-  }
-
-  .project-story__cta:hover,
-  .project-story__cta:focus-visible {
-    opacity: 0.92;
-    transform: translateY(-1px);
-    background: color-mix(in srgb, var(--theme-accent, #5763ff) 46%, transparent);
+    aspect-ratio: 16/9;
+    border-radius: var(--radius-md);
+    overflow: hidden;
   }
 
   @media (max-width: 960px) {
     .project-story__header {
       grid-template-columns: 1fr;
-      gap: var(--space-lg);
+      gap: var(--space-xl);
     }
 
-    .project-story__left,
-    .project-story__middle,
-    .project-story__right {
-      grid-column: 1 / span 12;
+    .project-story__metrics {
+      padding-left: 0;
+      border-left: none;
+      border-top: 1px solid var(--color-label-quaternary);
+      padding-top: var(--space-lg);
     }
-
-    .project-story__gallery {
-      height: auto;
-      min-height: 400px;
+    
+    .project-story__meta {
+      flex-wrap: wrap;
+      gap: var(--space-md);
     }
   }
 </style>

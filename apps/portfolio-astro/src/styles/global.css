@@ -7,33 +7,29 @@
 }
 
 html {
-  font-family: var(--font-family-body);
-  color: var(--theme-text, var(--color-label-primary));
-  background-color: var(--theme-bg, var(--color-surface-white));
+  font-family: var(--font-sans);
+  color: var(--color-label-primary);
+  background-color: var(--surface-page);
   scroll-behavior: smooth;
-  /* Theme transitions use centralized timing for consistency */
-  transition: background-color var(--theme-transition-duration, 0.6s) var(--theme-transition-easing, cubic-bezier(0.4, 0, 0.2, 1)),
-    color var(--theme-transition-duration, 0.6s) var(--theme-transition-easing, cubic-bezier(0.4, 0, 0.2, 1));
 }
 
 body {
   margin: 0;
-  font-size: var(--font-size-body-md);
-  line-height: var(--line-height-body-md);
-  letter-spacing: var(--letter-spacing-body-md);
+  font-family: var(--font-sans);
+  font-size: var(--text-body-size);
+  line-height: var(--text-body-height);
+  letter-spacing: var(--text-body-spacing);
+  font-weight: var(--text-body-weight);
   min-height: 100vh;
-  background-color: var(--theme-bg, #f7f7f9);
+  background-color: var(--surface-page);
   background-image: none;
-  color: var(--theme-text, var(--color-label-primary));
-  /* Theme transitions use centralized timing for consistency */
-  transition: background-color var(--theme-transition-duration, 0.6s) var(--theme-transition-easing, cubic-bezier(0.4, 0, 0.2, 1)),
-    color var(--theme-transition-duration, 0.6s) var(--theme-transition-easing, cubic-bezier(0.4, 0, 0.2, 1));
+  color: var(--color-label-primary);
+  overflow-x: hidden;
 }
 
 @media (prefers-reduced-motion: reduce) {
   html,
   body {
-    /* Reduced motion timing is handled by --theme-transition-duration override */
     transition-duration: var(--theme-transition-duration, 0.15s);
   }
 }
@@ -69,6 +65,48 @@ button {
 
 main {
   display: block;
+}
+
+/* Utility Classes for 5 Styles */
+.text-display {
+  font-family: var(--font-sans);
+  font-size: var(--text-display-size);
+  line-height: var(--text-display-height);
+  letter-spacing: var(--text-display-spacing);
+  font-weight: var(--text-display-weight);
+}
+
+.text-title {
+  font-family: var(--font-sans);
+  font-size: var(--text-title-size);
+  line-height: var(--text-title-height);
+  letter-spacing: var(--text-title-spacing);
+  font-weight: var(--text-title-weight);
+}
+
+.text-body {
+  font-family: var(--font-sans);
+  font-size: var(--text-body-size);
+  line-height: var(--text-body-height);
+  letter-spacing: var(--text-body-spacing);
+  font-weight: var(--text-body-weight);
+}
+
+.text-secondary {
+  font-family: var(--font-sans);
+  font-size: var(--text-secondary-size);
+  line-height: var(--text-secondary-height);
+  letter-spacing: var(--text-secondary-spacing);
+  font-weight: var(--text-secondary-weight);
+}
+
+.text-label {
+  font-family: var(--font-sans);
+  font-size: var(--text-label-size);
+  line-height: var(--text-label-height);
+  letter-spacing: var(--text-label-spacing);
+  font-weight: var(--text-label-weight);
+  text-transform: var(--text-label-case);
 }
 
 /* 12-Column Grid System */

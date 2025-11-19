@@ -46,10 +46,12 @@ const classes = [`outcome-metric`, `outcome-metric--${emphasis}`, `outcome-metri
   }
 
   .outcome-metric__label {
-    font-family: var(--font-family-ui);
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    font-size: 12px;
+    font-family: var(--font-sans);
+    font-size: var(--text-label-size);
+    line-height: var(--text-label-height);
+    letter-spacing: var(--text-label-spacing);
+    font-weight: var(--text-label-weight);
+    text-transform: var(--text-label-case);
     color: var(--color-label-secondary);
     margin: 0;
   }
@@ -59,16 +61,20 @@ const classes = [`outcome-metric`, `outcome-metric--${emphasis}`, `outcome-metri
   }
 
   .outcome-metric__value {
-    font-family: var(--font-family-heading);
-    font-size: clamp(28px, 5vw, 42px);
-    line-height: 1.15;
-    letter-spacing: -0.5px;
+    font-family: var(--font-sans);
+    font-size: var(--text-display-size); /* Use Display style */
+    line-height: var(--text-display-height);
+    letter-spacing: var(--text-display-spacing);
+    font-weight: var(--text-display-weight);
   }
 
   .outcome-metric__description {
     margin: 0;
-    font-size: var(--font-size-body-sm);
-    line-height: var(--line-height-body-sm);
+    font-family: var(--font-sans);
+    font-size: var(--text-secondary-size);
+    line-height: var(--text-secondary-height);
+    letter-spacing: var(--text-secondary-spacing);
+    font-weight: var(--text-secondary-weight);
     color: var(--color-label-secondary);
   }
 

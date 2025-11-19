@@ -3,13 +3,18 @@
 exports[`HeroSection > matches compiled snapshot 1`] = `
 "---
 import CarouselIsland from './CarouselIsland.astro';
+import Intro from './Intro.astro';
+import CaseStudyStack from './CaseStudyStack.astro';
+import type { CaseStudyItem } from './CaseStudyStack.astro';
 
 export type HeroCarouselItem = {
   src: string;
   alt: string;
   caption?: string;
-  emphasis?: 'primary' | 'secondary';
+  emphasis?: 'primary' | 'secondary' | 'supporting';
   motionDelay?: number;
+  width?: number;
+  height?: number;
 };
 
 export type HeroHighlight = {
@@ -26,7 +31,9 @@ interface Props {
   intro: string;
   bioSnippet?: string;
   featured: HeroHighlight;
+  featuredImage?: { asset: string; alt: string };
   carousel: HeroCarouselItem[];
+  caseStudies?: CaseStudyItem[];
   prefersReducedMotionCopy?: string;
 }
 
@@ -36,243 +43,95 @@ const {
   intro,
   bioSnippet,
   featured,
+  featuredImage,
   carousel = [],
+  caseStudies = [],
   prefersReducedMotionCopy
 } = Astro.props as Props;
 ---
 
 <section class="hero" id={id} aria-labelledby={\`\${id}-title\`} data-testid="hero-section">
-  <div class="hero__inner">
-    <div class="hero__copy">
-      <p class="hero__eyebrow">Featured designer</p>
-      <h1 class="hero__title" id={\`\${id}-title\`}>{heroTagline}</h1>
-      <p class="hero__intro">{intro}</p>
-      {bioSnippet && <p class="hero__bio">{bioSnippet}</p>}
-      {prefersReducedMotionCopy && (
-        <p class="hero__motion">{prefersReducedMotionCopy}</p>
-      )}
-    </div>
-
-    <article class="hero__highlight">
-      {featured.kicker && <p class="hero__highlight-kicker">{featured.kicker}</p>}
-      <h2 class="hero__highlight-title">{featured.title}</h2>
-      <p class="hero__highlight-summary">{featured.summary}</p>
-
-      <dl class="hero__metadata">
-        {featured.metadata.map((item) => (
-          <div class="hero__metadata-item">
-            <dt>{item.label}</dt>
-            <dd>{item.value}</dd>
-          </div>
-        ))}
-      </dl>
-
-      <a
-        class="hero__cta"
-        href={featured.cta.href}
-        target={featured.cta.isExternal ? '_blank' : undefined}
-        rel={featured.cta.isExternal ? 'noopener noreferrer' : undefined}
-      >
-        <span>{featured.cta.label}</span>
-        <span aria-hidden="true">↗</span>
-      </a>
-    </article>
-
+  <div class="hero__content">
     {carousel.length > 0 && (
-      <CarouselIsland id={\`\${id}-carousel\`} items={carousel} />
+      <div class="hero__carousel-wrapper">
+        <CarouselIsland id={\`\${id}-carousel\`} items={carousel} />
+      </div>
     )}
+
+    <div class="hero__bottom">
+      <div class="hero__intro-section">
+        <Intro intro={intro} id={\`\${id}-intro\`} />
+      </div>
+
+      <div class="hero__case-study-section">
+        <CaseStudyStack caseStudies={caseStudies} id={\`\${id}-case-studies\`} />
+      </div>
+    </div>
   </div>
 </section>
 
 <style>
   .hero {
-    padding: clamp(var(--space-xl), 10vh, 160px) clamp(var(--space-lg), 6vw, 120px)
-      clamp(var(--space-2xl), 12vh, 200px);
-    background: linear-gradient(
-      160deg,
-      rgba(255, 255, 255, 0.85) 0%,
-      rgba(233, 233, 241, 0.65) 40%,
-      rgba(244, 245, 255, 0.82) 100%
-    );
+    display: contents;
   }
 
-  .hero__inner {
+  .hero__content {
+    grid-column: 1 / span 12;
+    grid-row: 3 / span 13;
     display: grid;
-    grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
-    gap: clamp(var(--space-xl), 4vw, var(--space-2xl));
-    align-items: start;
-    max-width: 1200px;
-    margin: 0 auto;
+    grid-template-columns: repeat(12, 1fr);
+    grid-template-rows: auto 1fr;
+    gap: var(--grid-gap);
+    padding: var(--space-sm) var(--space-md);
   }
 
-  .hero__copy {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-md);
-    max-width: 520px;
-  }
-
-  .hero__eyebrow {
-    font-family: var(--font-family-ui);
-    font-size: 12px;
-    letter-spacing: 3px;
-    text-transform: uppercase;
-    color: var(--color-label-secondary);
-    margin: 0;
-  }
-
-  .hero__title {
-    margin: 0;
-    font-family: var(--font-family-heading);
-    font-size: clamp(38px, 5vw, 64px);
-    line-height: 1.05;
-    letter-spacing: var(--letter-spacing-h4);
-  }
-
-  .hero__intro {
-    margin: 0;
-    font-size: clamp(18px, 2.4vw, 22px);
-    line-height: 1.4;
-    color: var(--color-label-secondary);
-  }
-
-  .hero__bio {
-    margin: 0;
-    color: var(--color-label-secondary);
-  }
-
-  .hero__motion {
-    margin: 0;
-    padding: 10px 14px;
-    border-radius: var(--radius-md);
-    background: rgba(255, 255, 255, 0.7);
-    border: 1px solid rgba(11, 12, 17, 0.12);
-    font-family: var(--font-family-ui);
-    font-size: 12px;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-  }
-
-  .hero__highlight {
-    position: relative;
-    padding: clamp(var(--space-lg), 4vw, var(--space-2xl));
-    border-radius: var(--radius-lg);
-    background: rgba(18, 19, 30, 0.96);
-    color: var(--color-label-primary-dark);
+  .hero__carousel-wrapper {
+    grid-column: 1 / -1;
+    grid-row: 1;
+    max-height: 600px;
     overflow: hidden;
-    box-shadow: var(--shadow-elevated);
+    width: 100%;
+    margin-left: calc(-1 * var(--space-md));
+    margin-right: calc(-1 * var(--space-md));
   }
 
-  .hero__highlight::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: radial-gradient(
-      circle at 20% 20%,
-      rgba(255, 255, 255, 0.2),
-      rgba(255, 255, 255, 0) 70%
-    );
-    pointer-events: none;
+  .hero__bottom {
+    grid-column: 1 / span 12;
+    grid-row: 2;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: var(--space-lg);
+    padding-top: var(--space-lg);
   }
 
-  .hero__highlight > * {
-    position: relative;
-    z-index: 1;
+  .hero__intro-section {
+    flex: 0 0 auto;
   }
 
-  .hero__highlight-kicker {
-    margin: 0 0 var(--space-sm);
-    font-family: var(--font-family-ui);
-    font-size: 12px;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    color: var(--color-label-secondary-dark);
-  }
-
-  .hero__highlight-title {
-    margin: 0 0 var(--space-sm);
-    font-size: clamp(26px, 3vw, 34px);
-    line-height: 1.2;
-  }
-
-  .hero__highlight-summary {
-    margin: 0 0 var(--space-md);
-    color: var(--color-label-secondary-dark);
-    font-size: 16px;
-    line-height: 1.5;
-  }
-
-  .hero__metadata {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-    gap: var(--space-md);
-    margin: 0 0 var(--space-lg);
-  }
-
-  .hero__metadata-item {
-    display: grid;
-    gap: 4px;
-  }
-
-  .hero__metadata-item dt {
-    font-family: var(--font-family-ui);
-    font-size: 12px;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    color: var(--color-label-tertiary-dark);
-    margin: 0;
-  }
-
-  .hero__metadata-item dd {
-    margin: 0;
-    font-size: 16px;
-    font-weight: 500;
-    color: var(--color-label-primary-dark);
-  }
-
-  .hero__cta {
-    display: inline-flex;
-    align-items: center;
-    gap: var(--space-xs);
-    padding: 12px 16px;
-    border-radius: 999px;
-    background: rgba(255, 255, 255, 0.12);
-    color: var(--color-label-primary-dark);
-    font-family: var(--font-family-ui);
-    font-size: 13px;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    border: 1px solid rgba(255, 255, 255, 0.24);
-    transition: transform 0.2s ease, background 0.2s ease;
-  }
-
-  .hero__cta:hover,
-  .hero__cta:focus-visible {
-    transform: translateY(-2px);
-    background: rgba(255, 255, 255, 0.24);
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    .hero,
-    .hero__cta {
-      transition: none;
-    }
+  .hero__case-study-section {
+    flex: 0 0 auto;
   }
 
   @media (max-width: 960px) {
-    .hero__inner {
-      grid-template-columns: 1fr;
+    .hero__bottom {
+      flex-direction: column;
+      align-items: stretch;
     }
 
-    .hero__highlight {
-      order: 3;
+    .hero__intro-section,
+    .hero__case-study-section {
+      width: 100%;
     }
   }
 
   @media (max-width: 720px) {
-    .hero {
-      padding: clamp(var(--space-lg), 8vh, var(--space-xl))
-        clamp(var(--space-md), 6vw, var(--space-lg));
+    .hero__content {
+      grid-row: 3 / span 10;
+    }
+
+    .hero__carousel-wrapper {
+      min-height: 300px;
     }
   }
 </style>
@@ -290,6 +149,8 @@ export type SocialLink = {
   label: string;
   url: string;
   ariaLabel?: string;
+  isResume?: boolean;
+  isIcon?: boolean;
 };
 
 interface Props {
@@ -298,6 +159,7 @@ interface Props {
   navLinks: NavLink[];
   socialLinks: SocialLink[];
   menuLabel?: string;
+  email?: string;
 }
 
 const {
@@ -305,52 +167,115 @@ const {
   location,
   navLinks = [],
   socialLinks = [],
-  menuLabel = 'Menu'
+  menuLabel = 'Menu',
+  email
 } = Astro.props as Props;
+
+// Separate icon links (Twitter, LinkedIn) from text links (Resume, Contact)
+const iconLinks = socialLinks.filter(link => link.isIcon);
+const textLinks = socialLinks.filter(link => !link.isIcon);
+const resumeLink = textLinks.find(link => link.isResume);
+// Contact is the email address
+const contactLink = email ? { label: email, url: \`mailto:\${email}\`, ariaLabel: 'Contact', isResume: false, isIcon: false } : null;
+const otherTextLinks = textLinks.filter(link => !link.isResume);
 ---
 
 <header class="nav-header" data-testid="nav-header">
-  <div class="nav-header__inner">
-    <a class="nav-header__brand" href="#top">
-      <span class="nav-header__name">{name}</span>
-      <span class="nav-header__location">{location}</span>
-    </a>
+  <div class="nav-header__container">
+    <div class="nav-header__inner">
+      <nav aria-label="Primary" class="nav-header__primary">
+        <ul class="nav-header__links" role="list">
+          {navLinks.map((link) => (
+            <li>
+              <a href={link.href} class="nav-header__link">
+                <span class="nav-header__link-bg"></span>
+                <span>{link.label}</span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </nav>
 
-    <nav aria-label="Primary" class="nav-header__primary">
-      <ul class="nav-header__links" role="list">
-        {navLinks.map((link) => (
-          <li>
-            <a href={link.href} class="nav-header__link">
-              <span aria-hidden="true">☩</span>
-              <span>{link.label}</span>
-            </a>
-          </li>
-        ))}
-      </ul>
-    </nav>
+      <a class="nav-header__brand" href="#top">
+        <span class="nav-header__name">{name}</span>
+      </a>
 
-    <nav aria-label="Social" class="nav-header__social">
-      <ul class="nav-header__social-links" role="list">
-        {socialLinks.map((link) => (
-          <li>
-            <a
-              class="nav-header__social-link"
-              href={link.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label={link.ariaLabel ?? link.label}
-            >
-              {link.label}
-            </a>
-          </li>
-        ))}
-      </ul>
-    </nav>
+      <div class="nav-header__right">
+        {iconLinks.length > 0 && (
+          <nav aria-label="Social Icons" class="nav-header__social-icons">
+            <ul class="nav-header__icon-links" role="list">
+              {iconLinks.map((link) => (
+                <li>
+                  <a
+                    class="nav-header__icon-link"
+                    href={link.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label={link.ariaLabel ?? link.label}
+                  >
+                    <span class="nav-header__icon-link-bg"></span>
+                    {link.label === 'Twitter' ? (
+                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                        <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" fill="currentColor"/>
+                      </svg>
+                    ) : link.label === 'LinkedIn' ? (
+                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                        <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" fill="currentColor"/>
+                      </svg>
+                    ) : null}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </nav>
+        )}
 
-    <button type="button" class="nav-header__menu" aria-label={menuLabel}>
-      <span class="nav-header__menu-icon" aria-hidden="true"></span>
-      <span class="nav-header__menu-label">{menuLabel}</span>
-    </button>
+        <nav aria-label="Text Links" class="nav-header__text-links">
+          <ul class="nav-header__text-links-list" role="list">
+            {resumeLink && (
+              <li>
+                <a
+                  class="nav-header__text-link"
+                  href={resumeLink.url}
+                  download={true}
+                  aria-label={resumeLink.ariaLabel ?? resumeLink.label}
+                >
+                  <span class="nav-header__text-link-bg"></span>
+                  <span>{resumeLink.label}</span>
+                </a>
+              </li>
+            )}
+            {contactLink && (
+              <li>
+                <a
+                  class="nav-header__text-link"
+                  href={contactLink.url}
+                  aria-label={contactLink.ariaLabel ?? contactLink.label}
+                >
+                  <span class="nav-header__text-link-bg"></span>
+                  <span>Contact</span>
+                </a>
+              </li>
+            )}
+            {otherTextLinks.map((link) => (
+              <li>
+                <a
+                  class="nav-header__text-link"
+                  href={link.url}
+                  target={link.isResume ? undefined : '_blank'}
+                  rel={link.isResume ? undefined : 'noopener noreferrer'}
+                  aria-label={link.ariaLabel ?? link.label}
+                  download={link.isResume ? true : undefined}
+                >
+                  <span class="nav-header__text-link-bg"></span>
+                  <span>{link.label}</span>
+                </a>
+              </li>
+            ))}
+          </ul>
+        </nav>
+      </div>
+    </div>
   </div>
 </header>
 
@@ -359,165 +284,281 @@ const {
     position: sticky;
     top: 0;
     z-index: 10;
-    background: rgba(255, 255, 255, 0.8);
-    backdrop-filter: blur(14px);
+    background: transparent;
+    backdrop-filter: none;
     border-bottom: 1px solid rgba(11, 12, 17, 0.08);
+    transition: background-color 0.6s ease, border-color 0.6s ease;
+    margin-top: 0;
+  }
+
+  /* Ensure nav header maintains contrast with theme */
+  [data-active-theme] .nav-header {
+    background: transparent;
+    border-bottom-color: color-mix(in srgb, var(--theme-text, #0b0c11) 12%, transparent);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .nav-header {
+      transition: background-color 0.15s ease, border-color 0.15s ease;
+    }
+  }
+
+  .nav-header__container {
+    width: 100%;
+    padding: 0;
   }
 
   .nav-header__inner {
-    display: grid;
-    grid-template-columns: 1fr auto auto;
-    align-items: center;
-    gap: var(--space-lg);
-    padding: var(--space-sm) clamp(var(--space-lg), 5vw, var(--space-2xl));
-    max-width: 1200px;
-    margin: 0 auto;
-  }
-
-  .nav-header__brand {
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-    font-family: var(--font-family-heading);
-    font-size: clamp(18px, 2.2vw, 22px);
-    line-height: 1.1;
-    letter-spacing: var(--letter-spacing-body-lg);
-    color: var(--color-label-primary);
-  }
-
-  .nav-header__name {
-    font-weight: 600;
-  }
-
-  .nav-header__location {
-    font-family: var(--font-family-ui);
-    font-size: 12px;
-    letter-spacing: 0.8px;
-    text-transform: uppercase;
-    color: var(--color-label-secondary);
-  }
-
-  .nav-header__primary,
-  .nav-header__social {
-    display: flex;
-  }
-
-  .nav-header__links,
-  .nav-header__social-links {
     display: flex;
     align-items: center;
-    gap: var(--space-md);
+    justify-content: space-between;
+    gap: 0;
+    padding: 0;
+    max-width: 100%;
+    height: 80px;
+    border: 1px solid rgba(11, 12, 17, 0.08);
+  }
+
+  .nav-header__primary {
+    display: flex;
+    flex: 0 0 auto;
+  }
+
+  .nav-header__links {
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+    gap: 0;
     margin: 0;
     padding: 0;
     list-style: none;
+    height: 100%;
   }
 
   .nav-header__link {
+    position: relative;
     display: inline-flex;
     align-items: center;
-    gap: var(--space-xs);
-    font-family: var(--font-family-ui);
-    font-size: 13px;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    color: var(--color-label-secondary);
+    justify-content: center;
+    height: 100%;
+    padding: 0 var(--space-lg);
+    font-family: var(--font-family-body);
+    font-size: var(--font-size-body-md);
+    line-height: var(--line-height-body-md);
+    letter-spacing: var(--letter-spacing-body-md);
+    font-weight: var(--font-weight-body-md);
+    color: var(--color-label-primary);
     transition: color 0.2s ease;
+    overflow: hidden;
+    border-right: 1px solid rgba(11, 12, 17, 0.08);
+  }
+
+  .nav-header__link-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: var(--color-label-primary);
+    transform: translateY(-100%);
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: -1;
+  }
+
+  .nav-header__link:hover .nav-header__link-bg,
+  .nav-header__link:focus-visible .nav-header__link-bg {
+    transform: translateY(0);
   }
 
   .nav-header__link:hover,
   .nav-header__link:focus-visible {
-    color: var(--color-label-primary);
+    color: var(--color-surface-white);
   }
 
-  .nav-header__social-link {
-    font-family: var(--font-family-ui);
-    font-size: 12px;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    padding: 6px 10px;
-    border-radius: var(--radius-sm);
-    border: 1px solid rgba(11, 12, 17, 0.18);
-    background: rgba(255, 255, 255, 0.6);
-    transition: border-color 0.2s ease, background 0.2s ease;
+  @media (prefers-reduced-motion: reduce) {
+    .nav-header__link-bg {
+      transition: transform 0.15s ease;
+    }
   }
 
-  .nav-header__social-link:hover,
-  .nav-header__social-link:focus-visible {
-    border-color: rgba(11, 12, 17, 0.4);
-    background: rgba(255, 255, 255, 0.95);
+  .nav-header__brand {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    font-family: var(--font-family-heading);
+    font-size: var(--font-size-h4);
+    line-height: var(--line-height-h4);
+    letter-spacing: var(--letter-spacing-h4);
+    font-weight: var(--font-weight-h4);
+    color: var(--theme-text, var(--color-label-primary));
+    text-decoration: none;
   }
 
-  .nav-header__menu {
+  .nav-header__name {
+    font-weight: var(--font-weight-h4);
+  }
+
+  .nav-header__right {
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+    flex: 0 0 auto;
+    margin-left: auto;
+  }
+
+  .nav-header__social-icons {
+    display: flex;
+  }
+
+  .nav-header__icon-links {
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+    gap: 0;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    height: 100%;
+  }
+
+  .nav-header__icon-link {
+    position: relative;
     display: inline-flex;
     align-items: center;
-    gap: var(--space-xs);
-    border: 1px solid rgba(11, 12, 17, 0.16);
-    border-radius: 999px;
-    padding: 6px 14px;
-    background: rgba(255, 255, 255, 0.6);
-    font-family: var(--font-family-ui);
-    font-size: 12px;
-    letter-spacing: 1px;
-    text-transform: uppercase;
+    justify-content: center;
+    width: 80px;
+    height: 100%;
     color: var(--color-label-primary);
-    cursor: pointer;
-    transition: transform 0.2s ease, border-color 0.2s ease;
+    transition: color 0.2s ease;
+    overflow: hidden;
+    border-left: 1px solid rgba(11, 12, 17, 0.08);
   }
 
-  .nav-header__menu:hover,
-  .nav-header__menu:focus-visible {
-    transform: translateY(-1px);
-    border-color: rgba(11, 12, 17, 0.32);
-  }
-
-  .nav-header__menu-icon {
-    position: relative;
-    width: 14px;
-    height: 14px;
-  }
-
-  .nav-header__menu-icon::before,
-  .nav-header__menu-icon::after {
-    content: '';
+  .nav-header__icon-link-bg {
     position: absolute;
+    top: 0;
     left: 0;
     right: 0;
-    height: 1px;
-    background: currentColor;
+    bottom: 0;
+    background: var(--color-label-primary);
+    transform: translateY(-100%);
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: -1;
   }
 
-  .nav-header__menu-icon::before {
-    top: 4px;
+  .nav-header__icon-link:hover .nav-header__icon-link-bg,
+  .nav-header__icon-link:focus-visible .nav-header__icon-link-bg {
+    transform: translateY(0);
   }
 
-  .nav-header__menu-icon::after {
-    bottom: 4px;
+  .nav-header__icon-link:hover,
+  .nav-header__icon-link:focus-visible {
+    color: var(--color-surface-white);
   }
+
+  .nav-header__icon-link svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  .nav-header__text-links {
+    display: flex;
+  }
+
+  .nav-header__text-links-list {
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+    gap: 0;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    height: 100%;
+  }
+
+  .nav-header__text-link {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    padding: 0 var(--space-lg);
+    font-family: var(--font-family-body);
+    font-size: var(--font-size-body-md);
+    line-height: var(--line-height-body-md);
+    letter-spacing: var(--letter-spacing-body-md);
+    font-weight: var(--font-weight-body-md);
+    color: var(--color-label-primary);
+    text-decoration: none;
+    transition: color 0.2s ease;
+    overflow: hidden;
+    border-left: 1px solid rgba(11, 12, 17, 0.08);
+  }
+
+  .nav-header__text-link-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: var(--color-label-primary);
+    transform: translateY(-100%);
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: -1;
+  }
+
+  .nav-header__text-link:hover .nav-header__text-link-bg,
+  .nav-header__text-link:focus-visible .nav-header__text-link-bg {
+    transform: translateY(0);
+  }
+
+  .nav-header__text-link:hover,
+  .nav-header__text-link:focus-visible {
+    color: var(--color-surface-white);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .nav-header__icon-link-bg,
+    .nav-header__text-link-bg {
+      transition: transform 0.15s ease;
+    }
+  }
+
 
   @media (max-width: 960px) {
     .nav-header__inner {
-      grid-template-columns: 1fr auto;
-      grid-template-areas:
-        'brand menu'
-        'primary primary'
-        'social social';
-      row-gap: var(--space-sm);
+      flex-wrap: wrap;
+      gap: var(--space-sm);
     }
 
     .nav-header__brand {
-      grid-area: brand;
+      position: static;
+      transform: none;
+      order: 1;
+      width: 100%;
+      text-align: center;
     }
 
     .nav-header__primary {
-      grid-area: primary;
-      justify-content: flex-start;
+      order: 2;
+      width: 100%;
+      justify-content: center;
     }
 
-    .nav-header__social {
-      grid-area: social;
+    .nav-header__right {
+      order: 3;
+      width: 100%;
+      justify-content: space-between;
+      margin-left: 0;
     }
 
-    .nav-header__social-links {
+    .nav-header__icon-links,
+    .nav-header__text-links-list {
       flex-wrap: wrap;
       gap: var(--space-sm);
     }
@@ -525,23 +566,28 @@ const {
 
   @media (max-width: 720px) {
     .nav-header {
-      backdrop-filter: blur(18px);
+      backdrop-filter: none;
+    }
+
+    .nav-header__container {
+      padding: 0 var(--space-sm);
     }
 
     .nav-header__inner {
       gap: var(--space-sm);
-      padding-inline: clamp(var(--space-md), 5vw, var(--space-lg));
     }
 
     .nav-header__links {
-      gap: var(--space-sm);
+      gap: var(--space-xs);
     }
 
     .nav-header__link {
       font-size: 11px;
+      padding: var(--space-xs);
     }
 
-    .nav-header__social-links {
+    .nav-header__icon-links,
+    .nav-header__text-links-list {
       justify-content: flex-start;
     }
   }

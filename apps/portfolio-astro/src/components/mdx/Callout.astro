@@ -49,15 +49,17 @@ const toneClass = `callout--${tone}`;
     display: inline-flex;
     align-items: center;
     gap: var(--space-xs);
-    font-family: var(--font-family-ui);
-    font-size: 12px;
-    letter-spacing: 1.8px;
-    text-transform: uppercase;
+    font-family: var(--font-sans);
+    font-size: var(--text-label-size);
+    line-height: var(--text-label-height);
+    letter-spacing: var(--text-label-spacing);
+    font-weight: var(--text-label-weight);
+    text-transform: var(--text-label-case);
     color: var(--color-label-secondary);
   }
 
   .callout__icon {
-    font-size: 16px;
+    font-size: 16px; /* Icon size override */
   }
 
   .callout--highlight .callout__header {
@@ -70,8 +72,11 @@ const toneClass = `callout--${tone}`;
 
   .callout__body :global(p) {
     margin: 0;
-    font-size: var(--font-size-body-md);
-    line-height: var(--line-height-body-md);
+    font-family: var(--font-sans);
+    font-size: var(--text-body-size);
+    line-height: var(--text-body-height);
+    letter-spacing: var(--text-body-spacing);
+    font-weight: var(--text-body-weight);
     color: inherit;
   }
 

@@ -51,6 +51,7 @@ export const createProjectFrontmatterSchema = () => {
     storyLayout: z.enum(['case-study', 'metrics']).default('case-study'),
     summary: z.string().max(220, 'Keep the summary under 220 characters'),
     featured: z.boolean().default(false),
+    isFeaturedCaseStudy: z.boolean().default(false),
     role: z.string(),
     team: z.array(z.string()).default([]),
     timeline: z.string(),
@@ -59,6 +60,33 @@ export const createProjectFrontmatterSchema = () => {
       media: mediaItem,
       kicker: z.string().optional()
     }),
+    caseStudy: z
+      .object({
+        videoUrl: z.union([z.string().url('Provide a valid video URL'), z.literal('')]).optional(),
+        posterImage: mediaItem.optional(),
+        title: z.string(),
+        calloutSubtitle: z.string().optional(),
+        description: z.string(),
+        externalLink: z.union([z.string().url('Provide a valid URL'), z.literal('')]).optional()
+      })
+      .optional(),
+    deliverables: z
+      .array(
+        z.enum(['product', 'brand', 'web', 'design system'], {
+          errorMap: () => ({ message: 'Deliverable must be one of: product, brand, web, design system' })
+        })
+      )
+      .default([]),
+    ctas: z
+      .array(
+        z.object({
+          label: z.string(),
+          href: z.string().url('Provide a valid URL'),
+          variant: z.enum(['primary', 'secondary', 'appStore', 'playStore']).default('primary'),
+          isExternal: z.boolean().default(true)
+        })
+      )
+      .default([]),
     gallery: z
       .array(
         mediaItem.extend({

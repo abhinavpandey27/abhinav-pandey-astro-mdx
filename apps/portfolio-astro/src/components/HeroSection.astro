@@ -1,33 +1,13 @@
 ---
-import CarouselIsland from './CarouselIsland.astro';
-
-export type HeroCarouselItem = {
-  src: string;
-  alt: string;
-  caption?: string;
-  emphasis?: 'primary' | 'secondary' | 'supporting';
-  motionDelay?: number;
-  width?: number;
-  height?: number;
-};
-
-export type HeroHighlight = {
-  kicker?: string;
-  title: string;
-  summary: string;
-  metadata: Array<{ label: string; value: string }>;
-  cta: { label: string; href: string; isExternal?: boolean };
-};
+import ProjectList from './ProjectList.astro';
+import type { ProjectListItem } from './ProjectList.astro';
 
 interface Props {
   id?: string;
   heroTagline: string;
   intro: string;
   bioSnippet?: string;
-  featured: HeroHighlight;
-  featuredImage?: { asset: string; alt: string };
-  carousel: HeroCarouselItem[];
-  prefersReducedMotionCopy?: string;
+  projectList: ProjectListItem[];
 }
 
 const {
@@ -35,208 +15,131 @@ const {
   heroTagline,
   intro,
   bioSnippet,
-  featured,
-  featuredImage,
-  carousel = [],
-  prefersReducedMotionCopy
+  projectList = []
 } = Astro.props as Props;
 ---
 
-<section class="hero" id={id} aria-labelledby={`${id}-title`} data-testid="hero-section">
-  <div class="hero__content">
-    <div class="hero__intro">
-      <h1 class="hero__title" id={`${id}-title`}>{heroTagline}</h1>
-    </div>
-
-    <article class="hero__highlight">
-      <div class="hero__highlight-content">
-        <div class="hero__highlight-text">
-          {featured.kicker && <p class="hero__highlight-kicker">{featured.kicker}</p>}
-          <h2 class="hero__highlight-title">{featured.title}</h2>
-          <p class="hero__highlight-summary">{featured.summary}</p>
-          <a
-            class="hero__cta"
-            href={featured.cta.href}
-            target={featured.cta.isExternal ? '_blank' : undefined}
-            rel={featured.cta.isExternal ? 'noopener noreferrer' : undefined}
-          >
-            <span>{featured.cta.label}</span>
-            <span aria-hidden="true">→</span>
-          </a>
-        </div>
-        {featuredImage && (
-          <div class="hero__highlight-image">
-            <img src={featuredImage.asset} alt={featuredImage.alt} width="150" height="150" />
+<section class="hero-block" id={id} aria-labelledby={`${id}-title`} data-testid="hero-section">
+  <div class="hero-block__container">
+    <div class="hero-block__content">
+      <div class="hero-block__header">
+        <h1 class="hero-block__headline" id={`${id}-title`}>{heroTagline}</h1>
+        {intro && (
+          <div class="hero-block__intro-wrapper">
+            <p class="hero-block__intro">{intro}</p>
+            {bioSnippet && <p class="hero-block__bio">{bioSnippet}</p>}
           </div>
         )}
       </div>
-    </article>
-  </div>
 
-  {carousel.length > 0 && (
-    <CarouselIsland id={`${id}-carousel`} items={carousel} />
-  )}
+      {projectList.length > 0 && (
+        <div class="hero-block__project-list">
+          <ProjectList projects={projectList} />
+        </div>
+      )}
+    </div>
+  </div>
 </section>
 
 <style>
-  .hero {
-    display: contents;
-  }
-
-  .hero__content {
-    grid-column: 1 / span 12;
-    grid-row: 3 / span 3;
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
-    gap: var(--space-lg);
-    padding: var(--space-sm) var(--space-md);
-  }
-
-  .hero__intro {
+  .hero-block {
+    padding: 80px var(--space-xl);
+    min-height: auto;
     display: flex;
     flex-direction: column;
-    gap: 0;
-    flex: 0 0 auto;
-    width: 505px;
+    justify-content: center;
+    background: var(--surface-card);
+    color: var(--color-label-primary);
+    margin-bottom: 48px;
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-soft);
   }
 
-  .hero__title {
-    margin: 0;
-    font-family: var(--font-family-heading);
-    font-size: var(--font-size-h4);
-    line-height: var(--line-height-h4);
-    letter-spacing: var(--letter-spacing-h4);
-    font-weight: var(--font-weight-h4);
-    color: var(--theme-text, var(--color-label-primary));
-    white-space: pre-wrap;
-  }
-
-  .hero__highlight {
-    position: relative;
-    padding: var(--space-lg);
-    border-radius: 24px;
-    background: var(--color-surface-white);
-    border: 0.5px solid var(--color-label-quaternary);
-    width: 565px;
-    flex-shrink: 0;
-  }
-
-  .hero__highlight-content {
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
-    gap: var(--space-sm);
-  }
-
-  .hero__highlight-text {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-xs);
-    flex: 1;
-    width: 372px;
-  }
-
-  .hero__highlight-image {
-    flex-shrink: 0;
-    width: 150px;
-    height: 150px;
-    border-radius: 13px;
-    overflow: hidden;
-  }
-
-  .hero__highlight-image img {
+  .hero-block__container {
     width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
+    max-width: 1200px;
+    margin: 0 auto;
   }
 
-  .hero__highlight-kicker {
+  .hero-block__content {
+    display: flex;
+    flex-direction: column;
+    gap: 64px;
+  }
+
+  .hero-block__header {
+    display: grid;
+    grid-template-columns: 1.2fr 0.8fr;
+    gap: var(--space-2xl);
+    align-items: start;
+  }
+
+  .hero-block__headline {
     margin: 0;
-    font-family: var(--font-family-ui);
-    font-size: var(--font-size-label-lg);
-    line-height: var(--line-height-label-lg);
-    letter-spacing: var(--letter-spacing-label-lg);
-    text-transform: uppercase;
+    font-family: var(--font-sans);
+    font-size: var(--text-display-size);
+    line-height: var(--text-display-height);
+    letter-spacing: var(--text-display-spacing);
+    font-weight: var(--text-display-weight);
+    color: var(--color-label-primary);
+  }
+
+  .hero-block__intro-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+    padding-top: 8px;
+  }
+
+  .hero-block__intro {
+    margin: 0;
+    font-family: var(--font-sans);
+    font-size: var(--text-title-size); /* Title Style */
+    line-height: var(--text-title-height);
+    letter-spacing: var(--text-title-spacing);
+    font-weight: 400;
     color: var(--color-label-secondary);
   }
 
-  .hero__highlight-title {
+  .hero-block__bio {
     margin: 0;
-    font-family: var(--font-family-body);
-    font-size: var(--font-size-body-md);
-    line-height: var(--line-height-body-md);
-    letter-spacing: var(--letter-spacing-body-md);
-    font-weight: var(--font-weight-body-md);
-    color: var(--color-label-primary);
+    font-family: var(--font-sans);
+    font-size: var(--text-secondary-size);
+    line-height: var(--text-secondary-height);
+    letter-spacing: var(--text-secondary-spacing);
+    font-weight: var(--text-secondary-weight);
+    color: var(--color-label-tertiary);
   }
 
-  .hero__highlight-summary {
-    margin: 0;
-    font-family: var(--font-family-body);
-    font-size: var(--font-size-body-md);
-    line-height: var(--line-height-body-md);
-    letter-spacing: var(--letter-spacing-body-md);
-    color: var(--color-label-primary);
+  .hero-block__project-list {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
   }
 
-  .hero__cta {
-    align-self: flex-start;
-    display: inline-flex;
-    align-items: center;
-    gap: var(--space-xs);
-    padding: var(--space-xs) var(--space-sm);
-    border-radius: var(--radius-lg);
-    background: var(--color-material-regular);
-    border: 1px solid var(--color-label-tertiary);
-    backdrop-filter: blur(8px);
-    font-family: var(--font-family-ui);
-    font-size: var(--font-size-label-sm);
-    line-height: var(--line-height-label-sm);
-    letter-spacing: var(--letter-spacing-label-sm);
-    text-transform: uppercase;
-    color: var(--color-label-primary);
-    transition: transform 0.2s ease, border-color 0.2s ease, background-color 0.2s ease;
-    margin-top: var(--space-xs);
-  }
+  @media (max-width: 1024px) {
+    .hero-block {
+      padding: var(--space-xl) var(--space-lg);
+    }
 
-  .hero__cta:hover,
-  .hero__cta:focus-visible {
-    transform: translateY(-1px);
-    border-color: var(--color-label-secondary);
-    background: color-mix(in srgb, var(--color-surface-white) 60%, transparent);
-  }
-
-  .hero :global(.carousel) {
-    grid-column: 1 / span 12;
-    grid-row: 6 / span 10;
-  }
-
-  @media (max-width: 960px) {
-    .hero__content {
-      flex-direction: column;
+    .hero-block__header {
+      grid-template-columns: 1fr;
       gap: var(--space-lg);
     }
-
-    .hero__highlight {
-      width: 100%;
-    }
-
-    .hero__highlight-content {
-      flex-direction: column;
-    }
-
-    .hero__highlight-image {
-      width: 100%;
-      height: auto;
-      aspect-ratio: 1;
+    
+    .hero-block__intro-wrapper {
+      padding-top: 0;
     }
   }
 
   @media (max-width: 720px) {
-    .hero__content {
-      grid-row: 3 / span 4;
+    .hero-block {
+      padding: var(--space-lg) var(--space-md);
+    }
+    
+    .hero-block__content {
+      gap: 48px;
     }
   }
 </style>

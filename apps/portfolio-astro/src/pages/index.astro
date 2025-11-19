@@ -1,104 +1,122 @@
 ---
-import '../styles/global.css';
-import SidebarPanel from '../components/SidebarPanel.astro';
-import HeroSection from '../components/HeroSection.astro';
-import ProjectStory from '../components/ProjectStory.astro';
-import AboutSection from '../components/AboutSection.astro';
-import ContactStrip from '../components/ContactStrip.astro';
-import ThemeController from '../components/ThemeController.astro';
-import CaseStudyOverlay from '../components/CaseStudyOverlay.astro';
-import type { ProjectListItem } from '../components/ProjectList.astro';
-import type { CaseStudyItem } from '../components/CaseStudyStack.astro';
-import type { CollectionEntry } from 'astro:content';
-import { getCollection, getEntry } from 'astro:content';
-import { normalizeTheme } from '../lib/theme/manager';
-import type { ThemeTokens } from '../lib/theme/types';
-const FALLBACK_MEDIA = '/media/placeholder.webp';
+import "../styles/global.css";
+import SidebarPanel from "../components/SidebarPanel.astro";
+import HeroSection from "../components/HeroSection.astro";
+import ProjectStory from "../components/ProjectStory.astro";
+import AboutSection from "../components/AboutSection.astro";
+import ContactStrip from "../components/ContactStrip.astro";
+import ThemeController from "../components/ThemeController.astro";
+import CaseStudyOverlay from "../components/CaseStudyOverlay.astro";
+import CustomCursor from "../components/CustomCursor.astro";
+import type { ProjectListItem } from "../components/ProjectList.astro";
+import type { CaseStudyItem } from "../components/CaseStudyStack.astro";
+import type { CollectionEntry } from "astro:content";
+import { getCollection, getEntry } from "astro:content";
+import { normalizeTheme } from "../lib/theme/manager";
+import type { ThemeTokens } from "../lib/theme/types";
+const FALLBACK_MEDIA = "/media/placeholder.webp";
 
 const fallbackSite = {
-  title: 'Abhinav Pandey — Portfolio',
-  heroTagline: 'Motion-rich stories for teams shipping immersive products.',
-  location: 'Mumbai, India',
+  title: "Abhinav Pandey — Portfolio",
+  heroTagline: "Motion-rich stories for teams shipping immersive products.",
+  location: "Mumbai, India",
   intro:
-    'I craft end-to-end product experiences for teams who want motion to feel intentional, thoughtful, and accessible.',
-  bioSnippet: 'Previously at Orbit Labs and Flux Studio.',
-  email: 'abhinavpandey027@gmail.com',
+    "I craft end-to-end product experiences for teams who want motion to feel intentional, thoughtful, and accessible.",
+  bioSnippet: "Previously at Orbit Labs and Flux Studio.",
+  email: "abhinavpandey027@gmail.com",
   navLinks: [
-    { label: 'Work', href: '#work' },
-    { label: 'About', href: '#about' },
-    { label: 'Contact', href: '#contact' }
+    { label: "Work", href: "#work" },
+    { label: "About", href: "#about" },
+    { label: "Contact", href: "#contact" },
   ],
   socialLinks: [
     {
-      label: 'twitter' as const,
-      url: 'https://x.com/ab27hi',
-      ariaLabel: 'View Abhinav on X'
+      label: "twitter" as const,
+      url: "https://x.com/ab27hi",
+      ariaLabel: "View Abhinav on X",
     },
     {
-      label: 'email' as const,
-      url: 'mailto:abhinavpandey027@gmail.com',
-      ariaLabel: 'Email Abhinav'
+      label: "email" as const,
+      url: "mailto:abhinavpandey027@gmail.com",
+      ariaLabel: "Email Abhinav",
     },
     {
-      label: 'linkedin' as const,
-      url: 'https://www.linkedin.com/in/abhinavpandey',
-      ariaLabel: 'View Abhinav on LinkedIn'
-    }
+      label: "linkedin" as const,
+      url: "https://www.linkedin.com/in/abhinavpandey",
+      ariaLabel: "View Abhinav on LinkedIn",
+    },
   ],
   resume: {
-    label: 'Download résumé',
-    file: '/media/resume.pdf',
-    size: 0.2
+    label: "Download résumé",
+    file: "/media/resume.pdf",
+    size: 0.2,
   },
   heroCarousel: [
     {
       asset: FALLBACK_MEDIA,
-      alt: 'Placeholder hero artwork',
-      caption: 'Add hero carousel items from Tina.',
-      emphasis: 'primary' as const,
+      alt: "Placeholder hero artwork",
+      caption: "Add hero carousel items from Tina.",
+      emphasis: "primary" as const,
       width: undefined,
-      height: undefined
-    }
+      height: undefined,
+    },
   ],
   motion: {
-    prefersReducedMotionCopy: 'Animations respect your motion preferences — opt-out anytime.'
+    prefersReducedMotionCopy:
+      "Animations respect your motion preferences — opt-out anytime.",
   },
-  featuredProject: { collection: 'projects', slug: 'project-atlas' }
+  featuredProject: { collection: "projects", slug: "project-atlas" },
 };
 
-const [siteEntry] = await getCollection('site');
-const siteEntryActual = (siteEntry ?? ({
-  id: 'fallback-site',
-  slug: 'fallback-site',
-  body: '',
-  data: fallbackSite,
-  collection: 'site'
-} as unknown as CollectionEntry<'site'>));
+const [siteEntry] = await getCollection("site");
+const siteEntryActual =
+  siteEntry ??
+  ({
+    id: "fallback-site",
+    slug: "fallback-site",
+    body: "",
+    data: fallbackSite,
+    collection: "site",
+  } as unknown as CollectionEntry<"site">);
 const site = siteEntryActual.data ?? fallbackSite;
 
 const socialLabelMap: Record<string, string> = {
-  twitter: 'Twitter',
-  linkedin: 'LinkedIn',
-  email: 'E-Mail',
-  behance: 'Behance',
-  dribbble: 'Dribbble',
-  github: 'GitHub'
+  twitter: "Twitter",
+  linkedin: "LinkedIn",
+  email: "E-Mail",
+  behance: "Behance",
+  dribbble: "Dribbble",
+  github: "GitHub",
 };
 
-const navLinks = site.navLinks?.length ? site.navLinks.filter(link => link.label.toLowerCase() !== 'contact') : fallbackSite.navLinks.filter(link => link.label.toLowerCase() !== 'contact');
-const socialLinksSource = site.socialLinks?.length ? site.socialLinks : fallbackSite.socialLinks;
+const navLinks = site.navLinks?.length
+  ? site.navLinks.filter((link) => link.label.toLowerCase() !== "contact")
+  : fallbackSite.navLinks.filter(
+      (link) => link.label.toLowerCase() !== "contact",
+    );
+const socialLinksSource = site.socialLinks?.length
+  ? site.socialLinks
+  : fallbackSite.socialLinks;
 
 // Ensure we have Twitter, Email, LinkedIn, and Resume in the correct order
 // Filter and order social links to match Figma design: Twitter, Email, LinkedIn, Resume
 const orderedSocialLinks = [];
-const twitterLink = socialLinksSource.find(link => link.label.toLowerCase() === 'twitter');
-const emailLink = socialLinksSource.find(link => link.label.toLowerCase() === 'email');
-const linkedinLink = socialLinksSource.find(link => link.label.toLowerCase() === 'linkedin');
-const resumeLink = site.resume ? {
-  label: 'resume',
-  url: site.resume.file,
-  ariaLabel: site.resume.label || 'Download resume'
-} : null;
+const twitterLink = socialLinksSource.find(
+  (link) => link.label.toLowerCase() === "twitter",
+);
+const emailLink = socialLinksSource.find(
+  (link) => link.label.toLowerCase() === "email",
+);
+const linkedinLink = socialLinksSource.find(
+  (link) => link.label.toLowerCase() === "linkedin",
+);
+const resumeLink = site.resume
+  ? {
+      label: "resume",
+      url: site.resume.file,
+      ariaLabel: site.resume.label || "Download resume",
+    }
+  : null;
 
 // Add in order: Twitter, Email, LinkedIn, Resume
 if (twitterLink) orderedSocialLinks.push(twitterLink);
@@ -107,47 +125,55 @@ if (linkedinLink) orderedSocialLinks.push(linkedinLink);
 if (resumeLink) orderedSocialLinks.push(resumeLink);
 
 const socialLinks = orderedSocialLinks.map((link, index) => ({
-  label: socialLabelMap[link.label] ?? (link.label.toLowerCase() === 'resume' ? 'Resume' : link.label),
+  label:
+    socialLabelMap[link.label] ??
+    (link.label.toLowerCase() === "resume" ? "Resume" : link.label),
   url: link.url,
   ariaLabel: link.ariaLabel,
-  isResume: link.label.toLowerCase() === 'resume' || link.url?.endsWith('.pdf'),
-  isIcon: link.label.toLowerCase() === 'twitter' || link.label.toLowerCase() === 'linkedin'
+  isResume: link.label.toLowerCase() === "resume" || link.url?.endsWith(".pdf"),
+  isIcon:
+    link.label.toLowerCase() === "twitter" ||
+    link.label.toLowerCase() === "linkedin",
 }));
 
 const title = site.title ?? fallbackSite.title;
-const ownerName = title.split('—')[0]?.trim() ?? title;
+const ownerName = title.split("—")[0]?.trim() ?? title;
 const location = site.location ?? fallbackSite.location;
 const heroTagline = site.heroTagline ?? fallbackSite.heroTagline;
 const introCopy = site.intro ?? fallbackSite.intro;
 const bioSnippet = site.bioSnippet ?? fallbackSite.bioSnippet;
 const prefersReducedMotionCopy =
-  site.motion?.prefersReducedMotionCopy ?? fallbackSite.motion.prefersReducedMotionCopy;
+  site.motion?.prefersReducedMotionCopy ??
+  fallbackSite.motion.prefersReducedMotionCopy;
 
 const primaryEmail = site.email ?? fallbackSite.email;
 
-const heroCarousel: HeroCarouselItem[] = (site.heroCarousel?.length ? site.heroCarousel : fallbackSite.heroCarousel).map(
-  (item) => ({
-    src: item.asset,
-    alt: item.alt,
-    caption: item.caption,
-    emphasis: item.emphasis,
-    width: 'width' in item ? item.width : undefined,
-    height: 'height' in item ? item.height : undefined
-  })
-);
+const heroCarousel: HeroCarouselItem[] = (
+  site.heroCarousel?.length ? site.heroCarousel : fallbackSite.heroCarousel
+).map((item) => ({
+  src: item.asset,
+  alt: item.alt,
+  caption: item.caption,
+  emphasis: item.emphasis,
+  width: "width" in item ? item.width : undefined,
+  height: "height" in item ? item.height : undefined,
+}));
 
 // Add placeholder images if carousel has less than 6 items
-const placeholderImages: HeroCarouselItem[] = Array.from({ length: Math.max(0, 6 - heroCarousel.length) }, (_, i) => ({
-  src: '/media/placeholder.webp',
-  alt: `Placeholder carousel image ${i + 1}`,
-  caption: `Placeholder ${i + 1}`,
-  emphasis: 'primary' as const
-}));
+const placeholderImages: HeroCarouselItem[] = Array.from(
+  { length: Math.max(0, 6 - heroCarousel.length) },
+  (_, i) => ({
+    src: "/media/placeholder.webp",
+    alt: `Placeholder carousel image ${i + 1}`,
+    caption: `Placeholder ${i + 1}`,
+    emphasis: "primary" as const,
+  }),
+);
 
 const finalHeroCarousel = [...heroCarousel, ...placeholderImages].slice(0, 6);
 
-const projects = await getCollection('projects');
-const [aboutEntry] = await getCollection('about');
+const projects = await getCollection("projects");
+const [aboutEntry] = await getCollection("about");
 
 // Shape project data for project list
 const projectListItems: ProjectListItem[] = projects.map((project) => ({
@@ -159,15 +185,17 @@ const projectListItems: ProjectListItem[] = projects.map((project) => ({
   heroIcon: project.data.hero?.media
     ? {
         asset: project.data.hero.media.asset,
-        alt: project.data.hero.media.alt
+        alt: project.data.hero.media.alt,
       }
     : undefined,
-  href: `#${project.slug}`
+  href: `#${project.slug}`,
 }));
 
 // Gather featured case studies
 const featuredCaseStudies: CaseStudyItem[] = projects
-  .filter((project) => project.data.isFeaturedCaseStudy && project.data.caseStudy)
+  .filter(
+    (project) => project.data.isFeaturedCaseStudy && project.data.caseStudy,
+  )
   .map((project) => {
     const caseStudy = project.data.caseStudy!;
     return {
@@ -175,111 +203,137 @@ const featuredCaseStudies: CaseStudyItem[] = projects
       posterImage: caseStudy.posterImage
         ? {
             asset: caseStudy.posterImage.asset,
-            alt: caseStudy.posterImage.alt
+            alt: caseStudy.posterImage.alt,
           }
         : undefined,
       title: caseStudy.title,
       calloutSubtitle: caseStudy.calloutSubtitle,
       description: caseStudy.description,
       externalLink: caseStudy.externalLink,
-      slug: project.slug
+      slug: project.slug,
     };
   })
   .slice(0, 3); // Limit to 3 case studies
 
 // Add placeholder case studies if none exist (for testing)
-const placeholderCaseStudies: CaseStudyItem[] = featuredCaseStudies.length === 0 ? [
-  {
-    title: 'NFT-based Cricket Fantasy Game',
-    calloutSubtitle: 'Striker',
-    description: 'Did 0→1 for a new player-card-based fantasy system.',
-    slug: 'placeholder-1',
-    posterImage: { asset: '/media/placeholder.webp', alt: 'Placeholder case study 1' }
-  },
-  {
-    title: 'Product Design Case Study',
-    calloutSubtitle: 'Project Name',
-    description: 'A comprehensive case study showcasing design process and outcomes.',
-    slug: 'placeholder-2',
-    posterImage: { asset: '/media/placeholder.webp', alt: 'Placeholder case study 2' }
-  },
-  {
-    title: 'Mobile App Redesign',
-    calloutSubtitle: 'App Name',
-    description: 'Complete redesign of mobile experience with improved UX.',
-    slug: 'placeholder-3',
-    posterImage: { asset: '/media/placeholder.webp', alt: 'Placeholder case study 3' }
-  }
-] : [];
+const placeholderCaseStudies: CaseStudyItem[] =
+  featuredCaseStudies.length === 0
+    ? [
+        {
+          title: "NFT-based Cricket Fantasy Game",
+          calloutSubtitle: "Striker",
+          description: "Did 0→1 for a new player-card-based fantasy system.",
+          slug: "placeholder-1",
+          posterImage: {
+            asset: "/media/placeholder.webp",
+            alt: "Placeholder case study 1",
+          },
+        },
+        {
+          title: "Product Design Case Study",
+          calloutSubtitle: "Project Name",
+          description:
+            "A comprehensive case study showcasing design process and outcomes.",
+          slug: "placeholder-2",
+          posterImage: {
+            asset: "/media/placeholder.webp",
+            alt: "Placeholder case study 2",
+          },
+        },
+        {
+          title: "Mobile App Redesign",
+          calloutSubtitle: "App Name",
+          description:
+            "Complete redesign of mobile experience with improved UX.",
+          slug: "placeholder-3",
+          posterImage: {
+            asset: "/media/placeholder.webp",
+            alt: "Placeholder case study 3",
+          },
+        },
+      ]
+    : [];
 
-const finalCaseStudies = featuredCaseStudies.length > 0 ? featuredCaseStudies : placeholderCaseStudies;
+const finalCaseStudies =
+  featuredCaseStudies.length > 0 ? featuredCaseStudies : placeholderCaseStudies;
 
 // Theme registry: maps section IDs to theme tokens (lean: light/dark only)
 const themeMap: Record<string, ThemeTokens> = {};
 const lightTheme: ThemeTokens = {
-  bg: 'var(--surface-card)',
-  text: 'var(--color-label-primary)',
-  accent: '#0b0c11'
+  bg: "var(--surface-card)",
+  text: "var(--color-label-primary)",
+  accent: "#0b0c11",
 };
 const darkTheme: ThemeTokens = {
-  bg: '#0b0c11',
-  text: '#ffffff',
-  accent: '#ffffff'
+  bg: "#0b0c11",
+  text: "#ffffff",
+  accent: "#ffffff",
 };
 
 // Hero section theme (from site settings)
 const heroTheme = normalizeTheme(site.theme);
-themeMap['top'] = Object.keys(heroTheme).length > 0 ? heroTheme : lightTheme;
+themeMap["top"] = Object.keys(heroTheme).length > 0 ? heroTheme : lightTheme;
 
 // Project themes - Use project-defined themes or fallback to design tokens
 projects.forEach((project) => {
   const projectTheme = normalizeTheme(project.data.theme);
-  themeMap[project.slug] = Object.keys(projectTheme).length > 0 ? projectTheme : lightTheme;
+  themeMap[project.slug] =
+    Object.keys(projectTheme).length > 0 ? projectTheme : lightTheme;
 });
 
 // About section theme - only white or black
 if (aboutEntry) {
   const aboutTheme = normalizeTheme(aboutEntry.data.theme);
-  if (Object.keys(aboutTheme).length > 0 && (aboutTheme.bg === '#ffffff' || aboutTheme.bg === '#000000' || aboutTheme.bg === 'var(--color-surface-white)' || aboutTheme.bg === 'var(--color-surface-black)')) {
-    themeMap['about'] = aboutTheme;
+  if (
+    Object.keys(aboutTheme).length > 0 &&
+    (aboutTheme.bg === "#ffffff" ||
+      aboutTheme.bg === "#000000" ||
+      aboutTheme.bg === "var(--color-surface-white)" ||
+      aboutTheme.bg === "var(--color-surface-black)")
+  ) {
+    themeMap["about"] = aboutTheme;
   } else {
-    const bgType = aboutEntry.data.motion?.sectionBackground ?? 'light';
-    themeMap['about'] = bgType === 'dark' ? darkTheme : lightTheme;
+    const bgType = aboutEntry.data.motion?.sectionBackground ?? "light";
+    themeMap["about"] = bgType === "dark" ? darkTheme : lightTheme;
   }
 }
 
 // Contact section default theme
-themeMap['contact'] = darkTheme;
+themeMap["contact"] = darkTheme;
 
 const fallbackProject = {
-  kicker: 'Featured project',
-  title: 'Add a highlighted project in Tina',
-  summary: 'Select a featured project inside the Site Settings collection to replace this placeholder.',
+  kicker: "Featured project",
+  title: "Add a highlighted project in Tina",
+  summary:
+    "Select a featured project inside the Site Settings collection to replace this placeholder.",
   metadata: [
-    { label: 'Role', value: 'Design Lead' },
-    { label: 'Timeline', value: 'Timeline TBD' }
+    { label: "Role", value: "Design Lead" },
+    { label: "Timeline", value: "Timeline TBD" },
   ],
   cta: {
-    label: 'Contact',
+    label: "Contact",
     href: `mailto:${primaryEmail}`,
-    isExternal: true
-  }
+    isExternal: true,
+  },
 };
 
 let featuredProject = fallbackProject;
-let featuredProjectImage: { asset: string; alt: string } | undefined = undefined;
+let featuredProjectImage: { asset: string; alt: string } | undefined =
+  undefined;
 
 if (siteEntry && site.featuredProject) {
   const featuredProjectEntry = await getEntry(site.featuredProject);
-  if (featuredProjectEntry && featuredProjectEntry.collection === 'projects') {
+  if (featuredProjectEntry && featuredProjectEntry.collection === "projects") {
     const project = featuredProjectEntry.data;
-    const projectTeam = project.team.length ? project.team.join(', ') : undefined;
+    const projectTeam = project.team.length
+      ? project.team.join(", ")
+      : undefined;
     const projectCta =
       project.cta ??
       ({
-        label: 'View project',
+        label: "View project",
         href: `/projects/${featuredProjectEntry.slug}`,
-        isExternal: false
+        isExternal: false,
       } as const);
 
     featuredProject = {
@@ -287,18 +341,18 @@ if (siteEntry && site.featuredProject) {
       title: project.title,
       summary: project.summary,
       metadata: [
-        { label: 'Role', value: project.role },
-        { label: 'Timeline', value: project.timeline },
-        ...(projectTeam ? [{ label: 'Team', value: projectTeam }] : [])
+        { label: "Role", value: project.role },
+        { label: "Timeline", value: project.timeline },
+        ...(projectTeam ? [{ label: "Team", value: projectTeam }] : []),
       ],
-      cta: projectCta
+      cta: projectCta,
     };
 
     // Extract image from featured project for hero card thumbnail
     if (project.hero?.media) {
       featuredProjectImage = {
         asset: project.hero.media.asset,
-        alt: project.hero.media.alt
+        alt: project.hero.media.alt,
       };
     }
   }
@@ -333,7 +387,7 @@ if (siteEntry && site.featuredProject) {
 
           <div class="main-layout__content">
             <div class="content-container">
-              <ThemeController sectionId="top" theme={themeMap['top']}>
+              <ThemeController sectionId="top" theme={themeMap["top"]}>
                 <HeroSection
                   id="top"
                   heroTagline={heroTagline}
@@ -343,24 +397,31 @@ if (siteEntry && site.featuredProject) {
                 />
               </ThemeController>
 
-              {projects.length > 0 && (
-                <section id="work" class="work-section">
-                  {projects.map((project, index) => (
-                    <div class="work-block">
-                      <ProjectStory
-                        project={project}
-                        variant={project.data.storyLayout ?? (index % 2 === 0 ? 'case-study' : 'metrics')}
-                      />
-                    </div>
-                  ))}
-                </section>
-              )}
+              {
+                projects.length > 0 && (
+                  <section id="work" class="work-section">
+                    {projects.map((project, index) => (
+                      <div class="work-block">
+                        <ProjectStory
+                          project={project}
+                          variant={
+                            project.data.storyLayout ??
+                            (index % 2 === 0 ? "case-study" : "metrics")
+                          }
+                        />
+                      </div>
+                    ))}
+                  </section>
+                )
+              }
 
-              {aboutEntry && (
-                <ThemeController sectionId="about" theme={themeMap['about']}>
-                  <AboutSection about={aboutEntry} />
-                </ThemeController>
-              )}
+              {
+                aboutEntry && (
+                  <ThemeController sectionId="about" theme={themeMap["about"]}>
+                    <AboutSection about={aboutEntry} />
+                  </ThemeController>
+                )
+              }
             </div>
           </div>
         </div>
@@ -369,67 +430,102 @@ if (siteEntry && site.featuredProject) {
 
     <CaseStudyOverlay caseStudies={finalCaseStudies} />
 
-    <div data-default-theme={JSON.stringify(themeMap['top'] || lightTheme)} style="display: none;" aria-hidden="true"></div>
+    <div
+      data-default-theme={JSON.stringify(themeMap["top"] || lightTheme)}
+      style="display: none;"
+      aria-hidden="true"
+    >
+    </div>
 
     <script type="module">
-      import { initApp } from '../lib/app/init.ts';
-      
+      import { initApp } from "../lib/app/init.ts";
+
       // Initialize smooth scroll
-      const defaultThemeEl = document.querySelector('[data-default-theme]');
-      const defaultTheme = defaultThemeEl 
-        ? JSON.parse(defaultThemeEl.getAttribute('data-default-theme') || '{}')
-        : { bg: '#ffffff', text: '#0b0c11', accent: '#5763ff' };
-      
+      const defaultThemeEl = document.querySelector("[data-default-theme]");
+      const defaultTheme = defaultThemeEl
+        ? JSON.parse(defaultThemeEl.getAttribute("data-default-theme") || "{}")
+        : { bg: "#ffffff", text: "#0b0c11", accent: "#5763ff" };
+
       initApp(defaultTheme);
     </script>
 
     <script>
       // Theme Switcher - Simple, Direct, Works
-      (function() {
-        console.log('[ThemeSwitcher] Starting...');
-        
+      (function () {
+        console.log("[ThemeSwitcher] Starting...");
+
         function init() {
-          console.log('[ThemeSwitcher] Initializing...');
-          
-          const sections = Array.from(document.querySelectorAll('[data-theme-section]'))
-            .map(el => {
-              const id = el.getAttribute('data-theme-section');
-              const json = el.getAttribute('data-theme');
+          console.log("[ThemeSwitcher] Initializing...");
+
+          const sections = Array.from(
+            document.querySelectorAll("[data-theme-section]"),
+          )
+            .map((el) => {
+              const id = el.getAttribute("data-theme-section");
+              const json = el.getAttribute("data-theme");
               if (!id || !json) return null;
               try {
                 const theme = JSON.parse(json);
-                console.log('[ThemeSwitcher] Found:', id, theme);
+                console.log("[ThemeSwitcher] Found:", id, theme);
                 return { id, el: el, theme: theme };
               } catch (e) {
-                console.error('[ThemeSwitcher] Parse error:', e);
+                console.error("[ThemeSwitcher] Parse error:", e);
                 return null;
               }
             })
             .filter(Boolean);
 
-          console.log('[ThemeSwitcher] Total sections:', sections.length);
+          console.log("[ThemeSwitcher] Total sections:", sections.length);
 
           if (sections.length === 0) {
-            console.warn('[ThemeSwitcher] No sections!');
+            console.warn("[ThemeSwitcher] No sections!");
             return;
           }
 
           // Set initial theme
           const first = sections[0];
-          console.log('[ThemeSwitcher] Initial theme:', first.theme);
-          if (first.theme.bg) document.documentElement.style.setProperty('--theme-bg', first.theme.bg);
-          if (first.theme.text) document.documentElement.style.setProperty('--theme-text', first.theme.text);
-          if (first.theme.accent) document.documentElement.style.setProperty('--theme-accent', first.theme.accent);
+          console.log("[ThemeSwitcher] Initial theme:", first.theme);
+          if (first.theme.bg)
+            document.documentElement.style.setProperty(
+              "--theme-bg",
+              first.theme.bg,
+            );
+          if (first.theme.text)
+            document.documentElement.style.setProperty(
+              "--theme-text",
+              first.theme.text,
+            );
+          if (first.theme.accent)
+            document.documentElement.style.setProperty(
+              "--theme-accent",
+              first.theme.accent,
+            );
 
           let currentId = first.id;
 
           function applyTheme(target) {
             if (!target) return;
-            
-            console.log('[ThemeSwitcher] Applying theme:', target.id, target.theme);
-            if (target.theme.bg) document.documentElement.style.setProperty('--theme-bg', target.theme.bg);
-            if (target.theme.text) document.documentElement.style.setProperty('--theme-text', target.theme.text);
-            if (target.theme.accent) document.documentElement.style.setProperty('--theme-accent', target.theme.accent);
+
+            console.log(
+              "[ThemeSwitcher] Applying theme:",
+              target.id,
+              target.theme,
+            );
+            if (target.theme.bg)
+              document.documentElement.style.setProperty(
+                "--theme-bg",
+                target.theme.bg,
+              );
+            if (target.theme.text)
+              document.documentElement.style.setProperty(
+                "--theme-text",
+                target.theme.text,
+              );
+            if (target.theme.accent)
+              document.documentElement.style.setProperty(
+                "--theme-accent",
+                target.theme.accent,
+              );
             currentId = target.id;
           }
 
@@ -440,12 +536,16 @@ if (siteEntry && site.featuredProject) {
             let closest = Infinity;
             let target = null;
 
-            sections.forEach(section => {
+            sections.forEach((section) => {
               const rect = section.el.getBoundingClientRect();
               const elCenter = rect.top + rect.height / 2;
               const dist = Math.abs(center - elCenter);
 
-              if (rect.top < window.innerHeight && rect.bottom > 0 && dist < closest) {
+              if (
+                rect.top < window.innerHeight &&
+                rect.bottom > 0 &&
+                dist < closest
+              ) {
                 closest = dist;
                 target = section;
               }
@@ -453,34 +553,52 @@ if (siteEntry && site.featuredProject) {
 
             if (target) {
               if (target.id !== currentId) {
-                console.log('[ThemeSwitcher] CHANGE:', currentId, '->', target.id, 'BG:', target.theme.bg);
+                console.log(
+                  "[ThemeSwitcher] CHANGE:",
+                  currentId,
+                  "->",
+                  target.id,
+                  "BG:",
+                  target.theme.bg,
+                );
                 applyTheme(target);
               } else if (frameCount % 120 === 0) {
-                console.log('[ThemeSwitcher] Current:', target.id, 'BG:', target.theme.bg, 'Scroll:', window.scrollY);
+                console.log(
+                  "[ThemeSwitcher] Current:",
+                  target.id,
+                  "BG:",
+                  target.theme.bg,
+                  "Scroll:",
+                  window.scrollY,
+                );
               }
             }
           }
 
           // Use IntersectionObserver - most reliable
-          const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-              if (entry.isIntersecting) {
-                const sectionId = entry.target.getAttribute('data-theme-section');
-                const target = sections.find(s => s.id === sectionId);
-                if (target && target.id !== currentId) {
-                  applyTheme(target);
+          const observer = new IntersectionObserver(
+            (entries) => {
+              entries.forEach((entry) => {
+                if (entry.isIntersecting) {
+                  const sectionId =
+                    entry.target.getAttribute("data-theme-section");
+                  const target = sections.find((s) => s.id === sectionId);
+                  if (target && target.id !== currentId) {
+                    applyTheme(target);
+                  }
                 }
-              }
-            });
-          }, {
-            rootMargin: '-30% 0px -30% 0px',
-            threshold: [0, 0.1, 0.3, 0.5, 0.7, 1]
-          });
+              });
+            },
+            {
+              rootMargin: "-30% 0px -30% 0px",
+              threshold: [0, 0.1, 0.3, 0.5, 0.7, 1],
+            },
+          );
 
-          sections.forEach(section => {
+          sections.forEach((section) => {
             observer.observe(section.el);
           });
-          console.log('[ThemeSwitcher] Observing', sections.length, 'sections');
+          console.log("[ThemeSwitcher] Observing", sections.length, "sections");
 
           // Also use RAF as backup
           function rafUpdate() {
@@ -488,23 +606,24 @@ if (siteEntry && site.featuredProject) {
             requestAnimationFrame(rafUpdate);
           }
           requestAnimationFrame(rafUpdate);
-          console.log('[ThemeSwitcher] Started RAF loop');
+          console.log("[ThemeSwitcher] Started RAF loop");
 
           // Also listen to scroll
-          window.addEventListener('scroll', updateTheme, { passive: true });
-          
+          window.addEventListener("scroll", updateTheme, { passive: true });
+
           // Initial update
           updateTheme();
-          console.log('[ThemeSwitcher] Ready');
+          console.log("[ThemeSwitcher] Ready");
         }
 
-        if (document.readyState === 'loading') {
-          document.addEventListener('DOMContentLoaded', init);
+        if (document.readyState === "loading") {
+          document.addEventListener("DOMContentLoaded", init);
         } else {
           setTimeout(init, 100);
         }
       })();
     </script>
+    <CustomCursor />
   </body>
 </html>
 

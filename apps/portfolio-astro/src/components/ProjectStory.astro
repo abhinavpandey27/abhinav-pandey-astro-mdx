@@ -1,20 +1,25 @@
 ---
-import { type CollectionEntry } from 'astro:content';
-import CarouselIsland from './CarouselIsland.astro';
-import type { HeroCarouselItem } from './HeroSection.astro';
-import { Callout, OutcomeMetric } from './mdx';
+import { type CollectionEntry } from "astro:content";
+import CarouselIsland from "./CarouselIsland.astro";
+import type { HeroCarouselItem } from "./HeroSection.astro";
+import { Callout, OutcomeMetric } from "./mdx";
 
-type ProjectEntry = CollectionEntry<'projects'>;
-type Variant = 'case-study' | 'metrics';
+type ProjectEntry = CollectionEntry<"projects">;
+type Variant = "case-study" | "metrics";
 
 interface Props {
   project: ProjectEntry;
   variant?: Variant;
   id?: string;
-  'data-theme-section'?: string;
+  "data-theme-section"?: string;
 }
 
-const { project, variant = 'case-study', id, 'data-theme-section': themeSection } = Astro.props as Props;
+const {
+  project,
+  variant = "case-study",
+  id,
+  "data-theme-section": themeSection,
+} = Astro.props as Props;
 const data = project.data;
 const layoutVariant = data.storyLayout ?? variant;
 const { Content } = await project.render();
@@ -29,19 +34,19 @@ const gallery: HeroCarouselItem[] = data.gallery.map((item) => ({
   src: item.asset,
   alt: item.alt,
   caption: item.caption,
-  emphasis: item.emphasis ?? 'primary',
+  emphasis: item.emphasis ?? "primary",
   motionDelay: item.motionDelay,
-  width: 'width' in item ? item.width : undefined,
-  height: 'height' in item ? item.height : undefined
+  width: "width" in item ? item.width : undefined,
+  height: "height" in item ? item.height : undefined,
 }));
 
-const background = data.motion?.sectionBackground ?? 'dark';
+const background = data.motion?.sectionBackground ?? "dark";
 
 const sectionClasses = [
-  'project-story',
+  "project-story",
   `project-story--${background}`,
-  `project-story--${layoutVariant}`
-].join(' ');
+  `project-story--${layoutVariant}`,
+].join(" ");
 ---
 
 <section
@@ -54,83 +59,106 @@ const sectionClasses = [
     <div class="project-story__header">
       <div class="project-story__main-info">
         <div class="project-story__title-row">
-          {data.hero?.media && (
-            <img 
-              src={data.hero.media.asset} 
-              alt={data.hero.media.alt} 
-              class="project-story__icon"
-              width="48"
-              height="48"
-            />
-          )}
+          {
+            data.hero?.media && (
+              <img
+                src={data.hero.media.asset}
+                alt={data.hero.media.alt}
+                class="project-story__icon"
+                width="48"
+                height="48"
+              />
+            )
+          }
           <div class="project-story__titles">
             <h2 class="project-story__title">{data.title}</h2>
-            {data.hero?.kicker && (
-              <p class="project-story__subtitle">{data.hero.kicker}</p>
-            )}
+            {
+              data.hero?.kicker && (
+                <p class="project-story__subtitle">{data.hero.kicker}</p>
+              )
+            }
           </div>
         </div>
 
         <div class="project-story__body">
           <p class="project-story__summary">{data.summary}</p>
-          
+
           <div class="project-story__tags">
-            {deliverables.length > 0 && deliverables.map((d) => (
-              <span class="project-story__tag">{d}</span>
-            ))}
-            
-            {(ctas.length > 0 || legacyCta) && (
-              <div class="project-story__actions">
-                {ctas.map((cta) => (
-                  <a
-                    class="project-story__tag project-story__tag--action"
-                    href={cta.href}
-                    target={cta.isExternal ? '_blank' : undefined}
-                    rel={cta.isExternal ? 'noopener noreferrer' : undefined}
-                  >
-                    {cta.label}
-                  </a>
-                ))}
-                {legacyCta && ctas.length === 0 && (
-                  <a
-                    class="project-story__tag project-story__tag--action"
-                    href={legacyCta.href}
-                    target={legacyCta.isExternal ? '_blank' : undefined}
-                    rel={legacyCta.isExternal ? 'noopener noreferrer' : undefined}
-                  >
-                    {legacyCta.label}
-                  </a>
-                )}
-              </div>
-            )}
+            {
+              deliverables.length > 0 &&
+                deliverables.map((d) => (
+                  <span class="project-story__tag">{d}</span>
+                ))
+            }
+
+            {
+              (ctas.length > 0 || legacyCta) && (
+                <div class="project-story__actions">
+                  {ctas.map((cta) => (
+                    <a
+                      class="project-story__tag project-story__tag--action"
+                      href={cta.href}
+                      target={cta.isExternal ? "_blank" : undefined}
+                      rel={cta.isExternal ? "noopener noreferrer" : undefined}
+                    >
+                      {cta.label}
+                    </a>
+                  ))}
+                  {legacyCta && ctas.length === 0 && (
+                    <a
+                      class="project-story__tag project-story__tag--action"
+                      href={legacyCta.href}
+                      target={legacyCta.isExternal ? "_blank" : undefined}
+                      rel={
+                        legacyCta.isExternal ? "noopener noreferrer" : undefined
+                      }
+                    >
+                      {legacyCta.label}
+                    </a>
+                  )}
+                </div>
+              )
+            }
           </div>
         </div>
       </div>
 
-      {outcomes.length > 0 && (
-        <div class="project-story__metrics">
-          <ul class="project-story__metrics-list">
-            {outcomes.map((outcome) => (
-              <li class="project-story__metric-item">
-                <span class="project-story__metric-value">{outcome.value}</span>
-                <span class="project-story__metric-label">{outcome.label}</span>
-              </li>
-            ))}
-          </ul>
-          
-          <div class="project-story__meta">
-            <span class="project-story__meta-item">{data.role}</span>
-            <span class="project-story__meta-item">{data.timeline}</span>
+      {
+        outcomes.length > 0 && (
+          <div class="project-story__metrics">
+            <ul class="project-story__metrics-list">
+              {outcomes.map((outcome) => (
+                <li class="project-story__metric-item">
+                  <span class="project-story__metric-value">
+                    {outcome.value}
+                  </span>
+                  <span class="project-story__metric-label">
+                    {outcome.label}
+                  </span>
+                </li>
+              ))}
+            </ul>
+
+            <div class="project-story__meta">
+              <span class="project-story__meta-item">{data.role}</span>
+              <span class="project-story__meta-item">{data.timeline}</span>
+            </div>
           </div>
-        </div>
-      )}
+        )
+      }
     </div>
 
-    {gallery.length > 0 && (
-      <div class="project-story__gallery">
-        <CarouselIsland id={`${project.slug}-gallery`} items={gallery} autoplayInterval={6000} />
-      </div>
-    )}
+    {
+      gallery.length > 0 && (
+        <div class="project-story__gallery" data-cursor="VIEW PROJECT">
+          <CarouselIsland
+            id={`${project.slug}-gallery`}
+            items={gallery}
+            autoplayInterval={6000}
+          />
+        </div>
+      )
+    }
   </div>
 </section>
 
@@ -248,11 +276,11 @@ const sectionClasses = [
     color: var(--color-surface-white);
     transition: opacity 0.2s ease;
   }
-  
+
   .project-story__tag--action:hover {
     opacity: 0.9;
   }
-  
+
   .project-story__actions {
     display: contents;
   }
@@ -279,7 +307,7 @@ const sectionClasses = [
     flex-direction: column;
     gap: 4px;
   }
-  
+
   .project-story__metric-item::before {
     content: "•";
     color: var(--color-label-primary);
@@ -287,7 +315,7 @@ const sectionClasses = [
     margin-left: -16px;
     font-weight: bold;
   }
-  
+
   .project-story__metric-item {
     position: relative;
     margin-left: 16px;
@@ -331,7 +359,7 @@ const sectionClasses = [
     /* Aspect ratio or fixed height? Reference shows full width bleed or contained */
     height: auto;
   }
-  
+
   .project-story__gallery :global(.carousel) {
     aspect-ratio: 16/9;
     border-radius: var(--radius-md);
@@ -350,7 +378,7 @@ const sectionClasses = [
       border-top: 1px solid var(--color-label-quaternary);
       padding-top: var(--space-lg);
     }
-    
+
     .project-story__meta {
       flex-wrap: wrap;
       gap: var(--space-md);

@@ -14,14 +14,17 @@ interface Props {
   id?: string;
 }
 
-const { caseStudies = [], id = 'case-study-stack' } = Astro.props as Props;
+const { caseStudies = [], id = "case-study-stack" } = Astro.props as Props;
 
 const placeholder = {
-  title: 'Case Study',
-  calloutSubtitle: 'Featured Work',
-  description: 'Add a highlighted case study to replace this placeholder.',
-  posterImage: { asset: '/media/placeholder.webp', alt: 'Placeholder case study' },
-  slug: '#'
+  title: "Case Study",
+  calloutSubtitle: "Featured Work",
+  description: "Add a highlighted case study to replace this placeholder.",
+  posterImage: {
+    asset: "/media/placeholder.webp",
+    alt: "Placeholder case study",
+  },
+  slug: "#",
 };
 
 const primaryStudy = caseStudies[0] ?? placeholder;
@@ -35,53 +38,66 @@ const hasStack = caseStudies.length > 1;
     aria-label="View all case studies"
     data-case-study-trigger
     data-case-studies={JSON.stringify(caseStudies)}
+    data-cursor="VIEW CASE STUDY"
   >
-    <div class={`case-study-card ${hasStack ? 'case-study-card--stacked' : ''}`}>
+    <div
+      class={`case-study-card ${hasStack ? "case-study-card--stacked" : ""}`}
+    >
       <div class="case-study-card__media-wrapper">
-        {primaryStudy.posterImage && (
-          <img
-            src={primaryStudy.posterImage.asset}
-            alt={primaryStudy.posterImage.alt}
-            class="case-study-card__image"
-            loading="lazy"
-            width="600"
-            height="450"
-          />
-        )}
+        {
+          primaryStudy.posterImage && (
+            <img
+              src={primaryStudy.posterImage.asset}
+              alt={primaryStudy.posterImage.alt}
+              class="case-study-card__image"
+              loading="lazy"
+              width="600"
+              height="450"
+            />
+          )
+        }
       </div>
-      
+
       <div class="case-study-card__content">
         <div class="case-study-card__header">
           <span class="case-study-card__label">Featured Case Study</span>
-          {hasStack && <span class="case-study-card__badge">+{caseStudies.length - 1} more</span>}
+          {
+            hasStack && (
+              <span class="case-study-card__badge">
+                +{caseStudies.length - 1} more
+              </span>
+            )
+          }
         </div>
-        
+
         <h3 class="case-study-card__title">
           {primaryStudy.calloutSubtitle ?? primaryStudy.title}
         </h3>
         <p class="case-study-card__description">{primaryStudy.description}</p>
       </div>
     </div>
-    
-    {hasStack && <div class="case-study-stack-effect" aria-hidden="true"></div>}
+
+    {hasStack && <div class="case-study-stack-effect" aria-hidden="true" />}
   </button>
 </section>
 
 <script>
   // Click handler to open overlay
-  (function() {
+  (function () {
     const stack = document.currentScript?.previousElementSibling;
     if (!stack) return;
 
-    const trigger = stack.querySelector('[data-case-study-trigger]') as HTMLButtonElement;
+    const trigger = stack.querySelector(
+      "[data-case-study-trigger]",
+    ) as HTMLButtonElement;
 
     if (trigger) {
-      trigger.addEventListener('click', () => {
-        const caseStudiesData = trigger.getAttribute('data-case-studies');
+      trigger.addEventListener("click", () => {
+        const caseStudiesData = trigger.getAttribute("data-case-studies");
         if (caseStudiesData) {
-          const event = new CustomEvent('openCaseStudyOverlay', {
+          const event = new CustomEvent("openCaseStudyOverlay", {
             detail: JSON.parse(caseStudiesData),
-            bubbles: true
+            bubbles: true,
           });
           document.dispatchEvent(event);
         }
@@ -109,7 +125,7 @@ const hasStack = caseStudies.length > 1;
   }
 
   .case-study-stack__trigger:hover {
-    transform: translateY(-4px);
+    transform: translateY(-2px); /* Reduced hover movement */
   }
 
   .case-study-card {
@@ -117,12 +133,12 @@ const hasStack = caseStudies.length > 1;
     background: var(--surface-card);
     border: 1px solid var(--border-subtle);
     border-radius: var(--radius-md);
-    padding: var(--space-md);
+    padding: var(--space-sm); /* Reduced padding from md */
     overflow: hidden;
     z-index: 2;
     display: flex;
     flex-direction: column;
-    gap: var(--space-md);
+    gap: var(--space-sm); /* Kept as sm, but padding is reduced */
     box-shadow: var(--shadow-soft);
   }
 
@@ -132,7 +148,7 @@ const hasStack = caseStudies.length > 1;
     border-radius: var(--radius-sm);
     overflow: hidden;
     background: var(--surface-sidebar);
-    border: 1px solid rgba(0,0,0,0.04);
+    border: 1px solid rgba(0, 0, 0, 0.04);
   }
 
   .case-study-card__image {
@@ -149,14 +165,14 @@ const hasStack = caseStudies.length > 1;
   .case-study-card__content {
     display: flex;
     flex-direction: column;
-    gap: var(--space-xs);
+    gap: 4px; /* Reduced gap */
   }
 
   .case-study-card__header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 4px;
+    margin-bottom: 0; /* Removed margin */
   }
 
   .case-study-card__label {
@@ -164,39 +180,39 @@ const hasStack = caseStudies.length > 1;
     font-size: var(--text-label-size);
     line-height: var(--text-label-height);
     letter-spacing: var(--text-label-spacing);
-    font-weight: var(--text-label-weight);
+    font-weight: 400; /* Regular weight */
     text-transform: var(--text-label-case);
     color: var(--color-label-secondary);
   }
 
   .case-study-card__badge {
     font-family: var(--font-sans);
-    font-size: 10px; /* Specific tweak for badge or map to label-size-mobile */
+    font-size: 10px;
     padding: 2px 6px;
     border-radius: 99px;
     background: var(--surface-sidebar);
     color: var(--color-label-primary);
     border: 1px solid var(--border-subtle);
-    font-weight: 500;
+    font-weight: 400; /* Regular weight */
   }
 
   .case-study-card__title {
     margin: 0;
     font-family: var(--font-sans);
-    font-size: var(--text-title-size);
-    line-height: var(--text-title-height);
+    font-size: var(--text-body-size); /* Reduced size */
+    line-height: var(--text-body-height);
     letter-spacing: var(--text-title-spacing);
-    font-weight: var(--text-title-weight);
+    font-weight: 400; /* Regular weight */
     color: var(--color-label-primary);
   }
 
   .case-study-card__description {
     margin: 0;
     font-family: var(--font-sans);
-    font-size: var(--text-secondary-size);
-    line-height: var(--text-secondary-height);
+    font-size: var(--text-caption-size); /* Reduced size */
+    line-height: var(--text-caption-height);
     letter-spacing: var(--text-secondary-spacing);
-    font-weight: var(--text-secondary-weight);
+    font-weight: 400; /* Regular weight */
     color: var(--color-label-secondary);
     display: -webkit-box;
     -webkit-line-clamp: 2;
@@ -207,21 +223,23 @@ const hasStack = caseStudies.length > 1;
   /* Stack Effect */
   .case-study-stack-effect {
     position: absolute;
-    top: 8px;
-    left: 8px;
-    right: 8px;
-    bottom: -8px;
+    top: 4px; /* Reduced offset */
+    left: 4px;
+    right: 4px;
+    bottom: -4px;
     background: var(--surface-card);
     border: 1px solid var(--border-subtle);
     border-radius: var(--radius-md);
     z-index: 1;
     box-shadow: var(--shadow-soft);
     opacity: 0.5;
-    transition: transform 0.3s ease, opacity 0.3s ease;
+    transition:
+      transform 0.3s ease,
+      opacity 0.3s ease;
   }
 
   .case-study-stack__trigger:hover .case-study-stack-effect {
-    transform: translateY(4px) scale(0.98);
+    transform: translateY(2px) scale(0.99); /* Adjusted hover effect */
     opacity: 0.6;
   }
 </style>

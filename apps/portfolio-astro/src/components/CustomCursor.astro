@@ -1,0 +1,212 @@
+---
+
+---
+
+<div id="custom-cursor" class="custom-cursor">
+    <div class="custom-cursor__dot"></div>
+    <div class="custom-cursor__label">VIEW</div>
+</div>
+
+<script>
+    import { gsap } from "gsap";
+
+    class CustomCursor {
+        cursor: HTMLElement;
+        dot: HTMLElement;
+        label: HTMLElement;
+        pos: { x: number; y: number };
+        mouse: { x: number; y: number };
+        speed: number;
+        active: boolean;
+        visible: boolean;
+
+        constructor() {
+            this.cursor = document.getElementById("custom-cursor")!;
+            this.dot = this.cursor.querySelector(".custom-cursor__dot")!;
+            this.label = this.cursor.querySelector(".custom-cursor__label")!;
+
+            this.pos = { x: 0, y: 0 };
+            this.mouse = { x: 0, y: 0 };
+            this.speed = 0.15; // Lag factor
+            this.active = false;
+            this.visible = false;
+
+            this.init();
+        }
+
+        init() {
+            // Initial hide
+            gsap.set(this.cursor, { xPercent: -50, yPercent: -50, opacity: 0 });
+
+            // Mouse move listener
+            window.addEventListener("mousemove", (e) => {
+                this.mouse.x = e.clientX;
+                this.mouse.y = e.clientY;
+
+                if (!this.visible) {
+                    this.visible = true;
+                    gsap.to(this.cursor, { opacity: 1, duration: 0.3 });
+                }
+            });
+
+            // Ticker for smooth movement
+            gsap.ticker.add(() => this.update());
+
+            // Hover listeners for interactive elements
+            this.addHoverListeners();
+
+            // Re-add listeners on dynamic content changes (if any)
+            const observer = new MutationObserver(() =>
+                this.addHoverListeners(),
+            );
+            observer.observe(document.body, { childList: true, subtree: true });
+        }
+
+        update() {
+            // Smooth follow
+            this.pos.x += (this.mouse.x - this.pos.x) * this.speed;
+            this.pos.y += (this.mouse.y - this.pos.y) * this.speed;
+
+            gsap.set(this.cursor, { x: this.pos.x, y: this.pos.y });
+        }
+
+        addHoverListeners() {
+            const triggers = document.querySelectorAll("[data-cursor]");
+
+            triggers.forEach((trigger) => {
+                // Avoid double binding
+                if (trigger.getAttribute("data-cursor-bound")) return;
+                trigger.setAttribute("data-cursor-bound", "true");
+
+                trigger.addEventListener("mouseenter", (e) => {
+                    const target = e.currentTarget as HTMLElement;
+                    const labelText = target.getAttribute("data-cursor");
+                    this.enter(labelText);
+                });
+
+                trigger.addEventListener("mouseleave", () => {
+                    this.leave();
+                });
+            });
+        }
+
+        enter(text: string | null) {
+            this.active = true;
+
+            // Update label
+            if (text) {
+                this.label.textContent = text;
+            }
+
+            // Animate to active state
+            gsap.to(this.dot, {
+                scale: 0, // Hide dot
+                duration: 0.3,
+            });
+
+            gsap.to(this.cursor, {
+                width: "auto",
+                height: "auto",
+                backgroundColor: "#FF5722", // Orange accent from design
+                padding: "8px 16px",
+                borderRadius: "20px",
+                mixBlendMode: "normal",
+                duration: 0.3,
+                ease: "power2.out",
+            });
+
+            gsap.to(this.label, {
+                opacity: 1,
+                scale: 1,
+                duration: 0.3,
+                delay: 0.05,
+            });
+        }
+
+        leave() {
+            this.active = false;
+
+            // Animate back to default state
+            gsap.to(this.dot, {
+                scale: 1,
+                duration: 0.3,
+            });
+
+            gsap.to(this.cursor, {
+                width: "12px",
+                height: "12px",
+                backgroundColor: "transparent", // Dot handles color
+                padding: 0,
+                borderRadius: "50%",
+                mixBlendMode: "difference",
+                duration: 0.3,
+                ease: "power2.out",
+            });
+
+            gsap.to(this.label, {
+                opacity: 0,
+                scale: 0.5,
+                duration: 0.2,
+            });
+        }
+    }
+
+    // Initialize only on client and if not touch device (roughly)
+    if (window.matchMedia("(pointer: fine)").matches) {
+        new CustomCursor();
+    }
+</script>
+
+<style>
+    .custom-cursor {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 12px;
+        height: 12px;
+        pointer-events: none;
+        z-index: 9999;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        mix-blend-mode: difference; /* Cool effect for default cursor */
+        transform: translate(-50%, -50%);
+    }
+
+    .custom-cursor__dot {
+        width: 12px;
+        height: 12px;
+        background-color: white;
+        border-radius: 50%;
+        position: absolute;
+    }
+
+    .custom-cursor__label {
+        color: white;
+        font-family: var(--font-sans, sans-serif);
+        font-size: 12px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        opacity: 0;
+        white-space: nowrap;
+        transform: scale(0.5);
+        /* Reset mix-blend-mode for the text when active so it's readable */
+        mix-blend-mode: normal;
+    }
+
+    /* Hide system cursor on body when custom cursor is active? 
+     Actually, usually we keep system cursor or hide it globally. 
+     Let's hide it globally for now if the user wants a full custom cursor experience,
+     OR just hide it on triggers. The plan said hide on triggers.
+  */
+
+    :global(body) {
+        /* cursor: none; */ /* Uncomment if we want to replace cursor entirely */
+    }
+
+    /* When hovering a trigger, we want to hide the default cursor */
+    :global([data-cursor]) {
+        cursor: none;
+    }
+</style>

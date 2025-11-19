@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "central-icons": "npm:@central-icons-react-native/round-filled-radius-1-stroke-2@^1.1.33"
+  }
+}
